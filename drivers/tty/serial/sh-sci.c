@@ -627,7 +627,6 @@ static void sci_poll_put_char(struct uart_port *port, unsigned char c)
 static void sci_init_pins(struct uart_port *port, unsigned int cflag)
 {
 	struct sci_port *s = to_sci_port(port);
-	const struct plat_sci_reg *reg = sci_regmap[s->cfg->regtype] + SCSPTR;
 
 	/*
 	 * Use port-specific handler if provided.
@@ -641,7 +640,7 @@ static void sci_init_pins(struct uart_port *port, unsigned int cflag)
 	 * For the generic path SCSPTR is necessary. Bail out if that's
 	 * unavailable, too.
 	 */
-	if (!reg->size)
+	if (!sci_getreg(port, SCSPTR)->size)
 		return;
 
 	if ((s->cfg->capabilities & SCIx_HAVE_RTSCTS) &&
@@ -1815,13 +1814,11 @@ static void sci_enable_ms(struct uart_port *port)
 
 static void sci_break_ctl(struct uart_port *port, int break_state)
 {
-	struct sci_port *s = to_sci_port(port);
-	const struct plat_sci_reg *reg = sci_regmap[s->cfg->regtype] + SCSPTR;
 	unsigned short scscr, scsptr;
 	unsigned long flags;
 
 	/* check wheter the port has SCSPTR */
-	if (!reg->size) {
+	if (!sci_getreg(port, SCSPTR)->size) {
 		/*
 		 * Not supported by hardware. Most parts couple break and rx
 		 * interrupts together, with break detection always enabled.
