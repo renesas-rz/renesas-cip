@@ -30,7 +30,7 @@
 	compatible = "renesas,silk", "renesas,r8a7794";
 
 	aliases {
-		serial0 = &scif2;
+		serial10 = &scif2;
 	};
 
 	chosen {
