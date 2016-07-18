@@ -15,7 +15,7 @@ obj-$(CONFIG_ARCH_R8A7790)	+= setup-r8a7790.o
 obj-$(CONFIG_ARCH_R8A7791)	+= setup-r8a7791.o
 obj-$(CONFIG_ARCH_R8A7743)	+= setup-r8a7743.o
 obj-$(CONFIG_ARCH_R8A7793)	+= setup-r8a7793.o
-obj-$(CONFIG_ARCH_R8A7794)	+= setup-r8a7794.o
+obj-$(CONFIG_ARCH_R8A7794)	+= setup-r8a7794.o sgx-r8a7794-quirk.o
 obj-$(CONFIG_ARCH_EMEV2)	+= setup-emev2.o
 obj-$(CONFIG_ARCH_R7S72100)	+= setup-r7s72100.o
 
