@@ -42,6 +42,31 @@
 		device_type = "memory";
 		reg = <0 0x40000000 0 0x40000000>;
 	};
+	gpio-keys {
+		compatible = "gpio-keys";
+		autorepeat;
+		key@0 {
+                       gpios = <&gpio5 12 GPIO_ACTIVE_LOW>;
+                       linux,code = <2>;
+                       label = "SW6";
+                       gpio-key,wakeup;
+                       debounce-interval = <20>;
+               };
+               key@2{
+                       gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
+                       linux,code = <3>;
+                       label = "SW4";
+                       gpio-key,wakeup;
+                       debounce-interval = <20>;
+               };
+               key@3 {
+                       gpios = <&gpio5 10 GPIO_ACTIVE_LOW>;
+                       linux,code = <4>;
+                       label = "SW3";
+                       gpio-key,wakeup;
+                       debounce-interval = <20>;
+               };
+	};
 
 	d3_3v: regulator@0 {
 		compatible = "regulator-fixed";
@@ -302,6 +327,23 @@
 			};
 		};
 	};
+};
+&i2c7 {
+        status = "okay";
+        clock-frequency = <100000>;
+
+        pmic@58 {
+                compatible = "dlg,da9063";
+                reg = <0x58>;
+                interrupt-parent = <&gpio3>;
+                interrupts = <31 IRQ_TYPE_LEVEL_LOW>;
+                rtc {
+                        compatible = "dlg,da9063-rtc";
+                };
+                wdt {
+                        compatible = "dlg,da9063-watchdog";
+                };
+        };
 };
 
 &mmcif0 {
