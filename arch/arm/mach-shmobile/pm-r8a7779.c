@@ -11,7 +11,7 @@
 
 #include <asm/io.h>
 
-#include "pm-rcar.h"
+#include <linux/soc/renesas/rcar-sysc.h>
 #include "r8a7779.h"
 
 /* SYSC */
