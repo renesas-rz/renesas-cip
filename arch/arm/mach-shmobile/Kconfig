@@ -94,6 +94,10 @@ config ARCH_R8A7794
 	bool "R-Car E2 (R8A77940)"
 	select ARCH_RCAR_GEN2
 
+config ARCH_R8A7745
+        bool "RZ/G1E (R8A77450)"
+        select ARCH_RCAR_GEN2
+
 config ARCH_SH73A0
 	bool "SH-Mobile AG5 (R8A73A00)"
 	select ARCH_RMOBILE
