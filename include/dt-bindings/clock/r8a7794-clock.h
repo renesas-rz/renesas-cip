@@ -21,6 +21,7 @@
 #define R8A7794_CLK_SDH			6
 #define R8A7794_CLK_SD0			7
 #define R8A7794_CLK_Z			8
+#define R8A7794_CLK_SGX			9
 
 /* MSTP0 */
 #define R8A7794_CLK_MSIOF0		0
@@ -85,6 +86,7 @@
 #define R8A7794_CLK_DU0			24
 
 /* MSTP8 */
+#define R8A7794_CLK_IPMMU_SGX		0
 #define R8A7794_CLK_VIN1		10
 #define R8A7794_CLK_VIN0		11
 #define R8A7794_CLK_ETHER		13

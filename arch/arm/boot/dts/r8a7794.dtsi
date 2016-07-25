@@ -181,6 +181,17 @@
 		#power-domain-cells = <1>;
 	};
 
+	sgx@fd800000 {
+		compatible = "renesas,sgx";
+		reg = <0 0xfd800000 0 0x10000>;
+		interrupts = <0 119 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names = "irq_sgx";
+		clocks = <&mstp1_clks R8A7794_CLK_3DG>,
+			 <&mstp8_clks R8A7794_CLK_IPMMU_SGX>;
+		clock-names = "sgx_clk", "ipmmu_clk";
+		power-domains = <&sysc R8A7794_PD_SGX>;
+	};
+
 	cmt0: timer@ffca0000 {
 		compatible = "renesas,cmt-48-gen2";
 		reg = <0 0xffca0000 0 0x1004>;
@@ -1198,13 +1209,13 @@
 		mstp8_clks: mstp8_clks@e6150990 {
 			compatible = "renesas,r8a7794-mstp-clocks", "renesas,cpg-mstp-clocks";
 			reg = <0 0xe6150990 0 4>, <0 0xe61509a0 0 4>;
-			clocks = <&zg_clk>, <&zg_clk>, <&p_clk>;
+			clocks = <&zx_clk>, <&zg_clk>, <&zg_clk>, <&p_clk>;
 			#clock-cells = <1>;
 			clock-indices = <
-				R8A7794_CLK_VIN1 R8A7794_CLK_VIN0 R8A7794_CLK_ETHER
+				R8A7794_CLK_IPMMU_SGX R8A7794_CLK_VIN1 R8A7794_CLK_VIN0 R8A7794_CLK_ETHER
 			>;
 			clock-output-names =
-				"vin1", "vin0", "ether";
+				"ipmmu_sgx" ,"vin1", "vin0", "ether";
 		};
 		mstp9_clks: mstp9_clks@e6150994 {
 			compatible = "renesas,r8a7794-mstp-clocks", "renesas,cpg-mstp-clocks";
