@@ -904,6 +904,7 @@ static const struct of_device_id rcar_can_of_table[] __maybe_unused = {
 	{ .compatible = "renesas,can-r8a7779" },
 	{ .compatible = "renesas,can-r8a7790" },
 	{ .compatible = "renesas,can-r8a7791" },
+	{ .compatible = "renesas,can-r8a7743" },
 	{ }
 };
 MODULE_DEVICE_TABLE(of, rcar_can_of_table);
