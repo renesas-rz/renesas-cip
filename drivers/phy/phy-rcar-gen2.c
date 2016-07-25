@@ -196,6 +196,7 @@ static const struct of_device_id rcar_gen2_phy_match_table[] = {
 	{ .compatible = "renesas,usb-phy-r8a7791" },
 	{ .compatible = "renesas,usb-phy-r8a7743" },
 	{ .compatible = "renesas,usb-phy-r8a7794" },
+	{ .compatible = "renesas,usb-phy-r8a7745" },
 	{ }
 };
 MODULE_DEVICE_TABLE(of, rcar_gen2_phy_match_table);
