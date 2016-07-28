@@ -328,6 +328,11 @@ static const struct of_device_id cpg_of_match[] = {
 	},
 
 	{
+		.compatible = "renesas,r8a7743-cpg-clocks",
+		.data = &var_pll0_ratio,
+	},
+
+	{
 		.compatible = "renesas,r8a7792-cpg-clocks",
 		.data = &fix_pll0_ratio,
 	},
@@ -339,6 +344,11 @@ static const struct of_device_id cpg_of_match[] = {
 
 	{
 		.compatible = "renesas,r8a7794-cpg-clocks",
+		.data = &fix_pll0_ratio,
+	},
+
+	{
+		.compatible = "renesas,r8a7745-cpg-clocks",
 		.data = &fix_pll0_ratio,
 	},
 	{}
