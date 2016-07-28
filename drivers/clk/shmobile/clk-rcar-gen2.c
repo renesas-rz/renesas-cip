@@ -267,6 +267,9 @@ static struct clk * __init cpg_adsp_clk_register(struct rcar_gen2_cpg *cpg)
 #define CPG_PLL_CONFIG_INDEX(md)	((((md) & BIT(14)) >> 12) | \
 					 (((md) & BIT(13)) >> 12) | \
 					 (((md) & BIT(19)) >> 19))
+
+#define CPG_PLL0_CONFIG_INDEX(md)	(CPG_PLL_CONFIG_INDEX(md) >> 1)
+
 struct cpg_pll_config {
 	unsigned int extal_div;
 	unsigned int pll1_mult;
@@ -295,11 +298,59 @@ static const struct clk_div_table cpg_sd01_div_table[] = {
  * Initialization
  */
 
+
+struct pll0_config_data{
+	bool is_devider_fixed;
+	unsigned int mult_ratio_table[4];
+};
+
+
+static struct pll0_config_data fix_pll0_ratio = {
+	.is_devider_fixed = true,
+	.mult_ratio_table = {
+		200, 150, 230, 200	
+	} /* See tables 7.5b and 7.5c */
+};
+
+static struct pll0_config_data var_pll0_ratio = {
+	.is_devider_fixed = false
+};
+
+static const struct of_device_id cpg_of_match[] = {
+	{
+		.compatible = "renesas,r8a7790-cpg-clocks",
+		.data = &var_pll0_ratio,
+	},
+
+	{
+		.compatible = "renesas,r8a7791-cpg-clocks",
+		.data = &var_pll0_ratio,
+	},
+
+	{
+		.compatible = "renesas,r8a7792-cpg-clocks",
+		.data = &fix_pll0_ratio,
+	},
+
+	{
+		.compatible = "renesas,r8a7793-cpg-clocks",
+		.data = &var_pll0_ratio,
+	},
+
+	{
+		.compatible = "renesas,r8a7794-cpg-clocks",
+		.data = &fix_pll0_ratio,
+	},
+	{}
+};
+
+
 static u32 cpg_mode __initdata;
 
 static struct clk * __init
 rcar_gen2_cpg_register_clock(struct device_node *np, struct rcar_gen2_cpg *cpg,
-			     const struct cpg_pll_config *config,
+			     const struct cpg_pll_config *config, 
+			     const struct pll0_config_data *data,
 			     const char *name)
 {
 	const struct clk_div_table *table = NULL;
@@ -317,9 +368,13 @@ rcar_gen2_cpg_register_clock(struct device_node *np, struct rcar_gen2_cpg *cpg,
 		 * clock implementation and we currently have no need to change
 		 * the multiplier value.
 		 */
-		u32 value = clk_readl(cpg->reg + CPG_PLL0CR);
 		parent_name = "main";
-		mult = ((value >> 24) & ((1 << 7) - 1)) + 1;
+		if (data->is_devider_fixed)
+			mult = data->mult_ratio_table[CPG_PLL0_CONFIG_INDEX(cpg_mode)];
+		else {
+			u32 value = clk_readl(cpg->reg + CPG_PLL0CR);
+			mult = ((value >> 24) & ((1 << 7) - 1)) + 1;
+		}
 	} else if (!strcmp(name, "pll1")) {
 		parent_name = "main";
 		mult = config->pll1_mult / 2;
@@ -346,6 +401,7 @@ rcar_gen2_cpg_register_clock(struct device_node *np, struct rcar_gen2_cpg *cpg,
 		table = cpg_sd01_div_table;
 		shift = 0;
 	} else if (!strcmp(name, "z")) {
+		if (data->is_devider_fixed) return ERR_PTR(-EINVAL);
 		return cpg_z_clk_register(cpg);
 	} else if (!strcmp(name, "rcan")) {
 		return cpg_rcan_clk_register(cpg, np);
@@ -366,11 +422,18 @@ rcar_gen2_cpg_register_clock(struct device_node *np, struct rcar_gen2_cpg *cpg,
 
 static void __init rcar_gen2_cpg_clocks_init(struct device_node *np)
 {
+	const struct of_device_id *match;
 	const struct cpg_pll_config *config;
 	struct rcar_gen2_cpg *cpg;
 	struct clk **clks;
 	unsigned int i;
 	int num_clks;
+
+	match = of_match_node(cpg_of_match, np);
+	if (!match) {
+		pr_err("%s: No matching data\n", __func__);
+		return;
+	}
 
 	num_clks = of_property_count_strings(np, "clock-output-names");
 	if (num_clks < 0) {
@@ -406,7 +469,7 @@ static void __init rcar_gen2_cpg_clocks_init(struct device_node *np)
 		of_property_read_string_index(np, "clock-output-names", i,
 					      &name);
 
-		clk = rcar_gen2_cpg_register_clock(np, cpg, config, name);
+		clk = rcar_gen2_cpg_register_clock(np, cpg, config, match->data, name);
 		if (IS_ERR(clk))
 			pr_err("%s: failed to register %s %s clock (%ld)\n",
 			       __func__, np->name, name, PTR_ERR(clk));
