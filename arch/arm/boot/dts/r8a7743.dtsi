@@ -936,7 +936,7 @@
 		power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
 	};
 
-	vsps@fe928000 {
+	vspm@fe928000 {
 		compatible = "renesas,vspm-vsps","renesas-vspm";
 		reg = <0 0xfe928000 0 0x7404>;
 		interrupts = <0 267 IRQ_TYPE_LEVEL_HIGH>;
@@ -944,16 +944,32 @@
 		power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
 	};
 
-	vspd0@fe930000 {
-		compatible = "renesas,vspm-vspd0","renesas-vspm";
+        vspm@fe930000 {
+                compatible = "renesas,vspm-vspdu0","renesas-vspm";
+                reg = <0 0xfe930000 0 0x7404>;
+                interrupts = <0 246 IRQ_TYPE_LEVEL_HIGH>;
+                clocks = <&mstp1_clks R8A7743_CLK_VSP1_DU0>;
+                power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
+        };
+
+        vspm@fe938000 {
+                compatible = "renesas,vspdu1","renesas-vspm";
+                reg = <0 0xfe938000 0 0x7404>;
+                interrupts = <0 247 IRQ_TYPE_LEVEL_HIGH>;
+                clocks = <&mstp1_clks R8A7743_CLK_VSP1_DU1>;
+                power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
+        };
+
+	vspd0: vspd0@fe930000 {
+		compatible = "renesas,vsp2";
 		reg = <0 0xfe930000 0 0x7404>;
 		interrupts = <0 246 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp1_clks R8A7743_CLK_VSP1_DU0>;
 		power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
 	};
 
-	vspd1@fe938000 {
-		compatible = "renesas,vspm-vspd1","renesas-vspm";
+	vspd1: vspd1@fe938000 {
+		compatible = "renesas,vsp2";
 		reg = <0 0xfe938000 0 0x7404>;
 		interrupts = <0 247 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp1_clks R8A7743_CLK_VSP1_DU1>;
@@ -989,6 +1005,7 @@
 		clock-names = "du.0", "du.1", "lvds.0";
 		status = "disabled";
 
+		vsps = <&vspd0 &vspd1>;
 		ports {
 			#address-cells = <1>;
 			#size-cells = <0>;
