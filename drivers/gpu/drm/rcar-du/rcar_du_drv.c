@@ -117,6 +117,7 @@ static const struct rcar_du_device_info rcar_du_r8a7743_info = {
 		  | RCAR_DU_FEATURE_EXT_CTRL_REGS
 		  | RCAR_DU_FEATURE_VSP1_SOURCE,
 	.num_crtcs = 2,
+	.vspd_crtcs = BIT(0) | BIT(1),
 	.routes = {
 		[RCAR_DU_OUTPUT_DPAD0] = {
 			.possible_crtcs = BIT(1) | BIT(0),
@@ -159,6 +160,7 @@ static const struct rcar_du_device_info rcar_du_r8a7745_info = {
         .features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
                   | RCAR_DU_FEATURE_EXT_CTRL_REGS,
         .num_crtcs = 2,
+        .vspd_crtcs = BIT(0),
         .routes = {
                 /* R8A7745 has two RGB outputs and one (currently unsupported)
                  * TCON output.
