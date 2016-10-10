@@ -31,6 +31,7 @@
 void rcar_du_vsp_enable(struct rcar_du_crtc *crtc)
 {
 	if (crtc->vsp->vsp) {
+
 		const struct drm_display_mode *mode = &crtc->crtc.state->adjusted_mode;
 		struct rcar_du_device *rcdu = crtc->group->dev;
 		struct rcar_du_plane_state state = {
@@ -218,6 +219,24 @@ static void rcar_du_vsp_plane_atomic_update(struct drm_plane *plane,
 			rcar_du_vsp_plane_setup(rplane);
 		else
 			vsp1_du_atomic_update(rplane->vsp->vsp, rplane->index, 0, 0, 0, NULL, NULL);
+	}
+	else {
+		struct rcar_du_plane_state state = {
+			.format = rcar_du_format_info(DRM_FORMAT_ARGB8888),
+			.source = RCAR_DU_PLANE_MEMORY,
+			.alpha = 255,
+			.colorkey = 0,
+			.zpos = 0,
+		};
+
+		state.state = *(plane->state);
+
+		if (!plane->state->crtc)
+			return;
+
+		state.hwindex = (rplane->index + 4 % 8);
+
+		__rcar_du_plane_setup(rplane->vsp->group,&state);
 	}
 }
 
