@@ -901,7 +901,7 @@
 		};
 	};
 
-	tddmac@fea00000 {
+	vspm@fea00000 {
 		compatible = "renesas,vspm-tddmac", "renesas-vspm";
 		reg = <0 0xfea00000 0 0x0200>;
 		interrupts = <0 285 IRQ_TYPE_LEVEL_HIGH>;
@@ -909,7 +909,7 @@
 		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
 	};
 
-	vsps@fe928000 {
+	vspm@fe928000 {
 		compatible = "renesas,vspm-vsps", "renesas-vspm";
 		reg = <0 0xfe928000 0 0x7404>;
 		interrupts = <0 267 IRQ_TYPE_LEVEL_HIGH>;
@@ -917,8 +917,16 @@
 		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
 	};
 
-	vspd0@fe930000 {
+	vspm@fe930000 {
 		compatible = "renesas,vspm-vspd0", "renesas-vspm";
+		reg = <0 0xfe930000 0 0x7404>;
+		interrupts = <0 246 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp1_clks R8A7745_CLK_VSP1_DU0>;
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
+	};
+
+	vspdu0: vspdu0@fe930000 {
+		compatible = "renesas,vsp2";
 		reg = <0 0xfe930000 0 0x7404>;
 		interrupts = <0 246 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp1_clks R8A7745_CLK_VSP1_DU0>;
@@ -943,6 +951,8 @@
 			 <&mstp7_clks R8A7745_CLK_DU0>;
 		clock-names = "du.0", "du.1";
 		status = "disabled";
+
+		vsps = <&vspdu0>;
 
 		ports {
 			#address-cells = <1>;
