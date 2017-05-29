@@ -95,6 +95,16 @@
 		renesas,groups = "avb_mdio", "avb_gmii", "avb_phy_int";
 		renesas,function = "avb";
 	};
+
+	usb0_pins: usb0 {
+		renesas,groups = "usb0";
+		renesas,function = "usb0";
+	};
+
+	usb1_pins: usb1 {
+		renesas,groups = "usb1";
+		renesas,function = "usb1";
+	};
 };
 
 &scif0 {
@@ -147,4 +157,30 @@
 		reg = <3>;
 		micrel,led-mode = <1>;
 	};
+};
+
+&hsusb {
+	status = "okay";
+	pinctrl-0 = <&usb0_pins>;
+	pinctrl-names = "default";
+};
+
+&usbphy {
+	status = "okay";
+};
+
+&xhci {
+	status = "okay";
+};
+
+&pci0 {
+	status = "okay";
+	pinctrl-0 = <&usb0_pins>;
+	pinctrl-names = "default";
+};
+
+&pci1 {
+	status = "okay";
+	pinctrl-0 = <&usb1_pins>;
+	pinctrl-names = "default";
 };
