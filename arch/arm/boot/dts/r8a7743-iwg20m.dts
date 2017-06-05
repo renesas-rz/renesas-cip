@@ -20,6 +20,10 @@
 
 	aliases {
 		serial0 = &scif0;
+		serial1 = &scif1;
+		serial2 = &scif4;
+		serial3 = &scifb1;
+		serial4 = &hscif1;
 		eth = &avb;
 	};
 
@@ -74,6 +78,26 @@
 	scif0_pins: serial0 {
 		renesas,groups = "scif0_data_d";
 		renesas,function = "scif0";
+	};
+
+	scif1_pins: serial1 {
+		renesas,groups = "scif1_data_d";
+		renesas,function = "scif1";
+	};
+
+	scif4_pins: serial2 {
+		renesas,groups = "scif4_data_c";
+		renesas,function = "scif4";
+	};
+
+	scifb1_pins: serial3 {
+		renesas,groups = "scifb1_data_d", "scifb1_ctrl";
+		renesas,function = "scifb1";
+	};
+
+	hscif1_pins: serial4 {
+                renesas,groups = "hscif1_data_c", "hscif1_ctrl_c";
+                renesas,function = "hscif1";
 	};
 
 	mmcif0_pins: mmc {
@@ -134,6 +158,35 @@
 	pinctrl-names = "default";
 
 	status = "okay";
+};
+
+&scif1 {
+	pinctrl-0 = <&scif1_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};
+
+&scif4 {
+	pinctrl-0 = <&scif4_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};
+
+&scifb1 {
+        pinctrl-0 = <&scifb1_pins>;
+        pinctrl-names = "default";
+	    ctsrts;
+
+        status = "okay";
+};
+
+&hscif1 {
+        pinctrl-0 = <&hscif1_pins>;
+        pinctrl-names = "default";
+        ctsrts;
+        status = "okay";
 };
 
 &mmcif0 {
