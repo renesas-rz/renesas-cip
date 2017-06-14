@@ -64,6 +64,7 @@
 #define R8A7794_CLK_IRQC		7
 
 /* MSTP5 */
+#define R8A7794_CLK_AUDIO_DMAC0		2
 #define R8A7794_CLK_THERMAL		22
 #define R8A7794_CLK_PWM			23
 
