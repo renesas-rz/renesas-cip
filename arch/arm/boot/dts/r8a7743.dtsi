@@ -927,55 +927,37 @@
 		power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
 		status = "disabled";
 	};
-
-	dmac2d: dma-controller@fea00000 {
-		compatible = "renesas,2ddmac-r8a7743";
-		reg = <0 0xfea00000 0 0x0200>;
+        
+	tddmac@0xfea00000 {
+		compatible = "renesas,vspm-tddmac","renesas,vspm";
+		reg = <0 0xfea00000 0 0x200>;
 		interrupts = <0 285 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp1_clks R8A7743_CLK_2DDMAC>;
 		power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
 	};
 
-	vsps: vspm@fe928000 {
-		compatible = "renesas,vsps";
-		reg = <0 0xfe928000 0 0x8000>;
+	vsps@fe928000 {
+		compatible = "renesas,vspm-vsps","renesas-vspm";
+		reg = <0 0xfe928000 0 0x7404>;
 		interrupts = <0 267 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp1_clks R8A7743_CLK_VSP1_S>;
 		power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-
-		renesas,has-lut;
-		renesas,has-sru;
-		renesas,#rpf = <5>;
-		renesas,#uds = <3>;
-		renesas,#wpf = <4>;
 	};
 
-	vspd0: vspm@fe930000 {
-		compatible = "renesas,vspd0";
-		reg = <0 0xfe930000 0 0x8000>;
+	vspd0@fe930000 {
+		compatible = "renesas,vspm-vspd0","renesas-vspm";
+		reg = <0 0xfe930000 0 0x7404>;
 		interrupts = <0 246 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp1_clks R8A7743_CLK_VSP1_DU0>;
 		power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-
-		renesas,has-lif;
-		renesas,has-lut;
-		renesas,#rpf = <4>;
-		renesas,#uds = <1>;
-		renesas,#wpf = <4>;
 	};
 
-	vspd1: vspm@fe938000 {
-		compatible = "renesas,vspd1";
-		reg = <0 0xfe938000 0 0x8000>;
+	vspd1@fe938000 {
+		compatible = "renesas,vspm-vspd1","renesas-vspm";
+		reg = <0 0xfe938000 0 0x7404>;
 		interrupts = <0 247 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp1_clks R8A7743_CLK_VSP1_DU1>;
 		power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-
-		renesas,has-lif;
-		renesas,has-lut;
-		renesas,#rpf = <4>;
-		renesas,#uds = <1>;
-		renesas,#wpf = <4>;
 	};
 
 	fdp0: fdpm@fe940000 {
