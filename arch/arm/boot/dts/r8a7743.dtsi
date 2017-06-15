@@ -880,8 +880,16 @@
 		status = "disabled";
 	};
 
-	vsp1@fe928000 {
-		compatible = "renesas,vsp1";
+	dmac2d: dma-controller@fea00000 {
+		compatible = "renesas,2ddmac-r8a7743";
+		reg = <0 0xfea00000 0 0x0200>;
+		interrupts = <0 285 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp1_clks R8A7743_CLK_2DDMAC>;
+		power-domains = <&cpg_clocks>;
+	};
+
+	vsps: vspm@fe928000 {
+		compatible = "renesas,vsps";
 		reg = <0 0xfe928000 0 0x8000>;
 		interrupts = <0 267 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp1_clks R8A7743_CLK_VSP1_S>;
@@ -894,8 +902,8 @@
 		renesas,#wpf = <4>;
 	};
 
-	vsp1@fe930000 {
-		compatible = "renesas,vsp1";
+	vspd0: vspm@fe930000 {
+		compatible = "renesas,vspd0";
 		reg = <0 0xfe930000 0 0x8000>;
 		interrupts = <0 246 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp1_clks R8A7743_CLK_VSP1_DU0>;
@@ -908,8 +916,8 @@
 		renesas,#wpf = <4>;
 	};
 
-	vsp1@fe938000 {
-		compatible = "renesas,vsp1";
+	vspd1: vspm@fe938000 {
+		compatible = "renesas,vspd1";
 		reg = <0 0xfe938000 0 0x8000>;
 		interrupts = <0 247 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp1_clks R8A7743_CLK_VSP1_DU1>;
