@@ -18,7 +18,6 @@ static int r8a7745_sgx_notifier_call(struct notifier_block *nb,
 				    unsigned long event, void *data)
 {
 	struct device *dev = data;
-	u32 val;
 
 	switch (event) {
 	case BUS_NOTIFY_BIND_DRIVER:
