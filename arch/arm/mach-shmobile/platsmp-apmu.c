@@ -83,7 +83,7 @@ static void apmu_init_cpu(struct resource *res, int cpu, int bit)
 	apmu_cpus[cpu].iomem = ioremap_nocache(res->start, resource_size(res));
 	apmu_cpus[cpu].bit = bit;
 
-	pr_debug("apmu ioremap %d %d %pr %lu\n", cpu, bit, res, apmu_cpus[cpu].iomem);
+	pr_debug("apmu ioremap %d %d %pr %p\n", cpu, bit, res, apmu_cpus[cpu].iomem);
 }
 
 static void apmu_parse_cfg(void (*fn)(struct resource *res, int cpu, int bit),
