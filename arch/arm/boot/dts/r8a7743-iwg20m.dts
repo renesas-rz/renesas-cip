@@ -252,6 +252,16 @@
 		renesas,groups = "ssi0129_ctrl", "ssi0_data", "ssi1_data";
 		renesas,function = "ssi";
 	};
+
+	can0_pins: can0 {
+		renesas,groups = "can0_data_d";
+		renesas,function = "can0";
+	};
+
+	can1_pins: can1 {
+		renesas,groups = "can1_data_d";
+		renesas,function = "can1";
+	};
 };
 
 &scif0 {
@@ -499,4 +509,36 @@
 
 &ssi1 {
 	shared-pin;
+};
+
+&can0 {
+	pinctrl-0 = <&can0_pins>;
+	pinctrl-names = "default";
+	renesas,can-clock-select = <0x0>;
+	status = "okay"; 
+};
+
+&can1 {
+	pinctrl-0 = <&can1_pins>;
+	pinctrl-names = "default";
+	renesas,can-clock-select = <0x0>;
+	status = "okay";
+};
+
+&gpio2 {
+	can0-trx-en-gpio{
+		gpio-hog;
+		gpios = <3 GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "can0-trx-en-gpio";
+	};
+};
+
+&gpio0 {
+	can1-trx-en-gpio{
+		gpio-hog;
+		gpios = <4 GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "can1-trx-en-gpio";
+	};
 };
