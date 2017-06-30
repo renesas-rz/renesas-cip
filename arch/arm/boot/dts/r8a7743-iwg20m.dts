@@ -345,12 +345,6 @@
 	};
 };
 
-&hsusb {
-	status = "okay";
-	pinctrl-0 = <&usb0_pins>;
-	pinctrl-names = "default";
-};
-
 &usbphy {
 	status = "okay";
 };
