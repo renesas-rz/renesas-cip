@@ -542,3 +542,7 @@
 		line-name = "can1-trx-en-gpio";
 	};
 };
+
+&wdt0{
+	status = "okay";
+};
