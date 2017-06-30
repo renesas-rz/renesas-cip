@@ -1641,6 +1641,15 @@
 		#pwm-cells = <2>;
 	};
 
+	tpu: pwm@e60f0000 {
+		compatible = "renesas,tpu-r8a7743", "renesas,tpu";
+		reg = <0 0xe60f0000 0 0x40>;
+		interrupts = <0 135 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp3_clks R8A7743_CLK_TPU0>;
+		status = "disabled";
+		#pwm-cells = <3>;
+	};
+
 	pci0: pci@ee090000 {
 		compatible = "renesas,pci-r8a7743";
 		device_type = "pci";
