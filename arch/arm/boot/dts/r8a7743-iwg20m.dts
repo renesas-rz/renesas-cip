@@ -536,3 +536,11 @@
 &wdt0{
 	status = "okay";
 };
+
+&pcie_bus_clk {
+        status = "okay";
+};
+
+&pciec {
+        status = "okay";
+};
