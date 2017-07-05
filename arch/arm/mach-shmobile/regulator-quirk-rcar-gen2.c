@@ -1,9 +1,9 @@
 /*
  * R-Car Generation 2 da9063/da9210 regulator quirk
  *
- * The r8a7790/lager and r8a7791/koelsch development boards have da9063 and
- * da9210 regulators.  Both regulators have their interrupt request lines tied
- * to the same interrupt pin (IRQ2) on the SoC.
+ * The r8a7790/lager and r8a7791/koelsch and r8a7743/skrzg1m development boards 
+ * have da9063 and da9210 regulators.  Both regulators have their interrupt 
+ * request lines tied to the same interrupt pin (IRQ2) on the SoC.
  *
  * After cold boot or da9063-induced restart, both the da9063 and da9210 seem
  * to assert their interrupt request lines.  Hence as soon as one driver
@@ -80,7 +80,7 @@ static int regulator_quirk_notify(struct notifier_block *nb,
 	client = to_i2c_client(dev);
 	dev_dbg(dev, "Detected %s\n", client->name);
 
-	if ((client->addr == 0x58 && !strcmp(client->name, "da9063")) ||
+	if (((client->addr == 0x58 || client->addr == 0x5A) && !strcmp(client->name, "da9063")) ||
 	    (client->addr == 0x68 && !strcmp(client->name, "da9210"))) {
 		int ret;
 
@@ -114,7 +114,10 @@ static int __init rcar_gen2_regulator_quirk(void)
 
 	if (!of_machine_is_compatible("renesas,koelsch") &&
 	    !of_machine_is_compatible("renesas,lager") &&
-	    !of_machine_is_compatible("renesas,gose"))
+	    !of_machine_is_compatible("renesas,gose") &&
+	    !of_machine_is_compatible("renesas,porter") &&
+	    !of_machine_is_compatible("renesas,skrzg1m") &&
+	    !of_machine_is_compatible("renesas,skrzg1e"))
 		return -ENODEV;
 
 	irqc = ioremap(IRQC_BASE, PAGE_SIZE);

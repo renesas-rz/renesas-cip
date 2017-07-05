@@ -28,7 +28,7 @@
 			reg = <0>;
 			clock-frequency = <1500000000>;
 			voltage-tolerance = <1>; /* 1% */
-			clocks = <&cpg_clocks R8A7793_CLK_Z>;
+			clocks = <&z>;
 			clock-latency = <300000>; /* 300 us */
 
 			/* kHz - uV - OPPs unknown yet */
@@ -168,7 +168,7 @@
 			clocks = <&extal_clk>;
 			#clock-cells = <1>;
 			clock-output-names = "main", "pll0", "pll1", "pll3",
-					     "lb", "qspi", "sdh", "sd0", "z",
+					     "lb", "qspi", "sdh", "sd0",
 					     "rcan", "adsp";
 			#power-domain-cells = <0>;
 		};
@@ -200,6 +200,15 @@
 		};
 
 		/* Fixed factor clocks */
+		z: z {
+			compatible = "fixed-factor-clock";
+			clocks = <&cpg_clocks R8A7793_CLK_PLL0>;
+			#clock-cells = <0>;
+			clock-div = <3>;
+			clock-mult = <1>;
+			clock-output-names = "z";
+		};
+
 		pll1_div2_clk: pll1_div2_clk {
 			compatible = "fixed-factor-clock";
 			clocks = <&cpg_clocks R8A7793_CLK_PLL1>;

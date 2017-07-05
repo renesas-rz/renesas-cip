@@ -251,32 +251,17 @@ static void gpio_rcar_config_general_input_output_mode(struct gpio_chip *chip,
 
 static int gpio_rcar_request(struct gpio_chip *chip, unsigned offset)
 {
-	struct gpio_rcar_priv *p = gpio_to_priv(chip);
-	int error;
-
-	error = pm_runtime_get_sync(&p->pdev->dev);
-	if (error < 0)
-		return error;
-
-	error = pinctrl_request_gpio(chip->base + offset);
-	if (error)
-		pm_runtime_put(&p->pdev->dev);
-
-	return error;
+	return pinctrl_request_gpio(chip->base + offset);
 }
 
 static void gpio_rcar_free(struct gpio_chip *chip, unsigned offset)
 {
-	struct gpio_rcar_priv *p = gpio_to_priv(chip);
-
 	pinctrl_free_gpio(chip->base + offset);
 
 	/* Set the GPIO as an input to ensure that the next GPIO request won't
 	 * drive the GPIO pin as an output.
 	 */
 	gpio_rcar_config_general_input_output_mode(chip, offset, false);
-
-	pm_runtime_put(&p->pdev->dev);
 }
 
 static int gpio_rcar_direction_input(struct gpio_chip *chip, unsigned offset)
@@ -336,12 +321,18 @@ static const struct of_device_id gpio_rcar_of_table[] = {
 		.compatible = "renesas,gpio-r8a7791",
 		.data = &gpio_rcar_info_gen2,
 	}, {
+		.compatible = "renesas,gpio-r8a7743",
+		.data = &gpio_rcar_info_gen2,
+	}, {
 		.compatible = "renesas,gpio-r8a7793",
 		.data = &gpio_rcar_info_gen2,
 	}, {
 		.compatible = "renesas,gpio-r8a7794",
 		.data = &gpio_rcar_info_gen2,
-	}, {
+	},{
+                .compatible = "renesas,gpio-r8a7745",
+                .data = &gpio_rcar_info_gen2,
+        }, {
 		.compatible = "renesas,gpio-r8a7795",
 		/* Gen3 GPIO is identical to Gen2. */
 		.data = &gpio_rcar_info_gen2,
@@ -424,6 +415,7 @@ static int gpio_rcar_probe(struct platform_device *pdev)
 	}
 
 	pm_runtime_enable(dev);
+	pm_runtime_get_sync(dev);
 
 	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
@@ -505,6 +497,7 @@ static int gpio_rcar_probe(struct platform_device *pdev)
 err1:
 	gpiochip_remove(gpio_chip);
 err0:
+	pm_runtime_put(dev);
 	pm_runtime_disable(dev);
 	return ret;
 }
@@ -515,6 +508,7 @@ static int gpio_rcar_remove(struct platform_device *pdev)
 
 	gpiochip_remove(&p->gpio_chip);
 
+	pm_runtime_put(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
 	return 0;
 }

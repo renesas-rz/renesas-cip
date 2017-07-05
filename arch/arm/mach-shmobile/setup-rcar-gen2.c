@@ -57,7 +57,8 @@ void __init rcar_gen2_timer_init(void)
 	int extal_mhz = 0;
 	u32 freq;
 
-	if (of_machine_is_compatible("renesas,r8a7794")) {
+	if (of_machine_is_compatible("renesas,r8a7794") || 
+		of_machine_is_compatible("renesas,r8a7745")) {
 		freq = 260000000 / 8;	/* ZS / 8 */
 		/* CNTVOFF has to be initialized either from non-secure
 		 * Hypervisor mode or secure Monitor mode with SCR.NS==1.
@@ -183,6 +184,7 @@ static int __init rcar_gen2_scan_mem(unsigned long node, const char *uname,
 }
 
 struct cma *rcar_gen2_dma_contiguous;
+EXPORT_SYMBOL(rcar_gen2_dma_contiguous);
 
 void __init rcar_gen2_reserve(void)
 {

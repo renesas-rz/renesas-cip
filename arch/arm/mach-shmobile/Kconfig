@@ -2,23 +2,21 @@ config ARCH_SHMOBILE
 	bool
 	select ZONE_DMA if ARM_LPAE
 
-config PM_RCAR
-	bool
-	select PM_GENERIC_DOMAINS if PM
-
 config PM_RMOBILE
 	bool
 	select PM_GENERIC_DOMAINS
 
 config ARCH_RCAR_GEN1
 	bool
-	select PM_RCAR if PM || SMP
+	select PM
+	select PM_GENERIC_DOMAINS
 	select RENESAS_INTC_IRQPIN
 	select SYS_SUPPORTS_SH_TMU
 
 config ARCH_RCAR_GEN2
 	bool
-	select PM_RCAR if PM || SMP
+	select PM
+	select PM_GENERIC_DOMAINS
 	select RENESAS_IRQC
 	select SYS_SUPPORTS_SH_CMT
 	select PCI_DOMAINS if PCI
@@ -82,6 +80,11 @@ config ARCH_R8A7791
 	select ARCH_RCAR_GEN2
 	select I2C
 
+config ARCH_R8A7743
+	bool "RZ/G1M (R8A77430)"
+	select ARCH_RCAR_GEN2
+	select I2C
+
 config ARCH_R8A7793
 	bool "R-Car M2-N (R8A7793)"
 	select ARCH_RCAR_GEN2
@@ -90,6 +93,10 @@ config ARCH_R8A7793
 config ARCH_R8A7794
 	bool "R-Car E2 (R8A77940)"
 	select ARCH_RCAR_GEN2
+
+config ARCH_R8A7745
+        bool "RZ/G1E (R8A77450)"
+        select ARCH_RCAR_GEN2
 
 config ARCH_SH73A0
 	bool "SH-Mobile AG5 (R8A73A00)"
