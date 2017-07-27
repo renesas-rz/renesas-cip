@@ -2317,6 +2317,17 @@ static const unsigned int mmc_data8_mux[] = {
 	MMC_D0_MARK, MMC_D1_MARK, MMC_D2_MARK, MMC_D3_MARK,
 	MMC_D4_MARK, MMC_D5_MARK, MMC_D6_MARK, MMC_D7_MARK,
 };
+static const unsigned int mmc_data8_b_pins[] = {
+	/* D[0:7] */
+	RCAR_GP_PIN(6, 18), RCAR_GP_PIN(6, 19),
+	RCAR_GP_PIN(6, 20), RCAR_GP_PIN(6, 21),
+	RCAR_GP_PIN(6, 22), RCAR_GP_PIN(6, 23),
+	RCAR_GP_PIN(6, 6), RCAR_GP_PIN(6, 7),
+};
+static const unsigned int mmc_data8_b_mux[] = {
+	MMC_D0_MARK, MMC_D1_MARK, MMC_D2_MARK, MMC_D3_MARK,
+	MMC_D4_MARK, MMC_D5_MARK, MMC_D6_B_MARK, MMC_D7_B_MARK,
+};
 static const unsigned int mmc_ctrl_pins[] = {
 	/* CLK, CMD */
 	RCAR_GP_PIN(6, 16), RCAR_GP_PIN(6, 17),
@@ -4237,6 +4248,7 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
 	SH_PFC_PIN_GROUP(mmc_data1),
 	SH_PFC_PIN_GROUP(mmc_data4),
 	SH_PFC_PIN_GROUP(mmc_data8),
+	SH_PFC_PIN_GROUP(mmc_data8_b),
 	SH_PFC_PIN_GROUP(mmc_ctrl),
 	SH_PFC_PIN_GROUP(msiof0_clk),
 	SH_PFC_PIN_GROUP(msiof0_sync),
@@ -4645,6 +4657,7 @@ static const char * const mmc_groups[] = {
 	"mmc_data1",
 	"mmc_data4",
 	"mmc_data8",
+	"mmc_data8_b",
 	"mmc_ctrl",
 };
 
