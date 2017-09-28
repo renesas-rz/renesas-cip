@@ -350,6 +350,71 @@
 		dma-channels = <13>;
 	};
 
+	pwm0: pwm@e6e30000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e30000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	pwm1: pwm@e6e31000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e31000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	pwm2: pwm@e6e32000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e32000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	pwm3: pwm@e6e33000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e33000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	pwm4: pwm@e6e34000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e34000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	pwm5: pwm@e6e35000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e35000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	pwm6: pwm@e6e36000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e36000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	tpu: pwm@e60f0000 {
+		compatible = "renesas,tpu-r8a7745", "renesas,tpu";
+		reg = <0 0xe60f0000 0 0x40>;
+		interrupts = <0 135 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp3_clks R8A7745_CLK_TPU0>;
+		status = "disabled";
+		#pwm-cells = <3>;
+	};
+
 	scifa0: serial@e6c40000 {
 		compatible = "renesas,scifa-r8a7745", "renesas,scifa";
 		reg = <0 0xe6c40000 0 64>;
@@ -1255,17 +1320,19 @@
 		mstp3_clks: mstp3_clks@e615013c {
 			compatible = "renesas,r8a7745-mstp-clocks", "renesas,cpg-mstp-clocks";
 			reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
-			clocks = <&sd3_clk>, <&sd2_clk>, <&cpg_clocks R8A7745_CLK_SD0>,
+			clocks = <&cp_clk>, <&sd3_clk>, <&sd2_clk>, <&cpg_clocks R8A7745_CLK_SD0>,
 				 <&mmc0_clk>, <&hp_clk>, <&hp_clk>, <&rclk_clk>,
 				 <&hp_clk>, <&hp_clk>;
 			#clock-cells = <1>;
 			clock-indices = <
+				R8A7745_CLK_TPU0
 			        R8A7745_CLK_SDHI2 R8A7745_CLK_SDHI1 R8A7745_CLK_SDHI0
 				R8A7745_CLK_MMCIF0 R8A7745_CLK_IIC0
 				R8A7745_CLK_IIC1 R8A7745_CLK_CMT1
 				R8A7745_CLK_USBDMAC0 R8A7745_CLK_USBDMAC1
 			>;
 			clock-output-names =
+				"tpu",
 			        "sdhi2", "sdhi1", "sdhi0",
 				"mmcif0", "i2c6", "i2c7",
 				"cmt1", "usbdmac0", "usbdmac1";
