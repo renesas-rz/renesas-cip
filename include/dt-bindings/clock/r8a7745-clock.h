@@ -53,6 +53,7 @@
 #define R8A7745_CLK_SYS_DMAC0		19
 
 /* MSTP3 */
+#define R8A7745_CLK_TPU0                4
 #define R8A7745_CLK_SDHI2		11
 #define R8A7745_CLK_SDHI1		12
 #define R8A7745_CLK_SDHI0		14
