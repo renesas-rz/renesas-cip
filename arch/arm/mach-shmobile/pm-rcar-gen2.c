@@ -76,7 +76,9 @@ void __init rcar_gen2_pm_init(void)
 		syscier = 0x00111003;
 	}else if (of_machine_is_compatible("renesas,r8a7743")) {
 		syscier = 0x00111003;
- 	}
+	} else if (of_machine_is_compatible("renesas,r8a77470")) {
+		syscier = 0x0131000e;
+	}
 
 	/* RAM for jump stub, because BAR requires 256KB aligned address */
 	p = ioremap_nocache(boot_vector_addr, shmobile_boot_size);
