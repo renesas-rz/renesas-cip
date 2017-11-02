@@ -63,6 +63,11 @@
 #define STMPE_TS_NAME			"stmpe-ts"
 #define XY_MASK				0xfff
 
+#ifdef CONFIG_TOUCHSCREEN_STMPE_CALIBRATION_WORKAROUND
+#define STMPE_MIN_Y                    120
+#define STMPE_MAX_Y                   4210
+#endif
+
 struct stmpe_touch {
 	struct stmpe *stmpe;
 	struct input_dev *idev;
@@ -123,6 +128,17 @@ static void stmpe_work(struct work_struct *work)
 	input_sync(ts->idev);
 }
 
+#ifdef CONFIG_TOUCHSCREEN_STMPE_CALIBRATION_WORKAROUND
+static void calibration_pointer(int *x_orig, int *y_orig)
+{
+	int  y;
+
+	/*( 100 / 93 ) is the scalling factor*/
+	y = (*y_orig - STMPE_MIN_Y) * 100/93;
+	*y_orig = STMPE_MAX_Y - y;
+}
+#endif
+
 static irqreturn_t stmpe_ts_handler(int irq, void *data)
 {
 	u8 data_set[4];
@@ -150,13 +166,17 @@ static irqreturn_t stmpe_ts_handler(int irq, void *data)
 	y = ((data_set[1] & 0xf) << 8) | data_set[2];
 	z = data_set[3];
 
+#ifdef CONFIG_TOUCHSCREEN_STMPE_CALIBRATION_WORKAROUND
+	calibration_pointer(&x, &y);
+#endif
+
 	input_report_abs(ts->idev, ABS_X, x);
 	input_report_abs(ts->idev, ABS_Y, y);
 	input_report_abs(ts->idev, ABS_PRESSURE, z);
 	input_report_key(ts->idev, BTN_TOUCH, 1);
 	input_sync(ts->idev);
 
-       /* flush the FIFO after we have read out our values. */
+	/* flush the FIFO after we have read out our values. */
 	__stmpe_reset_fifo(ts->stmpe);
 
 	/* reenable the tsc */
