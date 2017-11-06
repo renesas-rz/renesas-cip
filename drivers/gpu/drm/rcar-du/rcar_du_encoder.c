@@ -23,6 +23,7 @@
 #include "rcar_du_hdmienc.h"
 #include "rcar_du_kms.h"
 #include "rcar_du_lvdscon.h"
+#include "rcar_du_rgbcon.h"
 #include "rcar_du_lvdsenc.h"
 #include "rcar_du_vgacon.h"
 
@@ -187,6 +188,10 @@ int rcar_du_encoder_init(struct rcar_du_device *rcdu,
 
 	case DRM_MODE_ENCODER_TMDS:
 		ret = rcar_du_hdmi_connector_init(rcdu, renc);
+		break;
+
+	case DRM_MODE_ENCODER_NONE:
+		ret = rcar_du_rgb_connector_init(rcdu, renc, con_node);
 		break;
 
 	default:
