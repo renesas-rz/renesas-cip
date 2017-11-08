@@ -51,6 +51,18 @@
 		renesas,groups = "mmc_data8", "mmc_ctrl";
 		renesas,function = "mmc";
 	};
+
+	pwm1_pins: pwm1 {
+		renesas,groups = "pwm1_c";
+		renesas,function = "pwm1";
+	};
+};
+
+&pwm1 {
+	pinctrl-0 = <&pwm1_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
 };
 
 &scif4 {
