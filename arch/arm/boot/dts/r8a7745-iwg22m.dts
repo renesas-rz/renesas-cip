@@ -51,6 +51,52 @@
 		regulator-always-on;
 		regulator-boot-on;
 	};
+
+	vcc_lcd: regulator@4 {
+		compatible = "regulator-fixed";
+
+		regulator-name = "panel vcc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
+
+	backlight {
+		compatible = "pwm-backlight";
+		pwms = <&tpu 3 5000000 GPIO_ACTIVE_LOW>;
+		brightness-levels = <0 4 8 16 32 64 128 255>;
+		default-brightness-level = <7>;
+		pinctrl-0 = <&backlight_pins>;
+		pinctrl-names = "default";
+	};
+
+	lcd@20 {
+		compatible = "edt,et043080dh6-gp", "simple-panel";
+		power-supply = <&vcc_lcd>;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				reg = <0>;
+				lcd_in: endpoint {
+					reg = <0>;
+					remote-endpoint = <&du_out_rgb0>;
+				};
+			};
+
+		};
+	};
+
+	x2_clk: x2-clock {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <10800000>;
+	};
 };
 
 &extal_clk {
@@ -71,6 +117,77 @@
 	pwm1_pins: pwm1 {
 		renesas,groups = "pwm1_c";
 		renesas,function = "pwm1";
+	};
+
+	i2c5_pins: i2c5 {
+		renesas,groups = "i2c5";
+		renesas,function = "i2c5";
+	};
+
+	stmp_pins: stmpe811 {
+		renesas,groups = "intc_irq0";
+		renesas,function = "intc";
+	};
+
+	backlight_pins: backlight {
+		renesas,groups = "tpu_to3";
+		renesas,function = "tpu";
+	};
+
+	du0_pins: du0 {
+		renesas,groups = "du0_rgb888", "du0_sync", "du0_disp",
+				"du0_clk0_out";
+		renesas,function = "du0";
+	};
+
+};
+
+&i2c5 {
+	pinctrl-0 = <&i2c5_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+	clock-frequency = <100000>;
+
+	/* STMPE811 touch screen controller */
+	stmpe811@44 {
+		compatible = "st,stmpe811";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		reg = <0x44>;
+		interrupt-parent = <&irqc0>;
+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+		pinctrl-0 = <&stmp_pins>;
+		pinctrl-names = "default";
+		id = <0>;
+		blocks = <0x5>;
+		irq-trigger = <0x1>;
+
+		stmpe_touchscreen {
+			compatible = "st,stmpe-ts";
+				reg = <0>;
+				/* 3.25 MHz ADC clock speed */
+				st,adc-freq = <3>;
+				/* 8 sample average control */
+				st,ave-ctrl = <2>;
+				/* 7 length fractional part in z */
+				st,fraction-z = <7>;
+				/*
+				* 50 mA typical 80 mA max touchscreen drivers
+				* current limit value
+				*/
+				st,i-drive = <0>;
+				/* 12-bit ADC */
+				st,mod-12b = <1>;
+				/* internal ADC reference */
+				st,ref-sel = <0>;
+				/* ADC converstion time: 80 clocks */
+				st,sample-time = <4>;
+				/* 1 ms panel driver settling time */
+				st,settling = <3>;
+				/* 5 ms touch detect interrupt delay */
+				st,touch-det-delay = <4>;
+		};
 	};
 };
 
@@ -98,4 +215,36 @@
 	non-removable;
         mmc-rst-gpio = <&gpio3 26 GPIO_ACTIVE_HIGH>;
 	status = "okay";
+};
+
+&tpu {
+	status = "okay";
+};
+
+&gpio1 {
+	lcd-power-eb-gpio{
+		gpio-hog;
+		gpios = <13 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "lcd-power-eb-gpio";
+	};
+};
+
+&du {
+	pinctrl-0 = <&du0_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+
+	clocks = <&mstp7_clks R8A7745_CLK_DU0>,
+		<&mstp7_clks R8A7745_CLK_DU1>,
+		<&x2_clk>;
+	clock-names = "du.0","du.1","dclkin.0";
+
+	ports {
+		port@0 {
+			endpoint {
+				remote-endpoint = <&lcd_in>;
+			};
+		};
+	};
 };
