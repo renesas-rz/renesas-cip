@@ -140,6 +140,11 @@
 		renesas,function = "du0";
 	};
 
+	vin1_pins: vin1 {
+		renesas,groups = "vin1_data8", "vin1_sync", "vin1_clk";
+		renesas,function = "vin1";
+	};
+
 };
 
 &i2c5 {
@@ -187,6 +192,20 @@
 				st,settling = <3>;
 				/* 5 ms touch detect interrupt delay */
 				st,touch-det-delay = <4>;
+		};
+	};
+
+	ov7725@21 {
+		compatible = "ov772x";
+		reg = <0x21>;
+		remote = <&vin1>;
+
+		port {
+			ov7725: endpoint {
+				bus-width = <8>;
+				pclk-sample = <1>;
+				remote-endpoint = <&vin1ep>;
+			};
 		};
 	};
 };
@@ -245,6 +264,22 @@
 			endpoint {
 				remote-endpoint = <&lcd_in>;
 			};
+		};
+	};
+};
+
+&vin1 {
+	status = "okay";
+	pinctrl-0 = <&vin1_pins>;
+	pinctrl-names = "default";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vin1ep: endpoint {
+			remote-endpoint = <&ov7725>;
+			bus-width = <8>;
 		};
 	};
 };
