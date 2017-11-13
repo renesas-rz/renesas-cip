@@ -119,6 +119,11 @@
 		renesas,function = "pwm1";
 	};
 
+	i2c3_pins: i2c3 {
+		renesas,groups = "i2c3_b";
+		renesas,function = "i2c3";
+	};
+
 	i2c5_pins: i2c5 {
 		renesas,groups = "i2c5";
 		renesas,function = "i2c5";
@@ -145,6 +150,19 @@
 		renesas,function = "vin1";
 	};
 
+};
+
+&i2c3 {
+	pinctrl-0 = <&i2c3_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+	clock-frequency = <400000>;
+
+	rtc@68 {
+		compatible = "bq32000";
+		reg = <0x68>;
+	};
 };
 
 &i2c5 {
