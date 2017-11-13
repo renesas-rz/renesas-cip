@@ -25,6 +25,11 @@
 		serial3 = &scifb1;
 		serial4 = &hscif1;
 		eth = &avb;
+		sata0	= &sata0;
+		sata1	= &sata1;
+		xhci	= &xhci;
+		pciec	= &pciec;
+		pcie_clk = &pcie_bus_clk;
 	};
 
 	memory@40000000 {
