@@ -283,3 +283,11 @@
 		};
 	};
 };
+
+&usbphy {
+       status = "okay";
+};
+
+&pci1 {
+       status = "okay";
+};
