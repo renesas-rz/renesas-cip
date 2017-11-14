@@ -2383,6 +2383,21 @@ static const unsigned int pwm6_b_pins[] = {
 static const unsigned int pwm6_b_mux[] = {
 	PWM6_B_MARK,
 };
+/* - CAN ------------------------------------------------------------ */
+static const unsigned int can0_pins[] = {
+	/* RX, TX */
+	RCAR_GP_PIN(6, 14), RCAR_GP_PIN(6, 15),
+};
+static const unsigned int can0_mux[] = {
+	CAN0_RX_MARK, CAN0_TX_MARK,
+};
+static const unsigned int can1_pins[] = {
+	/* RX, TX */
+	RCAR_GP_PIN(1, 1), RCAR_GP_PIN(1, 2),
+};
+static const unsigned int can1_mux[] = {
+	CAN1_RX_B_MARK, CAN1_TX_B_MARK,
+};
 /* - QSPI ------------------------------------------------------------------- */
 static const unsigned int qspi_ctrl_pins[] = {
 	/* SPCLK, SSL */
@@ -3526,6 +3541,8 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
 	SH_PFC_PIN_GROUP(pwm5_c),
 	SH_PFC_PIN_GROUP(pwm6),
 	SH_PFC_PIN_GROUP(pwm6_b),
+	SH_PFC_PIN_GROUP(can0),
+	SH_PFC_PIN_GROUP(can1),
 	SH_PFC_PIN_GROUP(qspi_ctrl),
 	SH_PFC_PIN_GROUP(qspi_data2),
 	SH_PFC_PIN_GROUP(qspi_data4),
@@ -3888,6 +3905,13 @@ static const char * const pwm6_groups[] = {
 	"pwm6_b",
 };
 
+static const char * const can0_groups[] = {
+	"can0",
+};
+
+static const char * const can1_groups[] = {
+	"can1",
+};
 
 static const char * const qspi_groups[] = {
 	"qspi_ctrl",
@@ -4127,6 +4151,8 @@ static const struct sh_pfc_function pinmux_functions[] = {
 	SH_PFC_FUNCTION(pwm4),
 	SH_PFC_FUNCTION(pwm5),
 	SH_PFC_FUNCTION(pwm6),
+	SH_PFC_FUNCTION(can0),
+	SH_PFC_FUNCTION(can1),
 	SH_PFC_FUNCTION(qspi),
 	SH_PFC_FUNCTION(scif0),
 	SH_PFC_FUNCTION(scif1),
