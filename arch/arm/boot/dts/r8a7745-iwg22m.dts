@@ -19,7 +19,13 @@
 	compatible = "iw,iwg22m", "renesas,r8a7745";
 
 	aliases {
+		serial0 = &scif1;
+		serial1 = &scif2;
+		serial2 = &scif3;
 		serial3 = &scif4;
+		serial4 = &scif5;
+		serial5 = &hscif1;
+		serial6 = &hscif2;
 	};
 
 	memory@40000000 {
@@ -104,9 +110,39 @@
 };
 
 &pfc {
+	scif1_pins: serial0 {
+		renesas,groups = "scif1_clk", "scif1_data";
+		renesas,function = "scif1";
+	};
+
+	scif2_pins: serial1 {
+		renesas,groups = "scif2_data";
+		renesas,function = "scif2";
+	};
+
+	scif3_pins: serial2 {
+		renesas,groups = "scif3_data";
+		renesas,function = "scif3";
+	};
+
 	scif4_pins: serial3 {
 			renesas,groups = "scif4_data_b";
 			renesas,function = "scif4";
+	};
+
+	scif5_pins: serial4 {
+		renesas,groups = "scif5_data_d";
+		renesas,function = "scif5";
+	};
+
+	hscif1_pins: serial5 {
+		renesas,groups = "hscif1_data", "hscif1_ctrl";
+		renesas,function = "hscif1";
+	};
+
+	hscif2_pins: serial6 {
+		renesas,groups = "hscif2_data";
+		renesas,function = "hscif2";
 	};
 
 	mmcif0_pins: mmcif0 {
@@ -245,8 +281,50 @@
 	status = "okay";
 };
 
+&scif1 {
+	pinctrl-0 = <&scif1_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};
+
+&scif2 {
+	pinctrl-0 = <&scif2_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};
+
+&scif3 {
+	pinctrl-0 = <&scif3_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};
+
 &scif4 {
 	pinctrl-0 = <&scif4_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};
+
+&scif5 {
+	pinctrl-0 = <&scif5_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};
+
+&hscif1 {
+	pinctrl-0 = <&hscif1_pins>;
+	pinctrl-names = "default";
+	ctsrts;
+	status = "okay";
+};
+
+&hscif2 {
+	pinctrl-0 = <&hscif2_pins>;
 	pinctrl-names = "default";
 
 	status = "okay";
