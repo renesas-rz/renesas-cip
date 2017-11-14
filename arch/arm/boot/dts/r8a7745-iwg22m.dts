@@ -150,6 +150,16 @@
 		renesas,function = "vin1";
 	};
 
+	can0_pins: can0 {
+		renesas,groups = "can0";
+		renesas,function = "can0";
+	};
+
+	can1_pins: can1 {
+		renesas,groups = "can1";
+		renesas,function = "can1";
+	};
+
 };
 
 &i2c3 {
@@ -256,6 +266,36 @@
 
 &tpu {
 	status = "okay";
+};
+
+&can0 {
+	pinctrl-0 = <&can0_pins>;
+	pinctrl-names = "default";
+	renesas,can-clock-select = <0x0>;
+	status = "okay";
+};
+
+&can1 {
+	pinctrl-0 = <&can1_pins>;
+	pinctrl-names = "default";
+	renesas,can-clock-select = <0x0>;
+	status = "okay";
+};
+
+&gpio4 {
+	can0-trx-en-gpio{
+		gpio-hog;
+		gpios = <2 GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "can0-trx-en-gpio";
+	};
+
+	can1-trx-en-gpio{
+		gpio-hog;
+		gpios = <10 GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "can1-trx-en-gpio";
+	};
 };
 
 &gpio1 {
