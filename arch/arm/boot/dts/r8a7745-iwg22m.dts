@@ -26,6 +26,7 @@
 		serial4 = &scif5;
 		serial5 = &hscif1;
 		serial6 = &hscif2;
+		eth = &avb;
 	};
 
 	memory@40000000 {
@@ -196,6 +197,16 @@
 		renesas,function = "can1";
 	};
 
+	avb_pins: avb {
+		renesas,groups = "avb_mdio", "avb_gmii", "avb_phy_int";
+		renesas,function = "avb";
+	};
+
+	phy0_pins: phy0 {
+		renesas,groups = "intc_irq8";
+		renesas,function = "intc";
+	};
+ 
 };
 
 &i2c3 {
@@ -427,3 +438,17 @@
 &pci1 {
        status = "okay";
 };
+
+&avb { 
+	pinctrl-0 = <&avb_pins>;
+	pinctrl-names = "default";
+
+	phy-handle = <&phy0>;
+	renesas,no-ether-link;
+	status = "okay";
+
+	phy0: ethernet-phy@0 {
+		reg = <3>;
+		micrel,led-mode = <1>;
+	};
+}; 
