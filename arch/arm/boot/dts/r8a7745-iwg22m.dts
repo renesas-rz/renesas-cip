@@ -75,6 +75,17 @@
 		regulator-always-on;
 	};
 
+	vcc_sdhi0: regulator@0 {
+		compatible = "regulator-fixed";
+
+		regulator-name = "SDHI0 Vcc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+
+		gpio = <&gpio0 20 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
 	x9_clk: x9-clock {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
@@ -257,6 +268,16 @@
 		renesas,groups = "ssi34_ctrl", "ssi3_data", "ssi4_data";
 		renesas,function = "ssi";
 	};
+
+	sdhi0_pins: sd0 {
+		renesas,groups = "sdhi0_data4", "sdhi0_ctrl";
+		renesas,function = "sdhi0";
+	};
+
+	sdhi1_pins: sd1 {
+		renesas,groups = "sdhi1_data4", "sdhi1_ctrl";
+		renesas,function = "sdhi1";
+	};
 };
 
 &i2c3 {
@@ -411,6 +432,26 @@
 	bus-width = <8>;
 	non-removable;
         mmc-rst-gpio = <&gpio3 26 GPIO_ACTIVE_HIGH>;
+	status = "okay";
+};
+
+&sdhi0 {
+	pinctrl-0 = <&sdhi0_pins>;
+	pinctrl-names = "default";
+
+	vmmc-supply = <&vcc_sdhi0>;
+	vqmmc-supply = <&reg_3p3v>;
+	cd-gpios = <&gpio6 6 GPIO_ACTIVE_LOW>;
+	status = "okay";
+};
+
+&sdhi1 {
+	pinctrl-0 = <&sdhi1_pins>;
+	pinctrl-names = "default";
+
+	vmmc-supply = <&reg_3p3v>;
+	vqmmc-supply = <&reg_3p3v>;
+	cd-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
 	status = "okay";
 };
 
