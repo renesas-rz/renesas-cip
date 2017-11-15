@@ -59,6 +59,29 @@
 		regulator-boot-on;
 	};
 
+	reg_0p0v: 0p0v {
+		compatible = "regulator-fixed";
+		regulator-name = "0P0V";
+		regulator-min-microvolt = <0000000>;
+		regulator-max-microvolt = <0000000>;
+		regulator-always-on;
+	};
+
+	reg_2p5v: 2p5v {
+		compatible = "regulator-fixed";
+		regulator-name = "2P5V";
+		regulator-min-microvolt = <2500000>;
+		regulator-max-microvolt = <2500000>;
+		regulator-always-on;
+	};
+
+	x9_clk: x9-clock {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <26000000>;
+		clock-output-names = "audio_clock";
+	};
+
 	vcc_lcd: regulator@4 {
 		compatible = "regulator-fixed";
 
@@ -103,6 +126,29 @@
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <10800000>;
+	};
+
+	sound {
+		compatible = "simple-audio-card";
+
+		simple-audio-card,format = "i2s";
+		simple-audio-card,bitclock-master = <&soundcodec>;
+		simple-audio-card,frame-master = <&soundcodec>;
+		simple-audio-card,routing =
+			"MIC_IN", "Mic Jack",
+			"Mic Jack", "Mic Bias",
+			"Headphone Jack", "HP_OUT";
+
+		sndcpu: simple-audio-card,cpu {
+			sound-dai = <&rcar_sound>;
+		};
+
+		soundcodec: simple-audio-card,codec {
+			sound-dai = <&codec>;
+			bitclock-master;
+			frame-master;
+			system-clock-frequency = <26000000>;
+		};
 	};
 };
 
@@ -206,7 +252,11 @@
 		renesas,groups = "intc_irq8";
 		renesas,function = "intc";
 	};
- 
+
+	sound_pins: sound {
+		renesas,groups = "ssi34_ctrl", "ssi3_data", "ssi4_data";
+		renesas,function = "ssi";
+	};
 };
 
 &i2c3 {
@@ -282,6 +332,17 @@
 				remote-endpoint = <&vin1ep>;
 			};
 		};
+	};
+
+	codec: sgtl5000@0a {
+			#sound-dai-cells = <0>;
+			compatible = "fsl,sgtl5000";
+			clocks = <&x9_clk 1>;
+			mclk = <&x9_clk 1>;
+			reg = <0x0a>;
+			VDDA-supply = <&reg_2p5v>;
+			VDDIO-supply = <&reg_3p3v>;
+			VDDD-supply = <&reg_0p0v>;
 	};
 };
 
@@ -452,3 +513,23 @@
 		micrel,led-mode = <1>;
 	};
 }; 
+
+&rcar_sound {
+	pinctrl-0 = <&sound_pins>;
+	pinctrl-names = "default";
+
+	#sound-dai-cells = <0>;
+
+	status = "okay";
+
+	rcar_sound,dai {
+		dai0 {
+			playback = <&ssi3>;
+			capture = <&ssi4>;
+		};
+	};
+};
+
+&ssi4 {
+	shared-pin;
+};
