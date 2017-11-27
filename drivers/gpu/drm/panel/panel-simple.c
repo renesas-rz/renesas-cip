@@ -958,10 +958,10 @@ static const struct drm_display_mode et04_wqvga_mode = {
 	.hsync_end = 492,
 	.htotal = 533,
 	/*Y resolution changed for "dc_linuxfb" module crashing while fb_align*/
-	.vdisplay = 288,
-	.vsync_start = 290,
-	.vsync_end = 294,
-	.vtotal = 304,
+	.vdisplay = 272,
+	.vsync_start = 274,
+	.vsync_end = 278,
+	.vtotal = 288,
 	.vrefresh = 60,
 	.flags = 0,
 };
