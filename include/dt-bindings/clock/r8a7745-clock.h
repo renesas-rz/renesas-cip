@@ -21,6 +21,7 @@
 #define R8A7745_CLK_SDH			6
 #define R8A7745_CLK_SD0			7
 #define R8A7745_CLK_Z			8
+#define R8A7745_CLK_RCAN                9
 #define R8A7745_CLK_SGX			9
 
 /* MSTP0 */
@@ -53,6 +54,7 @@
 #define R8A7745_CLK_SYS_DMAC0		19
 
 /* MSTP3 */
+#define R8A7745_CLK_TPU0                4
 #define R8A7745_CLK_SDHI2		11
 #define R8A7745_CLK_SDHI1		12
 #define R8A7745_CLK_SDHI0		14
@@ -84,12 +86,14 @@
 #define R8A7745_CLK_SCIF2		19
 #define R8A7745_CLK_SCIF1		20
 #define R8A7745_CLK_SCIF0		21
+#define R8A7745_CLK_DU1			23
 #define R8A7745_CLK_DU0			24
 
 /* MSTP8 */
 #define R8A7745_CLK_IPMMU_SGX		0
 #define R8A7745_CLK_VIN1		10
 #define R8A7745_CLK_VIN0		11
+#define R8A7745_CLK_AVB 		12
 #define R8A7745_CLK_ETHER		13
 
 /* MSTP9 */
@@ -100,6 +104,8 @@
 #define R8A7745_CLK_GPIO2		10
 #define R8A7745_CLK_GPIO1		11
 #define R8A7745_CLK_GPIO0		12
+#define R8A7745_CLK_RCAN1		15
+#define R8A7745_CLK_RCAN0		16
 #define R8A7745_CLK_QSPI_MOD		17
 #define R8A7745_CLK_I2C5		25
 #define R8A7745_CLK_I2C4		27

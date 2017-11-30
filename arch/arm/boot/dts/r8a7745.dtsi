@@ -30,6 +30,9 @@
 		i2c6 = &i2c6;
 		i2c7 = &i2c7;
 		spi0 = &qspi;
+		spi1 = &msiof0;
+		spi2 = &msiof1;
+		spi3 = &msiof2;
 		vin0 = &vin0;
 		vin1 = &vin1;
 	};
@@ -350,6 +353,71 @@
 		dma-channels = <13>;
 	};
 
+	pwm0: pwm@e6e30000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e30000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	pwm1: pwm@e6e31000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e31000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	pwm2: pwm@e6e32000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e32000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	pwm3: pwm@e6e33000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e33000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	pwm4: pwm@e6e34000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e34000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	pwm5: pwm@e6e35000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e35000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	pwm6: pwm@e6e36000 {
+		compatible = "renesas,pwm-rcar";
+		reg = <0 0xe6e36000 0 0x8>;
+		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		status = "disabled";
+		#pwm-cells = <2>;
+	};
+
+	tpu: pwm@e60f0000 {
+		compatible = "renesas,tpu-r8a7745", "renesas,tpu";
+		reg = <0 0xe60f0000 0 0x40>;
+		interrupts = <0 135 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp3_clks R8A7745_CLK_TPU0>;
+		status = "disabled";
+		#pwm-cells = <3>;
+	};
+
 	scifa0: serial@e6c40000 {
 		compatible = "renesas,scifa-r8a7745", "renesas,scifa";
 		reg = <0 0xe6c40000 0 64>;
@@ -577,6 +645,18 @@
 		#size-cells = <0>;
 		status = "disabled";
 	};
+ 
+	avb: ethernet@e6800000 {
+		compatible = "renesas,etheravb-r8a7745";
+		reg = <0 0xe6800000 0 0x800>;
+		interrupts = <0 163 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp8_clks R8A7745_CLK_AVB>;
+		power-domains = <&cpg_clocks>;
+		phy-mode = "gmii";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "disabled";
+	}; 
 
 	/* The memory map in the User's Manual maps the cores to bus numbers */
 	i2c0: i2c@e6508000 {
@@ -732,6 +812,46 @@
 		#size-cells = <0>;
 		status = "disabled";
 	};
+
+	msiof0: spi@e6e20000 {
+		compatible = "renesas,msiof-r8a7745";
+		reg = <0 0xe6e20000 0 0x0064>;
+		interrupts = <0 156 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp0_clks R8A7745_CLK_MSIOF0>;
+		dmas = <&dmac0 0x51>, <&dmac0 0x52>;
+		dma-names = "tx", "rx";
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "disabled";
+	};
+
+	msiof1: spi@e6e10000 {
+		compatible = "renesas,msiof-r8a7745";
+		reg = <0 0xe6e10000 0 0x0064>;
+		interrupts = <0 157 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp2_clks R8A7745_CLK_MSIOF1>;
+		dmas = <&dmac0 0x55>, <&dmac0 0x56>;
+		dma-names = "tx", "rx";
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "disabled";
+	};
+
+	msiof2: spi@e6e00000 {
+		compatible = "renesas,msiof-r8a7745";
+		reg = <0 0xe6e00000 0 0x0064>;
+		interrupts = <0 158 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp2_clks R8A7745_CLK_MSIOF2>;
+		dmas = <&dmac0 0x41>, <&dmac0 0x42>;
+		dma-names = "tx", "rx";
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "disabled";
+	};
+
 
 	vcp0: vcp0@fe900000 {
 		compatible = "renesas,vcp0";
@@ -948,7 +1068,7 @@
 		interrupts = <0 256 IRQ_TYPE_LEVEL_HIGH>,
 			     <0 268 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp7_clks R8A7745_CLK_DU0>,
-			 <&mstp7_clks R8A7745_CLK_DU0>;
+			 <&mstp7_clks R8A7745_CLK_DU1>;
 		clock-names = "du.0", "du.1";
 		status = "disabled";
 
@@ -969,6 +1089,28 @@
 				};
 			};
 		};
+	};
+
+	can0: can@e6e80000 {
+		compatible = "renesas,can-r8a7745";
+		reg = <0 0xe6e80000 0 0x1000>;
+		interrupts = <0 186 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp9_clks R8A7745_CLK_RCAN0>,
+			<&cpg_clocks R8A7745_CLK_RCAN>, <&can_clk>;
+		clock-names = "clkp1", "clkp2", "can_clk";
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
+		status = "disabled";
+	};
+
+	can1: can@e6e88000 {
+		compatible = "renesas,can-r8a7745";
+		reg = <0 0xe6e88000 0 0x1000>;
+		interrupts = <0 187 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp9_clks R8A7745_CLK_RCAN1>,
+			<&cpg_clocks R8A7745_CLK_RCAN>, <&can_clk>;
+		clock-names = "clkp1", "clkp2", "can_clk";
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
+		status = "disabled";
 	};
 
 	clocks {
@@ -1007,6 +1149,16 @@
 			#clock-cells = <0>;
 			clock-frequency = <0>;
 			clock-output-names = "audio_clkc";
+		};
+
+		/* External CAN clock */
+		can_clk: can_clk {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			/* This value must be overridden by the board. */
+			clock-frequency = <0>;
+			clock-output-names = "can_clk";
+			status = "disabled";
 		};
 
 		/* Special CPG clocks */
@@ -1255,17 +1407,19 @@
 		mstp3_clks: mstp3_clks@e615013c {
 			compatible = "renesas,r8a7745-mstp-clocks", "renesas,cpg-mstp-clocks";
 			reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
-			clocks = <&sd3_clk>, <&sd2_clk>, <&cpg_clocks R8A7745_CLK_SD0>,
+			clocks = <&cp_clk>, <&sd3_clk>, <&sd2_clk>, <&cpg_clocks R8A7745_CLK_SD0>,
 				 <&mmc0_clk>, <&hp_clk>, <&hp_clk>, <&rclk_clk>,
 				 <&hp_clk>, <&hp_clk>;
 			#clock-cells = <1>;
 			clock-indices = <
+				R8A7745_CLK_TPU0
 			        R8A7745_CLK_SDHI2 R8A7745_CLK_SDHI1 R8A7745_CLK_SDHI0
 				R8A7745_CLK_MMCIF0 R8A7745_CLK_IIC0
 				R8A7745_CLK_IIC1 R8A7745_CLK_CMT1
 				R8A7745_CLK_USBDMAC0 R8A7745_CLK_USBDMAC1
 			>;
 			clock-output-names =
+				"tpu",
 			        "sdhi2", "sdhi1", "sdhi0",
 				"mmcif0", "i2c6", "i2c7",
 				"cmt1", "usbdmac0", "usbdmac1";
@@ -1293,7 +1447,7 @@
 			clocks = <&mp_clk>, <&mp_clk>,
 				 <&zs_clk>, <&p_clk>, <&p_clk>, <&zs_clk>,
 				 <&zs_clk>, <&p_clk>, <&p_clk>, <&p_clk>, <&p_clk>,
-				 <&zx_clk>;
+				 <&zx_clk>, <&zx_clk>;
 			#clock-cells = <1>;
 			clock-indices = <
 				R8A7745_CLK_EHCI R8A7745_CLK_HSUSB
@@ -1301,41 +1455,44 @@
 				R8A7745_CLK_SCIF4 R8A7745_CLK_HSCIF1 R8A7745_CLK_HSCIF0
 				R8A7745_CLK_SCIF3 R8A7745_CLK_SCIF2 R8A7745_CLK_SCIF1
 				R8A7745_CLK_SCIF0 R8A7745_CLK_DU0
+				R8A7745_CLK_DU1
 			>;
 			clock-output-names =
 				"ehci", "hsusb",
 				"hscif2", "scif5", "scif4", "hscif1", "hscif0",
-				"scif3", "scif2", "scif1", "scif0", "du0";
+				"scif3", "scif2", "scif1", "scif0", "du0",
+				"du1";
 		};
 		mstp8_clks: mstp8_clks@e6150990 {
 			compatible = "renesas,r8a7745-mstp-clocks", "renesas,cpg-mstp-clocks";
 			reg = <0 0xe6150990 0 4>, <0 0xe61509a0 0 4>;
-			clocks = <&zx_clk>, <&zg_clk>, <&zg_clk>, <&p_clk>;
+			clocks = <&zx_clk>, <&zg_clk>, <&zg_clk>, <&hp_clk>, <&p_clk>;
 			#clock-cells = <1>;
 			clock-indices = <
-				R8A7745_CLK_IPMMU_SGX R8A7745_CLK_VIN1 R8A7745_CLK_VIN0 R8A7745_CLK_ETHER
-			>;
+				R8A7745_CLK_IPMMU_SGX R8A7745_CLK_VIN1 R8A7745_CLK_VIN0
+				R8A7745_CLK_AVB R8A7745_CLK_ETHER >;
 			clock-output-names =
-				"ipmmu_sgx" ,"vin1", "vin0", "ether";
+				"ipmmu_sgx" ,"vin1", "vin0", "avb", "ether";
 		};
 		mstp9_clks: mstp9_clks@e6150994 {
 			compatible = "renesas,r8a7745-mstp-clocks", "renesas,cpg-mstp-clocks";
 			reg = <0 0xe6150994 0 4>, <0 0xe61509a4 0 4>;
 			clocks = <&cp_clk>, <&cp_clk>, <&cp_clk>, <&cp_clk>,
-				 <&cp_clk>, <&cp_clk>, <&cp_clk>,
+				 <&cp_clk>, <&cp_clk>, <&cp_clk>, <&p_clk>, <&p_clk>,
 				 <&cpg_clocks R8A7745_CLK_QSPI>, <&hp_clk>, <&hp_clk>,
 				 <&hp_clk>, <&hp_clk>, <&hp_clk>, <&hp_clk>;
 			#clock-cells = <1>;
 			clock-indices = <R8A7745_CLK_GPIO6 R8A7745_CLK_GPIO5
 					 R8A7745_CLK_GPIO4 R8A7745_CLK_GPIO3
 					 R8A7745_CLK_GPIO2 R8A7745_CLK_GPIO1
-					 R8A7745_CLK_GPIO0 R8A7745_CLK_QSPI_MOD
+					 R8A7745_CLK_GPIO0 R8A7745_CLK_RCAN1
+					 R8A7745_CLK_RCAN0 R8A7745_CLK_QSPI_MOD
 					 R8A7745_CLK_I2C5 R8A7745_CLK_I2C4
 					 R8A7745_CLK_I2C3 R8A7745_CLK_I2C2
 					 R8A7745_CLK_I2C1 R8A7745_CLK_I2C0>;
 			clock-output-names =
 				"gpio6", "gpio5", "gpio4", "gpio3", "gpio2",
-				"gpio1", "gpio0", "qspi_mod",
+				"gpio1", "gpio0", "rcan1", "rcan0", "qspi_mod",
 				"i2c5", "i2c4", "i2c3", "i2c2", "i2c1", "i2c0";
 		};
 		mstp10_clks: mstp10_clks@e6150998 {

@@ -949,6 +949,32 @@ static const struct panel_desc lg_lp129qe = {
 	},
 };
 
+static const struct drm_display_mode et04_wqvga_mode = {
+	.clock = 10870,
+	.hdisplay = 480,
+	.hsync_start = 488,
+	.hsync_end = 492,
+	.htotal = 533,
+	/*Y resolution changed for "dc_linuxfb" module crashing while fb_align*/
+	.vdisplay = 288,
+	.vsync_start = 290,
+	.vsync_end = 294,
+	.vtotal = 304,
+	.vrefresh = 60,
+	.flags = 0,
+};
+
+static const struct panel_desc et04_wqvga = {
+	.modes = &et04_wqvga_mode,
+	.num_modes = 1,
+	.bpc = 8,
+	.size = {
+		.width = 100,
+		.height = 65,
+	},
+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24
+};
+
 static const struct drm_display_mode nec_nl4827hc19_05b_mode = {
 	.clock = 10870,
 	.hdisplay = 480,
@@ -1172,6 +1198,9 @@ static const struct of_device_id platform_of_match[] = {
 	}, {
 		.compatible = "lg,lp129qe",
 		.data = &lg_lp129qe,
+	}, {
+		.compatible = "edt,et043080dh6-gp",
+		.data = &et04_wqvga,
 	}, {
 		.compatible = "nec,nl4827hc19-05b",
 		.data = &nec_nl4827hc19_05b,

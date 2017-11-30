@@ -1,0 +1,7 @@
+Emerging Display Technologies Corporation. WQVGA LCD panel
+
+Required properties:
+- compatible: should be "edt,et043080dh6-gp"
+
+This binding is compatible with the simple-panel binding, which is specified
+in simple-panel.txt in this directory.
