@@ -1696,6 +1696,11 @@
 		};
 
 		rcar_sound,src {
+			src0: src@0 {
+				interrupts = <GIC_SPI 352 IRQ_TYPE_LEVEL_HIGH>;
+				dmas = <&audma0 0x85>, <&audma0 0x9a>;
+				dma-names = "rx", "tx";
+			};
 			src1: src@1 {
 				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
 				dmas = <&audma0 0x87>, <&audma0 0x9c>;
@@ -1724,6 +1729,21 @@
 			src6: src@6 {
 				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
 				dmas = <&audma0 0x91>, <&audma0 0xb4>;
+				dma-names = "rx", "tx";
+			};
+			src7: src@7 {
+				interrupts = <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
+				dmas = <&audma0 0x93>, <&audma0 0xb6>;
+				dma-names = "rx", "tx";
+			};
+			src8: src@8 {
+				interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>;
+				dmas = <&audma0 0x95>, <&audma0 0xb8>;
+				dma-names = "rx", "tx";
+			};
+			src9: src@9 {
+				interrupts = <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>;
+				dmas = <&audma0 0x97>, <&audma0 0xba>;
 				dma-names = "rx", "tx";
 			};
 		};
