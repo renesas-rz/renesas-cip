@@ -67,6 +67,7 @@
 #define R8A7745_CLK_USBDMAC1		31
 
 /* MSTP4 */
+#define R8A7745_CLK_RWDT                2
 #define R8A7745_CLK_IRQC		7
 
 /* MSTP5 */
