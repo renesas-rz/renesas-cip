@@ -290,7 +290,7 @@
 
 	msiof2_pins: spi3 {
 		renesas,groups = "msiof2_clk", "msiof2_tx", "msiof2_rx",
-				"msiof2_ss2", "msiof2_sync";
+				"msiof2_ss2";
 		renesas,function = "msiof2";
 	};
 };
