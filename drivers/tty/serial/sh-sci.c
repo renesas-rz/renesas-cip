@@ -1249,6 +1249,11 @@ static void work_fn_tx(struct work_struct *work)
 		CIRC_CNT_TO_END(xmit->head, xmit->tail, UART_XMIT_SIZE));
 	spin_unlock_irq(&port->lock);
 
+	if (sg_dma_len(sg) == 0) {
+		s->cookie_tx = -EINVAL;
+		return;
+	}
+
 	desc = dmaengine_prep_slave_single(chan, buf, s->tx_dma_len,
 					   DMA_MEM_TO_DEV,
 					   DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
