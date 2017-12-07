@@ -28,8 +28,6 @@ obj-$(CONFIG_SYSC_RCAR)		+= rcar-sysc.o
 obj-$(CONFIG_RCAR_CPU_TOPOLOGY)	+= rcar-topology.o
 
 # EMS for R-Car Gen3
-obj-$(CONFIG_ARCH_R8A7795)	+= rcar_ems_ctrl.o
-obj-$(CONFIG_ARCH_R8A7796)	+= rcar_ems_ctrl.o
-obj-$(CONFIG_ARCH_R8A77965)	+= rcar_ems_ctrl.o
+obj-$(CONFIG_RCAR_THERMAL_EMS)	+= rcar_ems_ctrl.o
 
 >>>>>>> 6f4d620... soc: renesas: rcar_ems_ctrl: Move Emergency shutdown to platform driver
