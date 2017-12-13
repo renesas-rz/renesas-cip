@@ -205,6 +205,24 @@ static const struct rcar_du_device_info rcar_du_r8a7795_info = {
 	.num_lvds = 1,
 };
 
+static const struct rcar_du_device_info rcar_du_r8a77470_info = {
+	.gen = 2,
+	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
+				| RCAR_DU_FEATURE_EXT_CTRL_REGS,
+	.num_crtcs = 1,
+	.routes = {
+		/* R8A7745 has two RGB outputs and one (currently unsupported)
+		 * TCON output.
+		 */
+		[RCAR_DU_OUTPUT_DPAD0] = {
+			.possible_crtcs = BIT(0),
+			.encoder_type = DRM_MODE_ENCODER_NONE,
+			.port = 0,
+		},
+	},
+	.num_lvds = 0,
+};
+
 static const struct of_device_id rcar_du_of_table[] = {
 	{ .compatible = "renesas,du-r8a7779", .data = &rcar_du_r8a7779_info },
 	{ .compatible = "renesas,du-r8a7790", .data = &rcar_du_r8a7790_info },
@@ -214,6 +232,7 @@ static const struct of_device_id rcar_du_of_table[] = {
 	{ .compatible = "renesas,du-r8a7794", .data = &rcar_du_r8a7794_info },
 	{ .compatible = "renesas,du-r8a7745", .data = &rcar_du_r8a7745_info },
 	{ .compatible = "renesas,du-r8a7795", .data = &rcar_du_r8a7795_info },
+	{ .compatible = "renesas,du-r8a77470", .data = &rcar_du_r8a77470_info },
 	{ }
 };
 
