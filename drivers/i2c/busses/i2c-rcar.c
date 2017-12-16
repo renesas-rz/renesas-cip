@@ -448,6 +448,7 @@ static irqreturn_t rcar_i2c_irq(int irq, void *ptr)
 		/* HW automatically sends STOP after received NACK */
 		rcar_i2c_write(priv, ICMIER, RCAR_IRQ_STOP);
 		rcar_i2c_flags_set(priv, ID_NACK);
+		rcar_i2c_write(priv, ICMSR, 0);
 		goto out;
 	}
 
@@ -455,6 +456,7 @@ static irqreturn_t rcar_i2c_irq(int irq, void *ptr)
 	if (msr & MST) {
 		priv->msgs_left--; /* The last message also made it */
 		rcar_i2c_flags_set(priv, ID_DONE);
+		rcar_i2c_write(priv, ICMSR, 0);
 		goto out;
 	}
 
@@ -466,7 +468,6 @@ static irqreturn_t rcar_i2c_irq(int irq, void *ptr)
 out:
 	if (rcar_i2c_flags_has(priv, ID_DONE)) {
 		rcar_i2c_write(priv, ICMIER, 0);
-		rcar_i2c_write(priv, ICMSR, 0);
 		wake_up(&priv->wait);
 	}
 
