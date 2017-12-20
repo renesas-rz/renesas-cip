@@ -242,8 +242,12 @@ static int sh_mobile_sdhi_probe(struct platform_device *pdev)
 	host->clk_enable	= sh_mobile_sdhi_clk_enable;
 	host->clk_disable	= sh_mobile_sdhi_clk_disable;
 	host->multi_io_quirk	= sh_mobile_sdhi_multi_io_quirk;
+
+	/* SD control register space size */
+	if (resource_size(res) > 0x400) /* 0x400 for bus_shift=2 */
+		host->bus_shift = 2;
 	/* SD control register space size is 0x100, 0x200 for bus_shift=1 */
-	if (resource_size(res) > 0x100)
+	else if (resource_size(res) > 0x100)
 		host->bus_shift = 1;
 	else
 		host->bus_shift = 0;
