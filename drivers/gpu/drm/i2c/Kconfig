@@ -7,6 +7,12 @@ config DRM_I2C_ADV7511
 	help
 	  Support for the Analog Device ADV7511(W) and ADV7513 HDMI encoders.
 
+config DRM_I2C_SII902X
+	tristate "sii902x"
+	depends on DRM && I2C
+	help
+	  Support for sii902x DVI/HDMI encoder chips
+
 config DRM_I2C_CH7006
 	tristate "Chrontel ch7006 TV encoder"
 	default m if DRM_NOUVEAU
