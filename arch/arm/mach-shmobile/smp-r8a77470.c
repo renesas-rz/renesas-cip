@@ -17,6 +17,7 @@
 #include <linux/init.h>
 #include <linux/smp.h>
 #include <linux/io.h>
+#include <linux/soc/renesas/rcar-sysc.h>
 
 #include <asm/smp_plat.h>
 
@@ -24,6 +25,11 @@
 #include "platsmp-apmu.h"
 #include "r8a77470.h"
 #include "rcar-gen2.h"
+
+static struct rcar_sysc_ch r8a77470_ca7_scu = {
+	.chan_offs = 0x100, /* PWRSR3 .. PWRER3 */
+	.isr_bit = 21, /* CA7-SCU */
+};
 
 static struct rcar_apmu_config r8a77470_apmu_config[] = {
 	{
@@ -40,6 +46,7 @@ static void __init r8a77470_smp_prepare_cpus(unsigned int max_cpus)
 				       ARRAY_SIZE(r8a77470_apmu_config));
 
 	rcar_gen2_pm_init();
+	rcar_sysc_power_up(&r8a77470_ca7_scu);
 }
 
 struct smp_operations r8a77470_smp_ops __initdata = {
