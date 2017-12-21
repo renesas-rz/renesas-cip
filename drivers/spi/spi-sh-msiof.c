@@ -54,6 +54,7 @@ struct sh_msiof_spi_priv {
 	void *rx_dma_page;
 	dma_addr_t tx_dma_addr;
 	dma_addr_t rx_dma_addr;
+	int mode;
 };
 
 #define TMDR1	0x00	/* Transmit Mode Register 1 */
@@ -624,6 +625,9 @@ static int sh_msiof_spi_txrx_once(struct sh_msiof_spi_priv *p,
 {
 	int fifo_shift;
 	int ret;
+	unsigned long timeout;
+
+	timeout = (p->mode == SPI_MSIOF_MASTER) ? HZ : MAX_SCHEDULE_TIMEOUT;
 
 	/* limit maximum word transfer to rx/tx fifo size */
 	if (tx_buf)
@@ -654,7 +658,7 @@ static int sh_msiof_spi_txrx_once(struct sh_msiof_spi_priv *p,
 	}
 
 	/* wait for tx fifo to be emptied / rx fifo to be filled */
-	if (!wait_for_completion_timeout(&p->done, HZ)) {
+	if (!wait_for_completion_timeout(&p->done, timeout)) {
 		dev_err(&p->pdev->dev, "PIO timeout\n");
 		ret = -ETIMEDOUT;
 		goto stop_reset;
@@ -698,6 +702,9 @@ static int sh_msiof_dma_once(struct sh_msiof_spi_priv *p, const void *tx,
 	struct dma_async_tx_descriptor *desc_tx = NULL, *desc_rx = NULL;
 	dma_cookie_t cookie;
 	int ret;
+	unsigned long timeout;
+
+	timeout = (p->mode == SPI_MSIOF_MASTER) ? HZ : MAX_SCHEDULE_TIMEOUT;
 
 	/* First prepare and submit the DMA request(s), as this may fail */
 	if (rx) {
@@ -764,7 +771,7 @@ static int sh_msiof_dma_once(struct sh_msiof_spi_priv *p, const void *tx,
 	}
 
 	/* wait for tx fifo to be emptied / rx fifo to be filled */
-	if (!wait_for_completion_timeout(&p->done, HZ)) {
+	if (!wait_for_completion_timeout(&p->done, timeout)) {
 		dev_err(&p->pdev->dev, "DMA timeout\n");
 		ret = -ETIMEDOUT;
 		goto stop_reset;
