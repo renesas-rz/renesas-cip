@@ -181,6 +181,21 @@
 						"du0_cde_disp";
 		renesas,function = "du0";
 	};
+
+	pwm0_pins: pwm0 {
+		renesas,groups = "pwm0_c";
+		renesas,function = "pwm0";
+	};
+
+	pwm2_pins: pwm2 {
+		renesas,groups = "pwm2_d";
+		renesas,function = "pwm2";
+	};
+
+	pwm6_pins: pwm6 {
+		renesas,groups = "pwm6_c";
+		renesas,function = "pwm6";
+	};
 };
 
 &scif1 {
@@ -313,6 +328,24 @@
 			remote-endpoint = <&sii9022_in>;
 		};
 	};
+};
+
+&pwm0 {
+	pinctrl-0 = <&pwm0_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&pwm2 {
+	pinctrl-0 = <&pwm2_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&pwm6 {
+	pinctrl-0 = <&pwm6_pins>;
+	pinctrl-names = "default";
+	status = "okay";
 };
 
 &qspi0 {
