@@ -693,6 +693,33 @@
 		status = "disabled";
 	};
 
+	pwm0: pwm@e6e30000 {
+		compatible = "renesas,pwm-r8a77470";
+		reg = <0 0xe6e30000 0 0x8>;
+		#pwm-cells = <2>;
+		clocks = <&mstp5_clks R8A77470_CLK_PWM>;
+		power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+		status = "disabled";
+	};
+
+	pwm2: pwm@e6e32000 {
+		compatible = "renesas,pwm-r8a77470";
+		reg = <0 0xe6e32000 0 0x8>;
+		#pwm-cells = <2>;
+		clocks = <&mstp5_clks R8A77470_CLK_PWM>;
+		power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+		status = "disabled";
+	};
+
+	pwm6: pwm@e6e36000 {
+		compatible = "renesas,pwm-r8a77470";
+		reg = <0 0xe6e36000 0 0x8>;
+		#pwm-cells = <2>;
+		clocks = <&mstp5_clks R8A77470_CLK_PWM>;
+		power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+		status = "disabled";
+	};
+
 	clocks {
 		#address-cells = <2>;
 		#size-cells = <2>;
