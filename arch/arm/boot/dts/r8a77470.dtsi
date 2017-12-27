@@ -438,6 +438,16 @@
 		status = "disabled";
 	};
 
+	can0: can@e6e80000 {
+		compatible = "renesas,can-r8a77470";
+		reg = <0 0xe6e80000 0 0x1000>;
+		interrupts = <0 186 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp9_clks R8A77470_CLK_RCAN0>;
+		clock-names = "clkp1";
+		power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
+		status = "disabled";
+	};
+
 	/* The memory map in the User's Manual maps the cores to bus numbers */
 	i2c0: i2c@e6508000 {
 		#address-cells = <1>;
