@@ -106,6 +106,15 @@ static void sh_mobile_sdhi_sdbuf_width(struct tmio_mmc_host *host, int width)
 	case 0xCB0D:
 		val = (width == 32) ? 0x0000 : 0x0001;
 		break;
+	case 0xCC10:
+	case 0xCD10:
+		if (width == 64)
+			val = 0x0000;
+		else if (width == 32)
+			val = 0x0101;
+		else    /* width = 16 */
+			val = 0x0001;
+		break;
 	default:
 		/* nothing to do */
 		return;
