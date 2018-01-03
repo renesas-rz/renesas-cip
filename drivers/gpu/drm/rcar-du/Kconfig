@@ -23,7 +23,10 @@ config DRM_RCAR_LVDS
 	depends on DRM_RCAR_DU
 	select DRM_PANEL
 	help
-	  Enable support for the R-Car Display Unit embedded LVDS encoders.
+	  Enable support LVDS encoders.
+
+	  If you want to access LVDS encoder, you select y.
+	  If you don't want to access LVDS encoder, you select n.
 
 config DRM_RCAR_VSP
        bool "R-Car DU VSP Compositor Support"
