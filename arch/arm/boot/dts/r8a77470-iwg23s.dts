@@ -275,6 +275,26 @@
 	status = "okay";
 };
 
+&usbphy0 {
+	status = "okay";
+};
+
+&usbphy1 {
+	status = "okay";
+};
+
+&hsusb {
+	status = "okay";
+};
+
+&ohci_1 {
+	status = "okay";
+};
+
+&ehci_1 {
+	status = "okay";
+};
+
 &can0 {
 	pinctrl-0 = <&can0_pins>;
 	pinctrl-names = "default";
