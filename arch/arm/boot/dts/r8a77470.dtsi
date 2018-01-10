@@ -800,7 +800,7 @@
 				R8A77470_CLK_VSP1_DU0 R8A77470_CLK_VSP1_S
 			>;
 			clock-output-names =
-				"vcp0", "vpc0", "tmu1", "pvrsrvkm", "tddmac", "fdp0",
+				"vcp0", "vpc0", "tmu1", "pvrsrvkm", "tddmac", "fdp1-0",
 				"tmu3", "tmu2", "cmt0", "vsp1-du0", "vsps";
 		};
 		mstp2_clks: mstp2_clks@e6150138 {
