@@ -117,6 +117,8 @@ static int sii902x_get_modes(struct drm_encoder *encoder,
 		kfree(edid);
 	}
 
+	sii902x_read(client, 0x1A);
+
 	cnt = 100;
 	do {
 		cnt--;
