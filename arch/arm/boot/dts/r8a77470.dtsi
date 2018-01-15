@@ -503,6 +503,9 @@
 	sdhi2: sd@ee160000 {
 		compatible = "renesas,sdhi-r8a77470";
 		reg = <0 0xee160000 0 0x200>;
+		dmas =	<&dmac1 0xd3>, <&dmac1 0xd4>,
+			<&dmac0 0xd3>, <&dmac0 0xd4>;
+		dma-names = "tx", "rx";
 		interrupts = <0 167 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp3_clks R8A77470_CLK_SDHI2>;
 		power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
