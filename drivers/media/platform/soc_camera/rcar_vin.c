@@ -136,6 +136,12 @@
 #define VIN_MAX_WIDTH		2048
 #define VIN_MAX_HEIGHT		2048
 
+/*
+ * At the time of NV16 format specification, the value of ow should be
+ * specifiedthe multiple of 32. To take the screen width normalizedto 640.
+ */
+#define RCA_CAMERA_USING_FORMAT_NV16_WIDTH		640
+
 #define TIMEOUT_MS		100
 
 enum chip_id {
@@ -653,8 +659,18 @@ static int rcar_vin_setup(struct rcar_vin_priv *priv)
 	/* output format */
 	switch (icd->current_fmt->host_fmt->fourcc) {
 	case V4L2_PIX_FMT_NV16:
-		iowrite32(ALIGN(cam->width * cam->height, 0x80),
+	/*
+	 * At the time of NV16 format specification, the capture output width should be
+	 * specified the value of the multiple of 32 for the specification of H/W.
+	 * In addition, the vertical scaling function by NV16 format is forbidden.
+	 */
+		if (cam->width%32 != 0) {
+			iowrite32(ALIGN(RCA_CAMERA_USING_FORMAT_NV16_WIDTH * cam->height, 0x80),
 			  priv->base + VNUVAOF_REG);
+		} else {
+			iowrite32(ALIGN(cam->width * cam->height, 0x80),
+			  priv->base + VNUVAOF_REG);
+		}
 		dmr = VNDMR_DTMD_YCSEP;
 		output_is_yuv = true;
 		break;
