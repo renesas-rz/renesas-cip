@@ -56,7 +56,8 @@ static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
 	 */
 	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7790") ||
 	    of_device_is_compatible(of_node, "renesas,xhci-r8a7791") ||
-	    of_device_is_compatible(of_node, "renesas,xhci-r8a7743"))
+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7743") ||
+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7744"))
 		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
 }
 
