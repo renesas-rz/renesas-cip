@@ -477,6 +477,10 @@ static const struct of_device_id usbhs_of_match[] = {
 		.data = (void *)USBHS_TYPE_RCAR_GEN2,
 	},
 	{
+		.compatible = "renesas,usbhs-r8a7744",
+		.data = (void *)USBHS_TYPE_RCAR_GEN2,
+	},
+	{
 		.compatible = "renesas,usbhs-r8a7794",
 		.data = (void *)USBHS_TYPE_RCAR_GEN2,
 	},
