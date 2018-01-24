@@ -127,6 +127,16 @@
 		renesas,function = "avb";
 	};
 
+	usb0_pins: usb0 {
+		renesas,groups = "usb0";
+		renesas,function = "usb0";
+	};
+
+	usb1_pins: usb1 {
+		renesas,groups = "usb1";
+		renesas,function = "usb1";
+	};
+
 	qspi_pins: spi0 {
 		renesas,groups = "qspi_ctrl", "qspi_data2";
 		renesas,function = "qspi";
@@ -235,6 +245,12 @@
 		reg = <3>;
 		micrel,led-mode = <1>;
 	};
+};
+
+&pci0 {
+	status = "okay";
+	pinctrl-0 = <&usb0_pins>;
+	pinctrl-names = "default";
 };
 
 &qspi {
