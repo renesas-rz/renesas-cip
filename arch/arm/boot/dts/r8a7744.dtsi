@@ -1309,6 +1309,15 @@
 		#pwm-cells = <2>;
 	};
 
+	tpu: pwm@e60f0000 {
+		compatible = "renesas,tpu-r8a7744", "renesas,tpu";
+		reg = <0 0xe60f0000 0 0x40>;
+		interrupts = <0 135 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp3_clks R8A7744_CLK_TPU0>;
+		status = "disabled";
+		#pwm-cells = <3>;
+	};
+
 	ipmmu_sy0: mmu@e6280000 {
 		compatible = "renesas,ipmmu-vmsa";
 		reg = <0 0xe6280000 0 0x1000>;
