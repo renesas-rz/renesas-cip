@@ -251,6 +251,10 @@
 	status = "okay";
 };
 
+&xhci {
+	status = "okay";
+};
+
 &pci0 {
 	status = "okay";
 	pinctrl-0 = <&usb0_pins>;
