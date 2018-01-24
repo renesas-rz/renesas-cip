@@ -30,6 +30,7 @@
 		i2c6 = &i2c6;
 		i2c7 = &i2c7;
 		i2c8 = &i2c8;
+		spi0 = &qspi;
 		spi1 = &msiof0;
 		spi2 = &msiof1;
 		spi3 = &msiof2;
