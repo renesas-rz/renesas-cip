@@ -277,6 +277,11 @@
 	status = "okay";
 	clock-frequency = <400000>;
 
+	rtc@68 {
+		compatible = "bq32000";
+		reg = <0x68>;
+	};
+
 };
 
 &i2c5 {
