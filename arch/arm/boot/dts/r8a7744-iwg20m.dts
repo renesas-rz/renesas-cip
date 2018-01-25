@@ -459,6 +459,11 @@
 				remote-endpoint = <&adv7511_in>;
 			};
 		};
+		port@1 {
+			endpoint {
+				remote-endpoint = <&panel_input>;
+			};
+		};
 	};
 };
 
@@ -482,6 +487,14 @@
 	shared-pin;
 };
 
+&gpio7 {
+	lcd-power-eb-gpio{
+		gpio-hog;
+		gpios = <25 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "lcd-power-eb-gpio";
+	};
+};
 
 &pwm3 {
 	pinctrl-0 = <&pwm3_pins>;
