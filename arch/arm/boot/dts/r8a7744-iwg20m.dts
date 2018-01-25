@@ -605,6 +605,10 @@
 	};
 };
 
+&wdt0{
+	status = "okay";
+};
+
 &pwm3 {
 	pinctrl-0 = <&pwm3_pins>;
 	pinctrl-names = "default";
