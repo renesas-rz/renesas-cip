@@ -122,7 +122,8 @@ static int sii902x_get_modes(struct drm_encoder *encoder,
 	cnt = 100;
 	do {
 		cnt--;
-		sii902x_write(client, 0x1A, old & ~0x6);
+		/*Once the host has finished reading EDID, it must write TPI 0x1A= 00 to clear the request*/
+		sii902x_write(client, 0x1A, 0x0);
 		msleep(10);
 		dat = sii902x_read(client, 0x1A);
 	} while ((dat & 0x6) && cnt);
