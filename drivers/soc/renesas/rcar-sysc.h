@@ -57,5 +57,6 @@ extern const struct rcar_sysc_info r8a7794_sysc_info;
 extern const struct rcar_sysc_info r8a7795_sysc_info;
 extern const struct rcar_sysc_info r8a7745_sysc_info;
 extern const struct rcar_sysc_info r8a7743_sysc_info;
+extern const struct rcar_sysc_info r8a7744_sysc_info;
 extern const struct rcar_sysc_info r8a77470_sysc_info;
 #endif /* __SOC_RENESAS_RCAR_SYSC_H__ */
