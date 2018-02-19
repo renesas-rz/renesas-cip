@@ -54,6 +54,26 @@
 		renesas,groups = "avb_mdio", "avb_gmii", "avb_phy_int";
 		renesas,function = "avb";
 	};
+
+	i2c0_pins: i2c0 {
+		renesas,groups = "i2c0";
+		renesas,function = "i2c0";
+	};
+
+	i2c1_pins: i2c1 {
+		renesas,groups = "i2c1_c";
+		renesas,function = "i2c1";
+	};
+
+	i2c2_pins: i2c2 {
+		renesas,groups = "i2c2_b";
+		renesas,function = "i2c2";
+	};
+
+	i2c3_pins: i2c3 {
+		renesas,groups = "i2c3";
+		renesas,function = "i2c3";
+	};
 };
 
 &scifa2 {
@@ -74,4 +94,36 @@
 		reg = <3>;
 		micrel,led-mode = <1>;
 	};
+};
+
+&i2c0 {
+	pinctrl-0 = <&i2c0_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+	clock-frequency = <400000>;
+
+};
+
+&i2c1 {
+	pinctrl-0 = <&i2c1_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+	clock-frequency = <400000>;
+};
+
+&i2c2	{
+	status = "okay";
+	clock-frequency = <400000>;
+	pinctrl-0 = <&i2c2_pins>;
+	pinctrl-names = "default";
+
+};
+
+&i2c3 {
+	pinctrl-0 = <&i2c3_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+	clock-frequency = <400000>;
 };
