@@ -538,6 +538,7 @@ static int adv7511_get_edid_block(void *data, u8 *buf, unsigned int block,
 	struct i2c_msg xfer[2];
 	uint8_t offset;
 	unsigned int i;
+	unsigned int cnt = 0;
 	int ret;
 
 	if (len > 128)
@@ -546,8 +547,17 @@ static int adv7511_get_edid_block(void *data, u8 *buf, unsigned int block,
 	if (adv7511->current_edid_segment != block / 2) {
 		unsigned int status, blk;
 
-		ret = regmap_read(adv7511->regmap, ADV7511_REG_DDC_STATUS,
-				  &status);
+		/* Use polling method to wait for DDC IDLE state.
+		 * This way we could avoid situations where
+		 * DDC controller is still stuck in Reading EDID state.
+		 */
+		do {
+		    ret = regmap_read(adv7511->regmap, ADV7511_REG_DDC_STATUS,
+					          &status);
+		    msleep(10);
+		    cnt++;
+		} while ((cnt < 200) && (status != 2));
+
 		if (ret < 0)
 			return ret;
 
