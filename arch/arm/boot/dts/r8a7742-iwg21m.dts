@@ -27,6 +27,8 @@
 		serial4 = &scifb2;
 		serial5 = &hscif0;
 		eth = &avb;
+		pciec   = &pciec;
+		pcie_clk = &pcie_bus_clk;
 	};
 
 	memory@40000000 {
@@ -430,4 +432,10 @@
 		output-low;
 		line-name = "enable-qspi";
 	};
+};
+
+&pcie_bus_clk {
+};
+
+&pciec {
 };
