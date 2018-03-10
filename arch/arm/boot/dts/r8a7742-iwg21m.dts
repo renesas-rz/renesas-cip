@@ -235,7 +235,7 @@
 	msiof0_pins: spi1 {
 		renesas,groups = "msiof0_clk", "msiof0_tx", "msiof0_rx";
 		renesas,function = "msiof0";
-	}
+	};
 };
 
 &scif0 {
