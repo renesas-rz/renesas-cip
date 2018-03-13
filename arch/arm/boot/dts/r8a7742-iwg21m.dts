@@ -19,6 +19,10 @@
 	model = "iwg21m";
 	compatible = "iw,iwg21m", "renesas,r8a7742";
 
+	aliases {
+		serial2 = &scifa2;
+	};
+
 	memory@40000000 {
 		device_type = "memory";
 		reg = <0 0x40000000 0 0x40000000>;
@@ -37,4 +41,17 @@
 
 &extal_clk {
 	clock-frequency = <20000000>;
+};
+
+&pfc {
+	scifa2_pins: serial2 {
+		renesas,groups = "scifa2_data_c";
+		renesas,function = "scifa2";
+	};
+};
+
+&scifa2 {
+	pinctrl-0 = <&scifa2_pins>;
+	pinctrl-names = "default";
+	status = "okay";
 };
