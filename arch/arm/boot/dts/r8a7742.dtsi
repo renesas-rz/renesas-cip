@@ -1259,6 +1259,7 @@
 		reg = <0 0xe6508000 0 0x40>;
 		interrupts = <0 287 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp9_clks R8A7742_CLK_I2C0>;
+		power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
 		status = "disabled";
 	};
 
@@ -1269,6 +1270,7 @@
 		reg = <0 0xe6518000 0 0x40>;
 		interrupts = <0 288 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp9_clks R8A7742_CLK_I2C1>;
+		power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
 		status = "disabled";
 	};
 
@@ -1279,6 +1281,7 @@
 		reg = <0 0xe6530000 0 0x40>;
 		interrupts = <0 286 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp9_clks R8A7742_CLK_I2C2>;
+		power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
 		status = "disabled";
 	};
 
@@ -1289,6 +1292,7 @@
 		reg = <0 0xe6540000 0 0x40>;
 		interrupts = <0 290 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp9_clks R8A7742_CLK_I2C3>;
+		power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
 		status = "disabled";
 	};
 
