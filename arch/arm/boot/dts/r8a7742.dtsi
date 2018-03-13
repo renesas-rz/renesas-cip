@@ -136,6 +136,15 @@
 		reg = <0 0xe6060000 0 0x250>;
 	};
 
+	scifa2: serial@e6c60000 {
+		compatible = "renesas,scifa-r8a7742", "renesas,scifa";
+		reg = <0 0xe6c60000 0 64>;
+		interrupts = <0 151 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&mstp2_clks R8A7742_CLK_SCIFA2>;
+		clock-names = "sci_ick";
+		status = "disabled";
+	};
+
 	clocks {
 		#address-cells = <2>;
 		#size-cells = <2>;
