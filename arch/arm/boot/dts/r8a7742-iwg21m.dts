@@ -21,6 +21,7 @@
 
 	aliases {
 		serial2 = &scifa2;
+		eth = &avb;
 	};
 
 	memory@40000000 {
@@ -48,10 +49,29 @@
 		renesas,groups = "scifa2_data_c";
 		renesas,function = "scifa2";
 	};
+
+	avb_pins: avb {
+		renesas,groups = "avb_mdio", "avb_gmii", "avb_phy_int";
+		renesas,function = "avb";
+	};
 };
 
 &scifa2 {
 	pinctrl-0 = <&scifa2_pins>;
 	pinctrl-names = "default";
 	status = "okay";
+};
+
+&avb {
+	pinctrl-0 = <&avb_pins>;
+	pinctrl-names = "default";
+
+	phy-handle = <&phy0>;
+	renesas,no-ether-link;
+	status = "okay";
+
+	phy0: ethernet-phy@0 {
+		reg = <3>;
+		micrel,led-mode = <1>;
+	};
 };
