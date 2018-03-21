@@ -39,6 +39,35 @@
 		#size-cells = <1>;
 	};
 
+	vcc_lvds: regulator@4 {
+		compatible = "regulator-fixed";
+
+		regulator-name = "panel vcc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
+
+	panel_edt: panel@0 {
+		compatible = "edt,etm0700g0dh6", "simple-panel";
+		power-supply = <&vcc_lvds>;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				reg = <0>;
+				panel_input: endpoint {
+					reg = <0>;
+					remote-endpoint = <&du_out_lvds0>;
+				};
+			};
+		};
+	};
+
 	buzzer {
 		compatible = "pwm-backlight";
 		pwms = <&tpu 0 5000000 GPIO_ACTIVE_HIGH>;
