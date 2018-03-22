@@ -193,7 +193,7 @@
 	pinctrl-0 = <&i2c1_pins>;
 	pinctrl-names = "default";
 
-	status = "okay";
+	status = "disabled";
 	clock-frequency = <400000>;
 };
 
