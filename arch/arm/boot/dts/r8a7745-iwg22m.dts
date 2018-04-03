@@ -635,3 +635,7 @@
 &ssi4 {
 	shared-pin;
 };
+
+&tmu1 {
+	status = "okay";
+};
