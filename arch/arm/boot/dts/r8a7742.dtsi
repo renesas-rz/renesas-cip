@@ -627,6 +627,11 @@
 			reg = <1>;
 			#phy-cells = <1>;
 		};
+
+		usb2: usb-channel@2 {
+			reg = <2>;
+			#phy-cells = <1>;
+		};
 	};
 
 	pci1: pci@ee0b0000 {
