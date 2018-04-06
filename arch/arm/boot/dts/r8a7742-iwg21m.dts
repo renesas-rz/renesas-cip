@@ -38,6 +38,33 @@
 		#address-cells = <1>;
 		#size-cells = <1>;
 	};
+
+	buzzer {
+		compatible = "pwm-backlight";
+		pwms = <&tpu 0 5000000 GPIO_ACTIVE_HIGH>;
+		brightness-levels = <0 4 8 16 32 64 128 255>;
+		default-brightness-level = <7>;
+		pinctrl-0 = <&buzzer_pins>;
+		pinctrl-names = "default";
+	};
+
+	fan {
+		compatible = "pwm-backlight";
+		pwms = <&tpu 1 5000000 GPIO_ACTIVE_HIGH>;
+		brightness-levels = <0 4 8 16 32 64 128 255>;
+		default-brightness-level = <7>;
+		pinctrl-0 = <&fan_pins>;
+		pinctrl-names = "default";
+	};
+
+	backlight {
+		compatible = "pwm-backlight";
+		pwms = <&tpu 2 5000000 GPIO_ACTIVE_HIGH>;
+		brightness-levels = <0 4 8 16 32 64 128 255>;
+		default-brightness-level = <7>;
+		pinctrl-0 = <&backlight_pins>;
+		pinctrl-names = "default";
+	};
 };
 
 &extal_clk {
@@ -73,6 +100,21 @@
 	i2c3_pins: i2c3 {
 		renesas,groups = "i2c3";
 		renesas,function = "i2c3";
+	};
+
+	buzzer_pins: buzzer {
+		renesas,groups = "tpu0_to0";
+		renesas,function = "tpu0";
+	};
+
+	fan_pins: fan {
+		renesas,groups = "tpu0_to1";
+		renesas,function = "tpu0";
+	};
+
+	backlight_pins: backlight {
+		renesas,groups = "tpu0_to2";
+		renesas,function = "tpu0";
 	};
 };
 
@@ -134,4 +176,8 @@
 	pinctrl-names = "default";
 	status = "okay";
 	clock-frequency = <400000>;
+};
+
+&tpu {
+	status = "okay";
 };
