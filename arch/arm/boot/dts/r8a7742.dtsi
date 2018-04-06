@@ -641,6 +641,7 @@
 		clocks = <&mstp3_clks R8A7742_CLK_SSUSB>;
 		phys = <&usb2 1>;
 		phy-names = "usb";
+		power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
 		status = "disabled";
 	};
 
