@@ -135,7 +135,7 @@
 				<0 2 IRQ_TYPE_LEVEL_HIGH>,
 				<0 3 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp4_clks R8A7742_CLK_IRQC>;
-		power-domains = <&cpg_clocks>;
+		power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
 	};
 
 	pfc: pfc@e6060000 {
