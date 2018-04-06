@@ -613,6 +613,21 @@
 		};
 	};
 
+	usbphy: usb-phy@e6590100 {
+		compatible = "renesas,usb-phy-r8a7742";
+		reg = <0 0xe6590100 0 0x100>;
+		clocks = <&mstp7_clks R8A7742_CLK_HSUSB>;
+		clock-names = "usbhs";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "disabled";
+
+		usb1: usb-channel@1 {
+			reg = <1>;
+			#phy-cells = <1>;
+		};
+	};
+
 	pci1: pci@ee0b0000 {
 		compatible = "renesas,pci-r8a7742";
 		device_type = "pci";
