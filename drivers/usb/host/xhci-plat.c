@@ -55,7 +55,8 @@ static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
 	 * xhci_gen_setup().
 	 */
 	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7743") ||
-	    of_device_is_compatible(of_node, "renesas,xhci-r8a7744"))
+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7744") ||
+		of_device_is_compatible(of_node, "renesas,xhci-r8a7742"))
 		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
 }
 
@@ -67,6 +68,7 @@ static int xhci_plat_setup(struct usb_hcd *hcd)
 
 	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7790") ||
 	    of_device_is_compatible(of_node, "renesas,xhci-r8a7791") ||
+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7742") ||
 	    of_device_is_compatible(of_node, "renesas,xhci-r8a7743") ||
 	    of_device_is_compatible(of_node, "renesas,xhci-r8a7744")) {
 		ret = xhci_rcar_init_quirk(hcd);
@@ -83,6 +85,7 @@ static int xhci_plat_start(struct usb_hcd *hcd)
 
 	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7790") ||
 	    of_device_is_compatible(of_node, "renesas,xhci-r8a7791") ||
+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7742") ||
 	    of_device_is_compatible(of_node, "renesas,xhci-r8a7743") ||
 	    of_device_is_compatible(of_node, "renesas,xhci-r8a7744"))
 		xhci_rcar_start(hcd);
@@ -286,6 +289,7 @@ static const struct of_device_id usb_xhci_of_match[] = {
 	{ .compatible = "marvell,armada-380-xhci"},
 	{ .compatible = "renesas,xhci-r8a7743"},
 	{ .compatible = "renesas,xhci-r8a7744"},
+	{ .compatible = "renesas,xhci-r8a7742"},
 	{ .compatible = "renesas,xhci-r8a7790"},
 	{ .compatible = "renesas,xhci-r8a7791"},
 	{ },
