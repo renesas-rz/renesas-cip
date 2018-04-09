@@ -1218,6 +1218,8 @@
 				<&mstp10_clks R8A7742_CLK_SCU_ALL>,
 				<&mstp10_clks R8A7742_CLK_SCU_ALL>,
 				<&mstp10_clks R8A7742_CLK_SCU_ALL>,
+				<&mstp10_clks R8A7742_CLK_SCU_ALL>,
+				<&mstp10_clks R8A7742_CLK_SCU_ALL>,
 				<&mstp10_clks R8A7742_CLK_SCU_ALL>;
 			#clock-cells = <1>;
 			clock-indices = <
@@ -1228,6 +1230,8 @@
 				R8A7742_CLK_SSI3 R8A7742_CLK_SSI2
 				R8A7742_CLK_SSI1 R8A7742_CLK_SSI0
 				R8A7742_CLK_SCU_DVC1 R8A7742_CLK_SCU_DVC0
+				R8A7742_CLK_SCU_CTU1_MIX1
+				R8A7742_CLK_SCU_CTU0_MIX0
 				R8A7742_CLK_SCU_CTU1_MIX1
 				R8A7742_CLK_SCU_CTU0_MIX0
 				R8A7742_CLK_SCU_SRC9 R8A7742_CLK_SCU_SRC8
@@ -1242,6 +1246,7 @@
 				"ssi4", "ssi3", "ssi2", "ssi1", "ssi0",
 				"dvc1", "dvc0",
 				"ctu1", "ctu0",
+				"mix1", "mix0",
 				"src9", "src8", "src7", "src6", "src5",
 				"src4", "src3", "src2", "src1", "src0";
 		};
@@ -1421,6 +1426,8 @@
 				<&mstp10_clks R8A7742_CLK_SCU_DVC0>,
 				<&mstp10_clks R8A7742_CLK_SCU_CTU1_MIX1>,
 				<&mstp10_clks R8A7742_CLK_SCU_CTU0_MIX0>,
+				<&mstp10_clks R8A7742_CLK_SCU_CTU1_MIX1>,
+				<&mstp10_clks R8A7742_CLK_SCU_CTU0_MIX0>,
 				<&audio_clk_a>, <&audio_clk_b>,
 				<&audio_clk_c>, <&m2_clk>;
 		clock-names =	"ssi-all",
@@ -1430,6 +1437,7 @@
 				"src.4", "src.3", "src.2", "src.1", "src.0",
 				"dvc.1", "dvc.0",
 				"ctu.1", "ctu.0",
+				"mix.1", "mix.0",
 				"clk_a", "clk_b", "clk_c", "clk_i";
 		power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
 
@@ -1444,6 +1452,11 @@
 			ctu11: ctu@5 { };
 			ctu12: ctu@6 { };
 			ctu13: ctu@7 { };
+		};
+
+		rcar_sound,mix {
+			mix0: mix@0 { };
+			mix1: mix@1 { };
 		};
 
 		rcar_sound,dvc {
