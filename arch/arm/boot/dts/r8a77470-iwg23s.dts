@@ -84,6 +84,17 @@
 		regulator-boot-on;
 		regulator-always-on;
 	};
+
+	hdmi-out {
+		compatible = "hdmi-connector";
+		type = "a";
+
+		port {
+			hdmi_con: endpoint {
+				remote-endpoint = <&sii9022_out>;
+			};
+		};
+	};
 };
 
 &cpu0 {
@@ -148,6 +159,17 @@
 	can0_pins: can0 {
 		renesas,groups = "can0_data_a";
 		renesas,function = "can0";
+	};
+
+	i2c4_pins: i2c4 {
+		renesas,groups = "i2c4_e";
+		renesas,function = "i2c4";
+	};
+
+	du0_pins: du0 {
+		renesas,groups = "du0_rgb888", "du0_clk_out", "du0_sync",
+						"du0_cde_disp";
+		renesas,function = "du0";
 	};
 };
 
@@ -232,4 +254,52 @@
 	pinctrl-names = "default";
 	renesas,can-clock-select = <0x0>;
 	status = "okay";
+};
+
+&i2c4 {
+	pinctrl-0 = <&i2c4_pins>;
+	pinctrl-names = "default";
+	clock-frequency = <100000>;
+	status = "okay";
+
+	hdmi@39 {
+		compatible = "sil,sii9022";
+		reg = <0x39>;
+		interrupt-parent = <&gpio2>;
+		interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				sii9022_in: endpoint {
+					remote-endpoint = <&du_out_rgb0>;
+				};
+			};
+
+			port@1 {
+				reg = <1>;
+				sii9022_out: endpoint {
+					remote-endpoint = <&hdmi_con>;
+				};
+			};
+		};
+	};
+};
+
+&du {
+	pinctrl-0 = <&du0_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+
+	clocks = <&mstp7_clks R8A77470_CLK_DU0>;
+	clock-names = "du.0";
+
+	port@0 {
+		endpoint {
+			remote-endpoint = <&sii9022_in>;
+		};
+	};
 };
