@@ -333,6 +333,7 @@ static int rcar_du_encoders_init_one(struct rcar_du_device *rcdu,
 	} encoders[] = {
 		{ "adi,adv7123", RCAR_DU_ENCODER_VGA },
 		{ "adi,adv7511w", RCAR_DU_ENCODER_HDMI },
+		{ "sil,sii9022", RCAR_DU_ENCODER_HDMI },
 		{ "thine,thc63lvdm83d", RCAR_DU_ENCODER_LVDS },
 	};
 
