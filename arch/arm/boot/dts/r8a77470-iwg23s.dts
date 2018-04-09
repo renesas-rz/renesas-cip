@@ -144,6 +144,11 @@
 		renesas,groups = "mmc_data8", "mmc_ctrl";
 		renesas,function = "mmc";
 	};
+
+	can0_pins: can0 {
+		renesas,groups = "can0_data_a";
+		renesas,function = "can0";
+	};
 };
 
 &scif1 {
@@ -219,5 +224,12 @@
 	cap-mmc-highspeed;
 	bus-width = <8>;
 	non-removable;
+	status = "okay";
+};
+
+&can0 {
+	pinctrl-0 = <&can0_pins>;
+	pinctrl-names = "default";
+	renesas,can-clock-select = <0x0>;
 	status = "okay";
 };
