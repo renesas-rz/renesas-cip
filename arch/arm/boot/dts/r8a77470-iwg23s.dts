@@ -243,9 +243,10 @@
 
 	vmmc-supply = <&fixedregulator3v3>;
 	vqmmc-supply = <&fixedregulator3v3>;
-	cap-mmc-highspeed;
 	bus-width = <8>;
 	non-removable;
+	cap-mmc-highspeed;
+	cap-mmc-wait-busy;
 	status = "okay";
 };
 
