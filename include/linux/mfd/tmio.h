@@ -123,6 +123,8 @@ struct tmio_mmc_data {
 	dma_addr_t			dma_rx_offset;
 	void (*set_pwr)(struct platform_device *host, int state);
 	void (*set_clk_div)(struct platform_device *host, int state);
+	int (*clk_enable)(struct platform_device *pdev, unsigned int *f);
+	void (*clk_disable)(struct platform_device *pdev);
 };
 
 /*
