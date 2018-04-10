@@ -950,22 +950,65 @@ static void tmio_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 
 	spin_unlock_irqrestore(&host->lock, flags);
 
-	switch (ios->power_mode) {
-	case MMC_POWER_OFF:
-		tmio_mmc_power_off(host);
-		tmio_mmc_clk_stop(host);
-		break;
-	case MMC_POWER_UP:
+	/*
+	 * host->power toggles between false and true in both cases - either
+	 * or not the controller can be runtime-suspended during inactivity.
+	 * But if the controller has to be kept on, the runtime-pm usage_count
+	 * is kept positive, so no suspending actually takes place.
+	 */
+	if (ios->power_mode == MMC_POWER_ON && ios->clock) {
+		if (host->power != TMIO_MMC_ON_RUN) {
+			tmio_mmc_clk_update(mmc);
+			pm_runtime_get_sync(dev);
+			if (host->resuming) {
+				tmio_mmc_reset(host);
+				host->resuming = false;
+			}
+		}
+		if (host->power == TMIO_MMC_OFF_STOP)
+			tmio_mmc_reset(host);
 		tmio_mmc_set_clock(host, ios->clock);
-		tmio_mmc_power_on(host, ios->vdd);
+		if (host->power == TMIO_MMC_OFF_STOP)
+			/* power up SD card and the bus */
+			tmio_mmc_power_on(host, ios->vdd);
+		host->power = TMIO_MMC_ON_RUN;
+		/* start bus clock */
 		tmio_mmc_clk_start(host);
-		tmio_mmc_set_bus_width(host, ios->bus_width);
+	} else if (ios->power_mode != MMC_POWER_UP) {
+		struct tmio_mmc_data *pdata = host->pdata;
+		unsigned int old_power = host->power;
+
+		if (old_power != TMIO_MMC_OFF_STOP) {
+			if (ios->power_mode == MMC_POWER_OFF) {
+				tmio_mmc_power_off(host);
+				host->power = TMIO_MMC_OFF_STOP;
+			} else {
+				host->power = TMIO_MMC_ON_STOP;
+			}
+		}
+
+		if (old_power == TMIO_MMC_ON_RUN) {
+			tmio_mmc_clk_stop(host);
+			pm_runtime_put(dev);
+			if (pdata->clk_disable)
+				pdata->clk_disable(host->pdev);
+		}
+	}
+
+	if (host->power != TMIO_MMC_OFF_STOP &&
+	    host->power != TMIO_MMC_ON_STOP) {
+		switch (ios->bus_width) {
+		case MMC_BUS_WIDTH_1:
+			sd_ctrl_write16(host, CTL_SD_MEM_CARD_OPT, 0x80e0);
 		break;
-	case MMC_POWER_ON:
-		tmio_mmc_set_clock(host, ios->clock);
-		tmio_mmc_clk_start(host);
-		tmio_mmc_set_bus_width(host, ios->bus_width);
+		case MMC_BUS_WIDTH_4:
+			sd_ctrl_write16(host, CTL_SD_MEM_CARD_OPT, 0x00e0);
 		break;
+		case MMC_BUS_WIDTH_8:
+			sd_ctrl_write16(host, CTL_SD_MEM_CARD_OPT, 0x20e0);
+		break;
+
+		}
 	}
 
 	/* Let things settle. delay taken from winCE driver */
