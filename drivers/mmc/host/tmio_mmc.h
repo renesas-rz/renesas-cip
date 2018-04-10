@@ -42,6 +42,12 @@
 struct tmio_mmc_data;
 struct tmio_mmc_host;
 
+enum tmio_mmc_power {
+	TMIO_MMC_OFF_STOP,	/* card power off, controller stopped */
+	TMIO_MMC_ON_STOP,	/* card power on, controller stopped */
+	TMIO_MMC_ON_RUN,	/* card power on, controller running */
+};
+
 struct tmio_mmc_dma {
 	enum dma_slave_buswidth dma_buswidth;
 	bool (*filter)(struct dma_chan *chan, void *arg);
@@ -54,6 +60,8 @@ struct tmio_mmc_host {
 	struct mmc_request      *mrq;
 	struct mmc_data         *data;
 	struct mmc_host         *mmc;
+
+	enum tmio_mmc_power	power;
 
 	/* Callbacks for clock / power control */
 	void (*set_pwr)(struct platform_device *host, int state);
@@ -93,6 +101,12 @@ struct tmio_mmc_host {
 	struct mutex		ios_lock;	/* protect set_ios() context */
 	bool			native_hotplug;
 	bool			sdio_irq_enabled;
+	bool			resuming;
+	bool			done_tuning;
+	struct completion	completion;
+
+	spinlock_t			trans_lock;
+	unsigned int		trans_state;
 
 	int (*write16_hook)(struct tmio_mmc_host *host, int addr);
 	int (*clk_enable)(struct platform_device *pdev, unsigned int *f);
