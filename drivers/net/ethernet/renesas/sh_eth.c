@@ -3058,6 +3058,7 @@ static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
 static const struct of_device_id sh_eth_match_table[] = {
 	{ .compatible = "renesas,gether-r8a7740", .data = &r8a7740_data },
 	{ .compatible = "renesas,ether-r8a7743", .data = &r8a779x_data },
+	{ .compatible = "renesas,ether-r8a7744", .data = &r8a779x_data },
 	{ .compatible = "renesas,ether-r8a7745", .data = &r8a779x_data },
 	{ .compatible = "renesas,ether-r8a7778", .data = &r8a777x_data },
 	{ .compatible = "renesas,ether-r8a7779", .data = &r8a777x_data },
@@ -3338,6 +3339,7 @@ static struct platform_device_id sh_eth_id_table[] = {
 	{ "r8a7790-ether", (kernel_ulong_t)&r8a779x_data },
 	{ "r8a7791-ether", (kernel_ulong_t)&r8a779x_data },
 	{ "r8a7743-ether", (kernel_ulong_t)&r8a779x_data },
+	{ "r8a7744-ether", (kernel_ulong_t)&r8a779x_data },
 	{ "r8a7793-ether", (kernel_ulong_t)&r8a779x_data },
 	{ "r8a7794-ether", (kernel_ulong_t)&r8a779x_data },
 	{ "r8a7745-ether", (kernel_ulong_t)&r8a779x_data },
