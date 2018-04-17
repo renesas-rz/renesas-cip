@@ -473,6 +473,7 @@
 		interrupt-parent = <&gpio0>;
 		interrupts = <24 IRQ_TYPE_EDGE_FALLING>;
 		reset-gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;
+		int-gpios = <&gpio0 24 GPIO_ACTIVE_LOW>;
 	};
 
 	codec: sgtl5000@a {

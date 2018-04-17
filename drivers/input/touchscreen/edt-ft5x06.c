@@ -39,6 +39,8 @@
 #include <linux/input/mt.h>
 #include <linux/input/touchscreen.h>
 #include <linux/of_device.h>
+#include <linux/of_gpio.h>
+#include <linux/gpio.h>
 
 #define WORK_REGISTER_THRESHOLD		0x00
 #define WORK_REGISTER_REPORT_RATE	0x08
@@ -884,6 +886,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
 	unsigned long irq_flags;
 	int error;
 	char fw_version[EDT_NAME_LEN];
+	int irq_pin;
 
 	dev_dbg(&client->dev, "probing for EDT FT5x06 I2C\n");
 
@@ -930,6 +933,17 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
 		usleep_range(5000, 6000);
 		gpiod_set_value_cansleep(tsdata->reset_gpio, 0);
 		msleep(300);
+	}
+
+	irq_pin = of_get_named_gpio(client->dev.of_node, "int-gpios", 0);
+	if (gpio_is_valid(irq_pin)) {
+		error = gpio_request_one(irq_pin, GPIOF_IN, "edt-ft5x06 irq");
+		if (error) {
+			dev_err(&client->dev,
+				"Failed to request GPIO %d, error %d\n",
+			irq_pin, error);
+			return error;
+		}
 	}
 
 	input = devm_input_allocate_device(&client->dev);
