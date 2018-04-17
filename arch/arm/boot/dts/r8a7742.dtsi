@@ -436,6 +436,9 @@
 		dmas = <&dmac1 0xc1>, <&dmac1 0xc2>;
 		dma-names = "tx", "rx";
 		power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
+		renesas,clk-rate = <97500000>;
+		renesas,mmc-scc-tapnum = <8>;
+		sd-uhs-sdr50;
 		status = "disabled";
 	};
 
