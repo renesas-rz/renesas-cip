@@ -338,6 +338,7 @@ static int rcar_du_encoders_init_one(struct rcar_du_device *rcdu,
 		{ "adi,adv7511w", RCAR_DU_ENCODER_HDMI },
 		{ "sil,sii9022", RCAR_DU_ENCODER_HDMI },
 		{ "thine,thc63lvdm83d", RCAR_DU_ENCODER_LVDS },
+		{ "cil,ch7036", RCAR_DU_ENCODER_LVDS },
 	};
 
 	enum rcar_du_encoder_type enc_type = RCAR_DU_ENCODER_NONE;
