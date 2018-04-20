@@ -891,6 +891,11 @@
 		power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
 		status = "disabled";
 
+		usb0: usb-channel@0 {
+			reg = <0>;
+			#phy-cells = <1>;
+		};
+
 		usb1: usb-channel@1 {
 			reg = <1>;
 			#phy-cells = <1>;
