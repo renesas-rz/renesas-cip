@@ -408,6 +408,10 @@
 	renesas,wakeup;
 };
 
+&hsusb {
+	status = "okay";
+};
+
 &xhci {
 	status = "okay";
 };
