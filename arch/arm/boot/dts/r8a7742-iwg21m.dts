@@ -403,6 +403,9 @@
 
 &usbphy {
 	status = "okay";
+	renesas,id-gpio = <&gpio5 20 GPIO_ACTIVE_LOW>;
+	renesas,vbus-gpio = <&gpio5 18 GPIO_ACTIVE_LOW>;
+	renesas,wakeup;
 };
 
 &xhci {
