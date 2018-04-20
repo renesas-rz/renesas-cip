@@ -397,6 +397,10 @@
 	status = "okay";
 };
 
+&pci0 {
+	status = "okay";
+};
+
 &pci1 {
 	status = "okay";
 };
