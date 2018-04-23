@@ -719,6 +719,70 @@
 	shared-pin;
 };
 
+&vin0 {
+	status = "okay";
+	pinctrl-0 = <&vin0_pins>;
+	pinctrl-names = "default";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vin0ep: endpoint {
+			remote-endpoint = <&ov7725_0 >;
+			bus-width = <8>;
+		};
+	};
+};
+
+&vin1 {
+	status = "okay";
+	pinctrl-0 = <&vin1_pins>;
+	pinctrl-names = "default";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vin1ep: endpoint {
+			remote-endpoint = <&ov7725_1>;
+			bus-width = <8>;
+		};
+	};
+};
+
+&vin2 {
+	status = "okay";
+	pinctrl-0 = <&vin2_pins>;
+	pinctrl-names = "default";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vin2ep: endpoint {
+			remote-endpoint = <&ov7725_2>;
+			bus-width = <8>;
+		};
+	};
+};
+
+&vin3 {
+	status = "okay";
+	pinctrl-0 = <&vin3_pins>;
+	pinctrl-names = "default";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vin3ep: endpoint {
+			remote-endpoint = <&ov7725_3>;
+			bus-width = <8>;
+		};
+	};
+};
+
 &can0 {
 	pinctrl-0 = <&can0_pins>;
 	pinctrl-names = "default";
