@@ -813,3 +813,15 @@
 &cmt1{
 	status = "okay";
 };
+
+&tmu1 {
+	status = "okay";
+};
+
+&tmu2 {
+	status = "okay";
+};
+
+&tmu3 {
+	status = "okay";
+};
