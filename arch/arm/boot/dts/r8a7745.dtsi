@@ -825,6 +825,10 @@
 		       <&dmac0 0xcd>, <&dmac0 0xce>;
 		dma-names = "tx", "rx", "tx", "rx";
 		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
+		max-frequency = <195000000>;
+		renesas,mmc-scc-tapnum = <8>;
+		sd-uhs-sdr50;
+		sd-uhs-sdr104;
 		status = "disabled";
 	};
 
