@@ -438,6 +438,15 @@
 	status = "okay";
 };
 
+
+&cmt0 {
+	status = "okay";
+};
+
+&cmt1 {
+	status = "okay";
+};
+
 &du {
 	pinctrl-0 = <&du0_pins>;
 	pinctrl-names = "default";
