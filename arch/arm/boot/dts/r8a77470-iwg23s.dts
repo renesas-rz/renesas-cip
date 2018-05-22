@@ -426,6 +426,18 @@
 	};
 };
 
+&tmu1 {
+	status = "okay";
+};
+
+&tmu2 {
+	status = "okay";
+};
+
+&tmu3 {
+	status = "okay";
+};
+
 &du {
 	pinctrl-0 = <&du0_pins>;
 	pinctrl-names = "default";
