@@ -158,6 +158,10 @@
 	};
 };
 
+&wdt0{
+	status = "okay";
+};
+
 &pci0 {
 	status = "okay";
 	pinctrl-0 = <&usb0_pins>;
