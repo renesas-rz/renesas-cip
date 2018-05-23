@@ -37,6 +37,11 @@
 		serial3 = &scifb1;
 		serial2 = &scif4;
 		ethernet0 = &avb;
+		sata0	= &sata0;
+		sata1	= &sata1;
+		xhci	= &xhci;
+		pciec	= &pciec;
+		pcie_clk = &pcie_bus_clk;
 	};
 
 	chosen {
