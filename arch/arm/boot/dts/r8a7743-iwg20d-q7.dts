@@ -11,7 +11,7 @@
 /dts-v1/;
 #include "r8a7743-iwg20m.dtsi"
 #include "iwg20d-q7-common.dtsi"
-
+#include <dt-bindings/input/input.h>
 / {
 	model = "iWave Systems RainboW-G20D-Qseven board based on RZ/G1M";
 	compatible = "iwave,g20d", "iwave,g20m", "renesas,r8a7743";
