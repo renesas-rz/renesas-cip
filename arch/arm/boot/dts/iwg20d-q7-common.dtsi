@@ -233,6 +233,11 @@
 		renesas,function = "can1";
 	};
 
+	vin0_pins: vin0 {
+		renesas,groups = "vin0_data8", "vin0_clk";
+		renesas,function = "vin0";
+	};
+
 };
 
 &i2c5 {
@@ -268,6 +273,18 @@
 				adv7511_out: endpoint {
 					remote-endpoint = <&hdmi_con>;
 				};
+			};
+		};
+	};
+	composite-in@5d {
+		compatible = "ti,tvp5150";
+		reg = <0x5d>;
+		remote = <&vin0>;
+
+		port {
+			tvp5150: endpoint {
+				bus-width = <8>;
+				remote-endpoint = <&vin0ep>;
 			};
 		};
 	};
@@ -349,6 +366,12 @@
 		output-low;
 		line-name = "can1-trx-en-gpio";
 	};
+	tvp-power{
+		gpio-hog;
+		gpios = <22 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "tvp-power";
+	};
 };
 
 &wdt0{
@@ -409,4 +432,20 @@
 	pinctrl-0 = <&scif4_pins>;
 	pinctrl-names = "default";
 	status = "okay";
+};
+
+&vin0 {
+	status = "okay";
+	pinctrl-0 = <&vin0_pins>;
+	pinctrl-names = "default";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vin0ep: endpoint {
+			remote-endpoint = <&tvp5150>;
+			bus-width = <8>;
+		};
+	};
 };
