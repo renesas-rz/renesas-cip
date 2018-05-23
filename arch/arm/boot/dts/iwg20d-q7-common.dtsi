@@ -12,6 +12,7 @@
 	aliases {
 		serial0 = &scif0;
 		serial3 = &scifb1;
+		serial2 = &scif4;
 		ethernet0 = &avb;
 	};
 
@@ -114,6 +115,11 @@
 		groups = "usb1";
 		function = "usb1";
 	};
+
+	scif4_pins: serial2 {
+		renesas,groups = "scif4_data_c";
+		renesas,function = "scif4";
+	};
 };
 
 &pci0 {
@@ -159,5 +165,11 @@
 };
 
 &xhci {
+	status = "okay";
+};
+
+&scif4 {
+	pinctrl-0 = <&scif4_pins>;
+	pinctrl-names = "default";
 	status = "okay";
 };
