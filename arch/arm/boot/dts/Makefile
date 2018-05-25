@@ -555,6 +555,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
 	r8a7743-skrzg1m.dtb \
 	r8a7745-skrzg1e.dtb \
 	r8a7745-iwg22m.dtb \
+	r8a77470-iwg23s.dtb \
 	r8a7793-gose.dtb \
 	r8a7794-alt.dtb \
 	r8a7794-silk.dtb \
