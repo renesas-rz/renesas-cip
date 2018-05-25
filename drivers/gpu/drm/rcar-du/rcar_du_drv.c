@@ -256,8 +256,13 @@ static const struct rcar_du_device_info rcar_du_r8a7742_info = {
 			.encoder_type = DRM_MODE_ENCODER_LVDS,
 			.port = 0,
 		},
+		[RCAR_DU_OUTPUT_LVDS1] = {
+			.possible_crtcs = BIT(1),
+			.encoder_type = DRM_MODE_ENCODER_LVDS,
+			.port = 1,
+		},
 	},
-	.num_lvds = 1,
+	.num_lvds = 2,
 };
 
 static const struct of_device_id rcar_du_of_table[] = {
