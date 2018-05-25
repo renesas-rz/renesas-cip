@@ -394,3 +394,7 @@
 		line-name = "lcd-power-eb-gpio";
 	};
 };
+
+&tmu1 {
+	status = "okay";
+};
