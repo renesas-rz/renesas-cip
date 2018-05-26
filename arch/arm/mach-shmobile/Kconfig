@@ -69,6 +69,7 @@ config ARCH_R8A7740
 config ARCH_R8A7743
 	bool "RZ/G1M (R8A77430)"
 	select ARCH_RCAR_GEN2
+	select I2C
 
 config ARCH_R8A7745
 	bool "RZ/G1E (R8A77450)"
