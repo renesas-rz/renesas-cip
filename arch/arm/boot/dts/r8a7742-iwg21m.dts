@@ -316,6 +316,31 @@
 		renesas,function = "tpu0";
 	};
 
+	pwm0_pins: pwm0 {
+		renesas,groups = "pwm0";
+		renesas,function = "pwm0";
+	};
+
+	pwm3_pins: pwm3 {
+		renesas,groups = "pwm3";
+		renesas,function = "pwm3";
+	};
+
+	pwm4_pins: pwm4 {
+		renesas,groups = "pwm4";
+		renesas,function = "pwm4";
+	};
+
+	pwm5_pins: pwm5 {
+		renesas,groups = "pwm5";
+		renesas,function = "pwm5";
+	};
+
+	pwm6_pins: pwm6 {
+		renesas,groups = "pwm6";
+		renesas,function = "pwm6";
+	};
+
 	mmc1_4_pins: mmc1_4 {
 		renesas,groups = "mmc1_data4", "mmc1_ctrl";
 		renesas,function = "mmc1";
@@ -794,6 +819,41 @@
 		output-low;
 		line-name = "can1-trx-en-gpio";
 	};
+};
+
+&pwm0 {
+	pinctrl-0 = <&pwm0_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};
+
+&pwm3 {
+	pinctrl-0 = <&pwm3_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};
+
+&pwm4 {
+	pinctrl-0 = <&pwm4_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};
+
+&pwm5 {
+	pinctrl-0 = <&pwm5_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};
+
+&pwm6 {
+	pinctrl-0 = <&pwm6_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
 };
 
 &cmt0{
