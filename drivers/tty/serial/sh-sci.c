@@ -116,6 +116,7 @@ struct sci_port {
 	struct work_struct		work_tx;
 	struct timer_list		rx_timer;
 	unsigned int			rx_timeout;
+	int                             circ_flush_flag;
 #endif
 
 	bool autorts;
@@ -1050,10 +1051,11 @@ static void sci_dma_tx_complete(void *arg)
 
 	spin_lock_irqsave(&port->lock, flags);
 
-	xmit->tail += s->tx_dma_len;
-	xmit->tail &= UART_XMIT_SIZE - 1;
-
-	port->icount.tx += s->tx_dma_len;
+	if (s->circ_flush_flag == SCI_CIRC_FLSH_OFF) {
+		xmit->tail += sg_dma_len(&s->sg_tx);
+		mit->tail &= UART_XMIT_SIZE - 1;
+		port->icount.tx += sg_dma_len(&s->sg_tx);
+	}
 
 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
 		uart_write_wakeup(port);
@@ -1251,6 +1253,7 @@ static void work_fn_tx(struct work_struct *work)
 	 * consistent xmit buffer state.
 	 */
 	spin_lock_irq(&port->lock);
+	s->circ_flush_flag = SCI_CIRC_FLSH_OFF;
 	buf = s->tx_dma_addr + (xmit->tail & (UART_XMIT_SIZE - 1));
 	s->tx_dma_len = min_t(unsigned int,
 		CIRC_CNT(xmit->head, xmit->tail, UART_XMIT_SIZE),
@@ -2080,6 +2083,15 @@ static void sci_baud_calc_hscif(unsigned int bps, unsigned long freq,
 		*srr = 15;
 		*cks = 0;
 	}
+}
+
+static void sci_flush_buffer(struct uart_port *port)
+{
+#ifdef CONFIG_SERIAL_SH_SCI_DMA
+	struct sci_port *s = to_sci_port(port);
+
+	s->circ_flush_flag = SCI_CIRC_FLSH_ON;
+#endif
 }
 
 static void sci_reset(struct uart_port *port)
