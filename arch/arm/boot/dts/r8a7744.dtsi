@@ -209,6 +209,7 @@
 		reg = <0 0xe61f0000 0 0x14>, <0 0xe61f0100 0 0x38>;
 		interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp5_clks R8A7744_CLK_THERMAL>;
+		power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
 	};
 
 	timer {
