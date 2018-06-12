@@ -113,11 +113,13 @@
 
 	backlight: backlight {
 		compatible = "pwm-backlight";
-		pwms = <&pwm3 0 5000000>;
+		pwms = <&tpu 3 5000000  GPIO_ACTIVE_HIGH>;
 		brightness-levels = <0 4 8 16 32 64 128 255>;
 		default-brightness-level = <7>;
 		power-supply = <&vcc_lvds>;
 		enable-gpios = <&gpio5 14 0>;
+		pinctrl-0 = <&backlight_pins>;
+		pinctrl-names = "default";
 	};
 
 	panel_edt: panel@0 {
@@ -286,6 +288,11 @@
 	pwm3_pins: pwm3 {
 		renesas,groups = "pwm3";
 		renesas,function = "pwm3";
+	};
+
+	backlight_pins: backlight {
+		renesas,groups = "tpu_to3";
+		renesas,function = "tpu";
 	};
 };
 
@@ -628,12 +635,12 @@
 };
 
 &pwm3 {
-	pinctrl-0 = <&pwm3_pins>;
-	pinctrl-names = "default";
-
 	status = "okay";
 };
 
+&tpu {
+	status = "okay";
+};
 
 &vin0 {
 	status = "okay";
