@@ -3143,6 +3143,14 @@ static const unsigned int msiof2_tx_e_pins[] = {
 static const unsigned int msiof2_tx_e_mux[] = {
 	MSIOF2_TXD_E_MARK,
 };
+/* - TPU -------------------------------------------------------------------- */
+static const unsigned int tpu_to3_pins[] = {
+	/* CLK */
+	RCAR_GP_PIN(1, 24),
+};
+static const unsigned int tpu_to3_mux[] = {
+	TPU_TO3_MARK,
+};
 /* - PWM -------------------------------------------------------------------- */
 static const unsigned int pwm0_pins[] = {
 	RCAR_GP_PIN(6, 14),
@@ -4471,7 +4479,7 @@ static const unsigned int vin2_clk_mux[] = {
 };
 
 static const struct {
-	struct sh_pfc_pin_group common[342];
+	struct sh_pfc_pin_group common[343];
 	struct sh_pfc_pin_group r8a779x[9];
 } pinmux_groups = {
 	.common = {
@@ -4645,6 +4653,7 @@ static const struct {
 		SH_PFC_PIN_GROUP(msiof2_sync_e),
 		SH_PFC_PIN_GROUP(msiof2_rx_e),
 		SH_PFC_PIN_GROUP(msiof2_tx_e),
+		SH_PFC_PIN_GROUP(tpu_to3),
 		SH_PFC_PIN_GROUP(pwm0),
 		SH_PFC_PIN_GROUP(pwm0_b),
 		SH_PFC_PIN_GROUP(pwm1),
@@ -5089,6 +5098,10 @@ static const char * const msiof2_groups[] = {
 	"msiof2_tx_e",
 };
 
+static const char * const tpu_groups[] = {
+	"tpu_to3",
+};
+
 static const char * const pwm0_groups[] = {
 	"pwm0",
 	"pwm0_b",
@@ -5348,7 +5361,7 @@ static const char * const vin2_groups[] = {
 };
 
 static const struct {
-	struct sh_pfc_function common[56];
+	struct sh_pfc_function common[57];
 	struct sh_pfc_function r8a779x[2];
 } pinmux_functions = {
 	.common = {
@@ -5375,6 +5388,7 @@ static const struct {
 		SH_PFC_FUNCTION(msiof0),
 		SH_PFC_FUNCTION(msiof1),
 		SH_PFC_FUNCTION(msiof2),
+		SH_PFC_FUNCTION(tpu),
 		SH_PFC_FUNCTION(pwm0),
 		SH_PFC_FUNCTION(pwm1),
 		SH_PFC_FUNCTION(pwm2),
