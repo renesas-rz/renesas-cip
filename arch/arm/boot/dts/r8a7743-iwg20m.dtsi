@@ -40,17 +40,17 @@
 
 &pfc {
 	mmcif0_pins: mmc {
-		groups = "mmc_data8_b", "mmc_ctrl";
-		function = "mmc";
+		renesas,groups = "mmc_data8_b", "mmc_ctrl";
+		renesas,function = "mmc";
 	};
 
 	qspi_pins: qspi {
-		groups = "qspi_ctrl", "qspi_data2";
-		function = "qspi";
+		renesas,groups = "qspi_ctrl", "qspi_data2";
+		renesas,function = "qspi";
 	};
 
 	sdhi0_pins: sd0 {
-		renesas,groups = "sdhi0_data4", "sdhi0_ctrl", "sdhi0_cd";
+		renesas,groups = "sdhi0_data4", "sdhi0_ctrl";
 		renesas,function = "sdhi0";
 		power-source = <3300>;
 	};
