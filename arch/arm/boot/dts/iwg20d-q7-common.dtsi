@@ -263,7 +263,7 @@
 
 	sdhi1_pins: sd1 {
 		renesas,groups = "sdhi1_data4", "sdhi1_ctrl", "sdhi1_cd";
-		function = "sdhi1";
+		renesas,function = "sdhi1";
 		power-source = <3300>;
 	};
 
