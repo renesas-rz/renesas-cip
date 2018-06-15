@@ -559,3 +559,7 @@
 &cmt1 {
 	status = "okay";
 };
+
+&hsusb {
+	status = "okay";
+};
