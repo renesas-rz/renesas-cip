@@ -112,8 +112,8 @@
 			  1800000 0>;
 	};
 
-	panel_hannstar: panel@0 {
-		compatible = "hannstar,hsd070pww1", "simple-panel";
+	panel_edt: panel@0 {
+		compatible = "edt,etm0700g0dh6", "simple-panel";
 		power-supply = <&vcc_lvds>;
 
 		ports {
