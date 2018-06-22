@@ -153,11 +153,6 @@
 		function = "can1";
 	};
 
-	du_pins: du {
-		groups = "du_rgb888", "du_sync", "du_oddf", "du_clk_out_0";
-		function = "du";
-	};
-
 	hscif1_pins: hscif1 {
 		groups = "hscif1_data_c", "hscif1_ctrl_c";
 		function = "hscif1";
