@@ -227,6 +227,11 @@
 		renesas,groups = "scif4_data_c";
 		renesas,function = "scif4";
 	};
+
+	pwm3_pins: pwm3 {
+		renesas,groups = "pwm3";
+		renesas,function = "pwm3";
+	};
 };
 
 &rcar_sound {
@@ -282,5 +287,12 @@
 };
 
 &usbphy {
+	status = "okay";
+};
+
+&pwm3 {
+	pinctrl-0 = <&pwm3_pins>;
+	pinctrl-names = "default";
+
 	status = "okay";
 };
