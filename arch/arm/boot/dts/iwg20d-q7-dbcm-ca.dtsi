@@ -74,6 +74,15 @@
 	status = "okay";
 };
 
+&gpio0 {
+	can1-trx-en-gpio{
+		gpio-hog;
+		gpios = <4 GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "can1-trx-en-gpio";
+	};
+};
+
 &du {
 	pinctrl-0 = <&du_pins>;
 	pinctrl-names = "default";
