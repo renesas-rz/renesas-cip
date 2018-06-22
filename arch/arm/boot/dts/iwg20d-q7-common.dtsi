@@ -156,15 +156,13 @@
 	status = "okay";
 };
 
+&xhci {
+	status = "okay";
+};
+
 &pci0 {
 	status = "okay";
 	pinctrl-0 = <&usb0_pins>;
-	pinctrl-names = "default";
-};
-
-&pci1 {
-	status = "okay";
-	pinctrl-0 = <&usb1_pins>;
 	pinctrl-names = "default";
 };
 
