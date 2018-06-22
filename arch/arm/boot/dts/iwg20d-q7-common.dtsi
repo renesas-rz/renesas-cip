@@ -131,6 +131,15 @@
 			};
 		};
 	};
+
+	backlight: backlight {
+		compatible = "pwm-backlight";
+		pwms = <&pwm3 0 5000000>;
+		brightness-levels = <0 4 8 16 32 64 128 255>;
+		default-brightness-level = <7>;
+		power-supply = <&vcc_lvds>;
+		enable-gpios = <&gpio5 14 0>;
+	};
 };
 
 &avb {
@@ -346,5 +355,14 @@
 				remote-endpoint = <&panel_input>;
 			};
 		};
+	};
+};
+
+&gpio7 {
+	lcd-power-eb-gpio{
+		gpio-hog;
+		gpios = <25 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "lcd-power-eb-gpio";
 	};
 };
