@@ -284,7 +284,3 @@
 &usbphy {
 	status = "okay";
 };
-
-&xhci {
-	status = "okay";
-};
