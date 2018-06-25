@@ -227,6 +227,7 @@ static int rcar_gen2_phy_power_on(struct phy *p)
 
 	/* USBHS_UGCTRL_CONNECT bit only exists on RZG1H,M,N,E SoC USBHS_UGSTS reg */
 	if (of_machine_is_compatible("renesas,r8a7743")
+		|| of_machine_is_compatible("renesas,r8a7742")
 		|| of_machine_is_compatible("renesas,r8a7744")
 		|| of_machine_is_compatible("renesas,r8a7745")) {
 		for (i = 0; i < 20; i++) {
@@ -267,6 +268,7 @@ static int rcar_gen2_phy_power_off(struct phy *p)
 
 	/* Power off USBHS PHY */
 	if (of_machine_is_compatible("renesas,r8a7743")
+		|| of_machine_is_compatible("renesas,r8a7742")
 		|| of_machine_is_compatible("renesas,r8a7744")
 		|| of_machine_is_compatible("renesas,r8a7745")) {
 		value = readl(usbhs_base + USBHS_UGCTRL);
@@ -298,6 +300,7 @@ static const struct phy_ops rcar_gen2_phy_ops = {
 static const struct of_device_id rcar_gen2_phy_match_table[] = {
 	{ .compatible = "renesas,usb-phy-r8a7790" },
 	{ .compatible = "renesas,usb-phy-r8a7791" },
+	{ .compatible = "renesas,usb-phy-r8a7742" },
 	{ .compatible = "renesas,usb-phy-r8a7794" },
 	{ .compatible = "renesas,usb-phy-r8a7745" },
 	{ .compatible = "renesas,usb-phy-r8a77470" },
@@ -739,6 +742,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
 			return error;
 		}
 		if (of_machine_is_compatible("renesas,r8a7743")
+			|| of_machine_is_compatible("renesas,r8a7742")
 			|| of_machine_is_compatible("renesas,r8a7744")
 			|| of_machine_is_compatible("renesas,r8a7745")) {
 			channel->select_mask = select_mask[channel_num];
@@ -754,6 +758,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
 			phy->channel = channel;
 			phy->number = n;
 			if (of_machine_is_compatible("renesas,r8a7743")
+				|| of_machine_is_compatible("renesas,r8a7742")
 				|| of_machine_is_compatible("renesas,r8a7744")
 				|| of_machine_is_compatible("renesas,r8a7745"))
 				phy->select_value = select_value[channel_num][n];
