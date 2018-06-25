@@ -247,8 +247,8 @@
 	};
 
 	i2c2_pins: i2c2 {
-		groups = "i2c2";
-		function = "i2c2";
+		renesas,groups = "i2c2";
+		renesas,function = "i2c2";
 	};
 
 	scif0_pins: scif0 {
