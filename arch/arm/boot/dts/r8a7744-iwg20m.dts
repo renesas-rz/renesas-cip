@@ -205,13 +205,13 @@
 	};
 
 	sdhi1_pins: sd2 {
-		renesas,groups = "sdhi1_data4", "sdhi1_ctrl";
+		renesas,groups = "sdhi1_data4", "sdhi1_ctrl", "sdhi1_cd";
 		renesas,function = "sdhi1";
 		power-source = <3300>;
 	};
 
 	sdhi1_pins_uhs: sd2_uhs {
-		renesas,groups = "sdhi1_data4", "sdhi1_ctrl";
+		renesas,groups = "sdhi1_data4", "sdhi1_ctrl", "sdhi1_cd";
 		renesas,function = "sdhi1";
 		power-source = <1800>;
 	};
@@ -353,7 +353,6 @@
 
 	vmmc-supply = <&vcc_sdhi1>;
 	vqmmc-supply = <&vccq_sdhi1>;
-	cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
 	wp-gpios = <&gpio6 15 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 };
