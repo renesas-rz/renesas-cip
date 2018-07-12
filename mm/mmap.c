@@ -1290,7 +1290,7 @@ static inline int mlock_future_check(struct mm_struct *mm,
 static inline u64 file_mmap_size_max(struct file *file, struct inode *inode)
 {
 	if (S_ISREG(inode->i_mode))
-		return MAX_LFS_FILESIZE;
+		return inode->i_sb->s_maxbytes;
 
 	if (S_ISBLK(inode->i_mode))
 		return MAX_LFS_FILESIZE;
