@@ -206,9 +206,7 @@ done:
 		devm_kfree(rcdu->dev, renc);
 	}
 
-	if (ret == -EPROBE_DEFER &&
-			(of_machine_is_compatible("iw,iwg20m") ||
-			of_machine_is_compatible("iw,iwg22m")))
+	if (ret == -EPROBE_DEFER)
 		/* Return -EPROBE_DEFER will make kernel trying to initialize
 		 * current output again. But in certain case it causes looping
 		 * and kernel cannot init another output. Disable temporarily */
