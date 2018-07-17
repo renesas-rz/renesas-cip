@@ -2279,6 +2279,7 @@ static struct soc_camera_host_ops rcar_vin_host_ops = {
 #ifdef CONFIG_OF
 static const struct of_device_id rcar_vin_of_table[] = {
 	{ .compatible = "renesas,vin-r8a7794", .data = (void *)RCAR_GEN2 },
+	{ .compatible = "renesas,vin-r8a7743", .data = (void *)RCAR_GEN2 },
 	{ .compatible = "renesas,vin-r8a7744", .data = (void *)RCAR_GEN2 },
 	{ .compatible = "renesas,vin-r8a7745", .data = (void *)RCAR_GEN2 },
 	{ .compatible = "renesas,vin-r8a7793", .data = (void *)RCAR_GEN2 },
