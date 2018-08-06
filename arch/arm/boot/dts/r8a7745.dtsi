@@ -410,6 +410,7 @@
 		compatible = "renesas,pwm-rcar";
 		reg = <0 0xe6e30000 0 0x8>;
 		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
 		status = "disabled";
 		#pwm-cells = <2>;
 	};
@@ -418,6 +419,7 @@
 		compatible = "renesas,pwm-rcar";
 		reg = <0 0xe6e31000 0 0x8>;
 		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
 		status = "disabled";
 		#pwm-cells = <2>;
 	};
@@ -426,6 +428,7 @@
 		compatible = "renesas,pwm-rcar";
 		reg = <0 0xe6e32000 0 0x8>;
 		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
 		status = "disabled";
 		#pwm-cells = <2>;
 	};
@@ -434,6 +437,7 @@
 		compatible = "renesas,pwm-rcar";
 		reg = <0 0xe6e33000 0 0x8>;
 		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
 		status = "disabled";
 		#pwm-cells = <2>;
 	};
@@ -442,6 +446,7 @@
 		compatible = "renesas,pwm-rcar";
 		reg = <0 0xe6e34000 0 0x8>;
 		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
 		status = "disabled";
 		#pwm-cells = <2>;
 	};
@@ -450,6 +455,7 @@
 		compatible = "renesas,pwm-rcar";
 		reg = <0 0xe6e35000 0 0x8>;
 		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
 		status = "disabled";
 		#pwm-cells = <2>;
 	};
@@ -458,6 +464,7 @@
 		compatible = "renesas,pwm-rcar";
 		reg = <0 0xe6e36000 0 0x8>;
 		clocks = <&mstp5_clks R8A7745_CLK_PWM>;
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
 		status = "disabled";
 		#pwm-cells = <2>;
 	};
@@ -467,6 +474,7 @@
 		reg = <0 0xe60f0000 0 0x40>;
 		interrupts = <0 135 IRQ_TYPE_LEVEL_HIGH>;
 		clocks = <&mstp3_clks R8A7745_CLK_TPU0>;
+		power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
 		status = "disabled";
 		#pwm-cells = <3>;
 	};
