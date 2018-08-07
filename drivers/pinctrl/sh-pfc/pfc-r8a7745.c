@@ -158,7 +158,7 @@ enum {
 	FN_D10, FN_HSCIF2_HSCK, FN_SCIF1_SCK_C, FN_IRQ6, FN_PWM5_C,
 	FN_D11, FN_HSCIF2_HCTS_N, FN_SCIF1_RXD_C, FN_I2C1_SCL_D,
 	FN_D12, FN_HSCIF2_HRTS_N, FN_SCIF1_TXD_C, FN_I2C1_SDA_D,
-	FN_D13,	FN_SCIFA1_SCK, FN_TANS1, FN_PWM2_C, FN_TCLK2_B,
+	FN_D13,	FN_SCIFA1_SCK, FN_PWM2_C, FN_TCLK2_B,
 	FN_D14, FN_SCIFA1_RXD, FN_I2C5_SCL_B,
 	FN_D15, FN_SCIFA1_TXD, FN_I2C5_SDA_B,
 	FN_A0, FN_SCIFB1_SCK, FN_PWM3_B,
@@ -2648,7 +2648,7 @@ static const unsigned int scif5_data_b_mux[] = {
 };
 static const unsigned int scif5_data_c_pins[] = {
 	/* RX, TX */
-	RCAR_GP_PIN(2, 0), RCAR_GP_PIN(2, 11),
+	RCAR_GP_PIN(2, 0), RCAR_GP_PIN(2, 1),
 };
 static const unsigned int scif5_data_c_mux[] = {
 	SCIF5_RXD_C_MARK, SCIF5_TXD_C_MARK,
@@ -2793,7 +2793,7 @@ static const unsigned int scifa3_clk_b_mux[] = {
 /* - SCIFA4 ----------------------------------------------------------------- */
 static const unsigned int scifa4_data_pins[] = {
 	/* RXD, TXD */
-	RCAR_GP_PIN(4, 12), RCAR_GP_PIN(4, 12),
+	RCAR_GP_PIN(4, 11), RCAR_GP_PIN(4, 12),
 };
 static const unsigned int scifa4_data_mux[] = {
 	SCIFA4_RXD_MARK, SCIFA4_TXD_MARK,
