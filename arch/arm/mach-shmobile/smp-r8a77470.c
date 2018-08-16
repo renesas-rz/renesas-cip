@@ -26,6 +26,9 @@
 #include "r8a77470.h"
 #include "rcar-gen2.h"
 
+#define APMU		0xe6151000
+#define CA7DBGRCR	0x0180
+
 static struct rcar_sysc_ch r8a77470_ca7_scu = {
 	.chan_offs = 0x100, /* PWRSR3 .. PWRER3 */
 	.isr_bit = 21, /* CA7-SCU */
@@ -44,6 +47,15 @@ static void __init r8a77470_smp_prepare_cpus(unsigned int max_cpus)
 	shmobile_smp_apmu_prepare_cpus(max_cpus,
 				       r8a77470_apmu_config,
 				       ARRAY_SIZE(r8a77470_apmu_config));
+
+	/* setup for debug mode */
+	{
+		void __iomem *p = ioremap_nocache(APMU, 0x2000);
+		u32 val = readl_relaxed(p + CA7DBGRCR);
+
+		writel_relaxed((val | 0x01f83330), p + CA7DBGRCR);
+		iounmap(p);
+	}
 
 	rcar_gen2_pm_init();
 	rcar_sysc_power_up(&r8a77470_ca7_scu);
