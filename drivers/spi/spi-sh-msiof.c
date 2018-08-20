@@ -33,6 +33,7 @@
 
 #include <asm/unaligned.h>
 
+#include <linux/of_gpio.h>
 
 struct sh_msiof_chipdata {
 	u16 tx_fifo_size;
@@ -54,6 +55,7 @@ struct sh_msiof_spi_priv {
 	void *rx_dma_page;
 	dma_addr_t tx_dma_addr;
 	dma_addr_t rx_dma_addr;
+	int mode;
 };
 
 #define TMDR1	0x00	/* Transmit Mode Register 1 */
@@ -180,6 +182,12 @@ struct sh_msiof_spi_priv {
 #define IER_RFUDFE	0x00000010 /* Receive FIFO Underflow Enable */
 #define IER_RFOVFE	0x00000008 /* Receive FIFO Overflow Enable */
 
+static int msiof_rcar_is_gen2(struct device *dev)
+{
+	struct device_node *node = dev->of_node;
+
+	return of_device_is_compatible(node, "renesas,msiof-r8a77470");
+}
 
 static u32 sh_msiof_read(struct sh_msiof_spi_priv *p, int reg_offs)
 {
@@ -272,6 +280,17 @@ static void sh_msiof_spi_set_clk_regs(struct sh_msiof_spi_priv *p,
 
 	k = min_t(int, k, ARRAY_SIZE(sh_msiof_spi_div_table) - 1);
 
+	/*
+	 * In case of Gen2, BRDV[2:0]=B'111 is valid only
+	 * when the BRPS[4:0] bits are set to B'00000 or B'00001.
+	 */
+	if (msiof_rcar_is_gen2(&p->pdev->dev) &&
+		sh_msiof_spi_div_table[k].brdv == SCR_BRDV_DIV_1 &&
+		!(brps == 1 || brps == 2)) {
+		k = 1; /* SCR_BRDV_DIV_1 -> SCR_BRDV_DIV_2 */
+		brps = DIV_ROUND_UP(brps, 2);
+	}
+
 	scr = sh_msiof_spi_div_table[k].brdv | SCR_BRPS(brps);
 	sh_msiof_write(p, TSCR, scr);
 	if (!(p->chipdata->master_flags & SPI_MASTER_MUST_TX))
@@ -338,7 +357,10 @@ static void sh_msiof_spi_set_pin_regs(struct sh_msiof_spi_priv *p,
 	tmp |= !cs_high << MDR1_SYNCAC_SHIFT;
 	tmp |= lsb_first << MDR1_BITLSB_SHIFT;
 	tmp |= sh_msiof_spi_get_dtdl_and_syncdl(p);
-	sh_msiof_write(p, TMDR1, tmp | MDR1_TRMD | TMDR1_PCON);
+	if (p->mode == SPI_MSIOF_MASTER)
+		sh_msiof_write(p, TMDR1, tmp | MDR1_TRMD | TMDR1_PCON);
+	else
+		sh_msiof_write(p, TMDR1, tmp | TMDR1_PCON);
 	if (p->chipdata->master_flags & SPI_MASTER_MUST_TX) {
 		/* These bits are reserved if RX needs TX */
 		tmp &= ~0x0000ffff;
@@ -539,9 +561,15 @@ static int sh_msiof_spi_setup(struct spi_device *spi)
 				  !!(spi->mode & SPI_LSB_FIRST),
 				  !!(spi->mode & SPI_CS_HIGH));
 
-	if (spi->cs_gpio >= 0)
-		gpio_set_value(spi->cs_gpio, !(spi->mode & SPI_CS_HIGH));
-
+	if (spi->cs_gpio >= 0) {
+		if (of_machine_is_compatible("renesas,r8a7742")) {
+			gpio_direction_output(spi->cs_gpio,
+					!(spi->mode & SPI_CS_HIGH));
+		} else {
+			gpio_set_value(spi->cs_gpio,
+					!(spi->mode & SPI_CS_HIGH));
+		}
+	}
 
 	pm_runtime_put(&p->pdev->dev);
 
@@ -565,17 +593,18 @@ static int sh_msiof_prepare_message(struct spi_master *master,
 
 static int sh_msiof_spi_start(struct sh_msiof_spi_priv *p, void *rx_buf)
 {
-	int ret;
+	int ret = 0;
 
 	/* setup clock and rx/tx signals */
-	ret = sh_msiof_modify_ctr_wait(p, 0, CTR_TSCKE);
+	if (p->mode == SPI_MSIOF_MASTER)
+		ret = sh_msiof_modify_ctr_wait(p, 0, CTR_TSCKE);
 	if (rx_buf && !ret)
 		ret = sh_msiof_modify_ctr_wait(p, 0, CTR_RXE);
 	if (!ret)
 		ret = sh_msiof_modify_ctr_wait(p, 0, CTR_TXE);
 
 	/* start by setting frame bit */
-	if (!ret)
+	if (!ret && p->mode == SPI_MSIOF_MASTER)
 		ret = sh_msiof_modify_ctr_wait(p, 0, CTR_TFSE);
 
 	return ret;
@@ -586,12 +615,13 @@ static int sh_msiof_spi_stop(struct sh_msiof_spi_priv *p, void *rx_buf)
 	int ret;
 
 	/* shut down frame, rx/tx and clock signals */
-	ret = sh_msiof_modify_ctr_wait(p, CTR_TFSE, 0);
+	if (p->mode == SPI_MSIOF_MASTER)
+		ret = sh_msiof_modify_ctr_wait(p, CTR_TFSE, 0);
 	if (!ret)
 		ret = sh_msiof_modify_ctr_wait(p, CTR_TXE, 0);
 	if (rx_buf && !ret)
 		ret = sh_msiof_modify_ctr_wait(p, CTR_RXE, 0);
-	if (!ret)
+	if (!ret && p->mode == SPI_MSIOF_MASTER)
 		ret = sh_msiof_modify_ctr_wait(p, CTR_TSCKE, 0);
 
 	return ret;
@@ -607,6 +637,9 @@ static int sh_msiof_spi_txrx_once(struct sh_msiof_spi_priv *p,
 {
 	int fifo_shift;
 	int ret;
+	unsigned long timeout;
+
+	timeout = (p->mode == SPI_MSIOF_MASTER) ? HZ : MAX_SCHEDULE_TIMEOUT;
 
 	/* limit maximum word transfer to rx/tx fifo size */
 	if (tx_buf)
@@ -637,7 +670,7 @@ static int sh_msiof_spi_txrx_once(struct sh_msiof_spi_priv *p,
 	}
 
 	/* wait for tx fifo to be emptied / rx fifo to be filled */
-	if (!wait_for_completion_timeout(&p->done, HZ)) {
+	if (!wait_for_completion_timeout(&p->done, timeout)) {
 		dev_err(&p->pdev->dev, "PIO timeout\n");
 		ret = -ETIMEDOUT;
 		goto stop_reset;
@@ -681,6 +714,9 @@ static int sh_msiof_dma_once(struct sh_msiof_spi_priv *p, const void *tx,
 	struct dma_async_tx_descriptor *desc_tx = NULL, *desc_rx = NULL;
 	dma_cookie_t cookie;
 	int ret;
+	unsigned long timeout;
+
+	timeout = (p->mode == SPI_MSIOF_MASTER) ? HZ : MAX_SCHEDULE_TIMEOUT;
 
 	/* First prepare and submit the DMA request(s), as this may fail */
 	if (rx) {
@@ -747,7 +783,7 @@ static int sh_msiof_dma_once(struct sh_msiof_spi_priv *p, const void *tx,
 	}
 
 	/* wait for tx fifo to be emptied / rx fifo to be filled */
-	if (!wait_for_completion_timeout(&p->done, HZ)) {
+	if (!wait_for_completion_timeout(&p->done, timeout)) {
 		dev_err(&p->pdev->dev, "DMA timeout\n");
 		ret = -ETIMEDOUT;
 		goto stop_reset;
@@ -844,7 +880,8 @@ static int sh_msiof_transfer_one(struct spi_master *master,
 	int ret;
 
 	/* setup clocks (clock already enabled in chipselect()) */
-	sh_msiof_spi_set_clk_regs(p, clk_get_rate(p->clk), t->speed_hz);
+	if (p->mode == SPI_MSIOF_MASTER)
+		sh_msiof_spi_set_clk_regs(p, clk_get_rate(p->clk), t->speed_hz);
 
 	while (master->dma_tx && len > 15) {
 		/*
@@ -976,7 +1013,10 @@ static const struct sh_msiof_chipdata r8a779x_data = {
 static const struct of_device_id sh_msiof_match[] = {
 	{ .compatible = "renesas,sh-mobile-msiof", .data = &sh_data },
 	{ .compatible = "renesas,msiof-r8a7743",   .data = &r8a779x_data },
+	{ .compatible = "renesas,msiof-r8a7744",   .data = &r8a779x_data },
 	{ .compatible = "renesas,msiof-r8a7745",   .data = &r8a779x_data },
+	{ .compatible = "renesas,msiof-r8a77470",   .data = &r8a779x_data },
+	{ .compatible = "renesas,msiof-r8a7742",   .data = &r8a779x_data },
 	{ .compatible = "renesas,msiof-r8a7790",   .data = &r8a779x_data },
 	{ .compatible = "renesas,msiof-r8a7791",   .data = &r8a779x_data },
 	{ .compatible = "renesas,msiof-r8a7792",   .data = &r8a779x_data },
@@ -994,6 +1034,7 @@ static struct sh_msiof_spi_info *sh_msiof_spi_parse_dt(struct device *dev)
 	struct sh_msiof_spi_info *info;
 	struct device_node *np = dev->of_node;
 	u32 num_cs = 1;
+	int i;
 
 	info = devm_kzalloc(dev, sizeof(struct sh_msiof_spi_info), GFP_KERNEL);
 	if (!info)
@@ -1008,7 +1049,24 @@ static struct sh_msiof_spi_info *sh_msiof_spi_parse_dt(struct device *dev)
 	of_property_read_u32(np, "renesas,dtdl", &info->dtdl);
 	of_property_read_u32(np, "renesas,syncdl", &info->syncdl);
 
+	if (of_property_read_bool(np, "slave"))
+		info->mode = SPI_MSIOF_SLAVE;
+	else
+		info->mode = SPI_MSIOF_MASTER;
+
 	info->num_chipselect = num_cs;
+
+	if (of_machine_is_compatible("renesas,r8a7742"))
+		for (i = 0; i < num_cs; i++) {
+			int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
+
+			if (gpio_is_valid(cs_gpio)) {
+				if (devm_gpio_request(dev, cs_gpio, "msiof-cs-gpio")) {
+					dev_err(dev, "Can't get CS GPIO %i\n", i);
+					return NULL;
+				}
+			}
+		}
 
 	return info;
 }
@@ -1081,9 +1139,7 @@ static int sh_msiof_request_dma(struct sh_msiof_spi_priv *p)
 	}
 
 	/* The DMA engine uses the second register set, if present */
-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-	if (!res)
-		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 
 	master = p->master;
 	master->dma_tx = sh_msiof_request_dma_chan(dev, DMA_MEM_TO_DEV,
@@ -1229,6 +1285,7 @@ static int sh_msiof_spi_probe(struct platform_device *pdev)
 		p->tx_fifo_size = p->info->tx_fifo_override;
 	if (p->info->rx_fifo_override)
 		p->rx_fifo_size = p->info->rx_fifo_override;
+	p->mode = p->info->mode;
 
 	/* init master code */
 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
@@ -1274,6 +1331,8 @@ static int sh_msiof_spi_remove(struct platform_device *pdev)
 
 static const struct platform_device_id spi_driver_ids[] = {
 	{ "spi_sh_msiof",	(kernel_ulong_t)&sh_data },
+	{ "spi_r8a7743_msiof",  (kernel_ulong_t)&r8a779x_data },
+	{ "spi_r8a7745_msiof",  (kernel_ulong_t)&r8a779x_data },
 	{},
 };
 MODULE_DEVICE_TABLE(platform, spi_driver_ids);

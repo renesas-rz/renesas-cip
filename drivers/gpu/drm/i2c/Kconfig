@@ -7,6 +7,12 @@ config DRM_I2C_ADV7511
 	help
 	  Support for the Analog Device ADV7511(W) and ADV7513 HDMI encoders.
 
+config DRM_I2C_SII902X
+	tristate "sii902x"
+	depends on DRM && I2C
+	help
+	  Support for sii902x DVI/HDMI encoder chips
+
 config DRM_I2C_CH7006
 	tristate "Chrontel ch7006 TV encoder"
 	default m if DRM_NOUVEAU
@@ -16,6 +22,12 @@ config DRM_I2C_CH7006
 
 	  This driver is currently only useful if you're also using
 	  the nouveau driver.
+
+config DRM_I2C_CH7036
+	tristate "Chrontel ch7036 LVDS to HDMI converter"
+	help
+	  Support for Chrontel ch7036 and similar TV encoders, found
+	  on some nVidia video cards.
 
 config DRM_I2C_SIL164
 	tristate "Silicon Image sil164 TMDS transmitter"

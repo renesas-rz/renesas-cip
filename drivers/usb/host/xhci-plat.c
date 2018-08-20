@@ -38,12 +38,26 @@ static const struct xhci_driver_overrides xhci_plat_overrides __initconst = {
 
 static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
 {
+	struct usb_hcd *hcd = xhci_to_hcd(xhci);
+	struct device_node *of_node = hcd->self.controller->of_node;
 	/*
 	 * As of now platform drivers don't provide MSI support so we ensure
 	 * here that the generic code does not try to make a pci_dev from our
 	 * dev struct in order to setup MSI
 	 */
 	xhci->quirks |= XHCI_PLAT;
+
+	/*
+	 * On R-Car Gen2 and Gen3, the AC64 bit (bit 0) of HCCPARAMS1 is set
+	 * to 1. However, these SoCs don't support 64-bit address memory
+	 * pointers. So, this driver clears the AC64 bit of xhci->hcc_params
+	 * to call dma_set_coherent_mask(dev, DMA_BIT_MASK(32)) in
+	 * xhci_gen_setup().
+	 */
+	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7743") ||
+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7744") ||
+		of_device_is_compatible(of_node, "renesas,xhci-r8a7742"))
+		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
 }
 
 /* called during probe() after chip reset completes */
@@ -54,7 +68,9 @@ static int xhci_plat_setup(struct usb_hcd *hcd)
 
 	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7790") ||
 	    of_device_is_compatible(of_node, "renesas,xhci-r8a7791") ||
-	    of_device_is_compatible(of_node, "renesas,xhci-r8a7743")) {
+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7742") ||
+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7743") ||
+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7744")) {
 		ret = xhci_rcar_init_quirk(hcd);
 		if (ret)
 			return ret;
@@ -69,7 +85,9 @@ static int xhci_plat_start(struct usb_hcd *hcd)
 
 	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7790") ||
 	    of_device_is_compatible(of_node, "renesas,xhci-r8a7791") ||
-	    of_device_is_compatible(of_node, "renesas,xhci-r8a7743"))
+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7742") ||
+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7743") ||
+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7744"))
 		xhci_rcar_start(hcd);
 
 	return xhci_run(hcd);
@@ -270,6 +288,8 @@ static const struct of_device_id usb_xhci_of_match[] = {
 	{ .compatible = "marvell,armada-375-xhci"},
 	{ .compatible = "marvell,armada-380-xhci"},
 	{ .compatible = "renesas,xhci-r8a7743"},
+	{ .compatible = "renesas,xhci-r8a7744"},
+	{ .compatible = "renesas,xhci-r8a7742"},
 	{ .compatible = "renesas,xhci-r8a7790"},
 	{ .compatible = "renesas,xhci-r8a7791"},
 	{ },

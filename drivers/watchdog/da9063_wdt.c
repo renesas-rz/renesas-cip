@@ -22,6 +22,8 @@
 #include <linux/mfd/da9063/core.h>
 #include <linux/reboot.h>
 #include <linux/regmap.h>
+#include <linux/of.h>
+#include <linux/io.h>
 
 /*
  * Watchdog selector to timeout in seconds.
@@ -129,8 +131,14 @@ static int da9063_wdt_restart_handler(struct notifier_block *this,
 						   restart_handler);
 	int ret;
 
+#ifdef CONFIG_RTC_DA9063_RESET_RENESAS_SILK
+	/* To be sure RTC interrupt triggered */
+	mdelay(1000);
+#endif
+
 	ret = regmap_write(wdt->da9063->regmap, DA9063_REG_CONTROL_F,
 			   DA9063_SHUTDOWN);
+
 	if (ret)
 		dev_alert(wdt->da9063->dev, "Failed to shutdown (err = %d)\n",
 			  ret);

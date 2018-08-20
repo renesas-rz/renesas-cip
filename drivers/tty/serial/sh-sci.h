@@ -6,7 +6,6 @@
 #define SCI_MAJOR		204
 #define SCI_MINOR_START		8
 
-
 /*
  * SCI register subset common for all port types.
  * Not all registers will exist on all parts.

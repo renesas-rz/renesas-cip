@@ -35,12 +35,33 @@
 	aliases {
 		serial0 = &scif0;
 		serial3 = &scifb1;
+		serial2 = &scif4;
 		ethernet0 = &avb;
+		sata0	= &sata0;
+		sata1	= &sata1;
+		xhci	= &xhci;
+		pciec	= &pciec;
+		pcie_clk = &pcie_bus_clk;
 	};
 
 	chosen {
 		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
 		stdout-path = "serial0:115200n8";
+	};
+
+	vcc_lvds: regulator@4 {
+		compatible = "regulator-fixed";
+
+		regulator-name = "panel vcc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
+
+	x3_clk: x3-clock {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <148500000>;
 	};
 
 	audio_clock: audio_clock {
@@ -95,6 +116,37 @@
 		states = <3300000 1
 			  1800000 0>;
 	};
+
+	panel_edt: panel@0 {
+		compatible = "edt,etm0700g0dh6", "simple-panel";
+		power-supply = <&vcc_lvds>;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				reg = <0>;
+				panel_input: endpoint {
+					reg = <0>;
+					remote-endpoint = <&du_out_lvds0>;
+				};
+			};
+		};
+	};
+
+	backlight: backlight {
+		compatible = "pwm-backlight";
+		pwms = <&tpu 3 5000000 GPIO_ACTIVE_HIGH>;
+		brightness-levels = <0 4 8 16 32 64 128 255>;
+		default-brightness-level = <7>;
+		power-supply = <&vcc_lvds>;
+		enable-gpios = <&gpio5 14 0>;
+		pinctrl-0 = <&backlight_pins>;
+		pinctrl-names = "default";
+	};
 };
 
 &avb {
@@ -119,10 +171,13 @@
 	status = "okay";
 };
 
-&hsusb {
-	status = "okay";
-	pinctrl-0 = <&usb0_pins>;
-	pinctrl-names = "default";
+&gpio2 {
+	can0-trx-en-gpio{
+		gpio-hog;
+		gpios = <3 GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "can0-trx-en-gpio";
+	};
 };
 
 &i2c2 {
@@ -146,17 +201,32 @@
 		VDDIO-supply = <&reg_3p3v>;
 		VDDD-supply = <&reg_1p5v>;
 	};
+
+	ft5x06@38 {
+		compatible = "edt,edt-ft5406";
+		reg = <0x38>;
+		interrupt-parent = <&gpio2>;
+		interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
+		reset-gpios = <&gpio2 13 GPIO_ACTIVE_LOW>;
+	};
+};
+
+&wdt0{
+	status = "okay";
+};
+
+&xhci {
+	status = "okay";
 };
 
 &pci0 {
+	status = "okay";
 	pinctrl-0 = <&usb0_pins>;
 	pinctrl-names = "default";
 };
 
-&pci1 {
+&hsusb {
 	status = "okay";
-	pinctrl-0 = <&usb1_pins>;
-	pinctrl-names = "default";
 };
 
 &pcie_bus_clk {
@@ -194,7 +264,7 @@
 	};
 
 	sdhi1_pins: sd1 {
-		groups = "sdhi1_data4", "sdhi1_ctrl";
+		groups = "sdhi1_data4", "sdhi1_ctrl", "sdhi1_cd";
 		function = "sdhi1";
 		power-source = <3300>;
 	};
@@ -202,6 +272,12 @@
 	sound_pins: sound {
 		groups = "ssi0129_ctrl", "ssi0_data", "ssi1_data";
 		function = "ssi";
+	};
+
+	sdhi1_pins_uhs: sd2_uhs {
+		groups = "sdhi1_data4", "sdhi1_ctrl", "sdhi1_cd";
+		function = "sdhi1";
+		power-source = <1800>;
 	};
 
 	usb0_pins: usb0 {
@@ -213,6 +289,26 @@
 		groups = "usb1";
 		function = "usb1";
 	};
+
+	scif4_pins: serial2 {
+		groups = "scif4_data_c";
+		function = "scif4";
+	};
+
+	backlight_pins: backlight {
+		groups = "tpu_to3";
+		function = "tpu";
+	};
+
+	pwm3_pins: pwm3 {
+		groups = "pwm3";
+		function = "pwm3";
+	};
+
+        du_pins: du {
+                groups = "du_rgb888", "du_sync", "du_oddf", "du_clk_out_0";
+                function = "du";
+        };
 };
 
 &rcar_sound {
@@ -246,13 +342,19 @@
 	status = "okay";
 };
 
+&scif4 {
+	pinctrl-0 = <&scif4_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
 &sdhi1 {
 	pinctrl-0 = <&sdhi1_pins>;
-	pinctrl-names = "default";
+	pinctrl-1 = <&sdhi1_pins_uhs>;
+	pinctrl-names = "default", "uhs";
 
 	vmmc-supply = <&vcc_sdhi1>;
 	vqmmc-supply = <&vccq_sdhi1>;
-	cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
 	wp-gpios = <&gpio6 15 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 };
@@ -262,5 +364,60 @@
 };
 
 &usbphy {
+	status = "okay";
+	renesas,id-gpio = <&gpio1 11 GPIO_ACTIVE_LOW>;
+	renesas,vbus-gpio = <&gpio7 24 GPIO_ACTIVE_LOW>;
+	renesas,vbus-pwr-gpio = <&gpio7 23 GPIO_ACTIVE_LOW>;
+	renesas,wakeup;
+};
+
+&pwm3 {
+	status = "okay";
+};
+
+&tpu {
+	status = "okay";
+};
+
+&du {
+	pinctrl-0 = <&du_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+
+	ports {
+		port@1 {
+			endpoint {
+				remote-endpoint = <&panel_input>;
+			};
+		};
+	};
+};
+
+&gpio7 {
+	lcd-power-eb-gpio{
+		gpio-hog;
+		gpios = <25 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "lcd-power-eb-gpio";
+	};
+};
+
+&tmu1 {
+	status = "okay";
+};
+
+&tmu2 {
+	status = "okay";
+};
+
+&tmu3 {
+	status = "okay";
+};
+
+&cmt0 {
+	status = "okay";
+};
+
+&cmt1 {
 	status = "okay";
 };

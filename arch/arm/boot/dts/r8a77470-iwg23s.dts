@@ -1,0 +1,463 @@
+/*
+ * Device Tree Source for the iwg23s-Pi boards
+ *
+ * Copyright (c) 2016 iWave Systems Technologies Pvt. Ltd.
+ *
+ * This file is licensed under the terms of the GNU General Public License
+ * version 2.  This program is licensed "as is" without any warranty of any
+ * kind, whether express or implied.
+ */
+
+/dts-v1/;
+#include "r8a77470.dtsi"
+#include <dt-bindings/gpio/gpio.h>
+/ {
+	model = "iW-RainboW-G23S-Pi Board based on Renesas RZ/G1C";
+	compatible = "iw,iwg23s", "renesas,r8a77470";
+
+	aliases {
+		serial1 = &scif1;
+		serial2 = &scif2;
+		serial3 = &scif4;
+		serial4 = &scif5;
+		serial5 = &hscif1;
+		serial6 = &hscif2;
+		ethernet0 = &avb;
+	};
+
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0 0x40000000 0 0x20000000>;
+	};
+
+	lbsc {
+		#address-cells = <1>;
+		#size-cells = <1>;
+	};
+
+	reg_1p0v: 1p0v {
+		compatible = "regulator-fixed";
+		regulator-name = "1P0V";
+		regulator-min-microvolt = <1000000>;
+		regulator-max-microvolt = <1000000>;
+		regulator-boot-on;
+		regulator-always-on;
+	};
+
+	vcc_sdhi2: regulator@2 {
+		compatible = "regulator-fixed";
+
+		regulator-name = "SDHI2 Vcc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+
+		enable-active-high;
+	};
+
+	vccq_sdhi2: regulator@3 {
+		compatible = "regulator-gpio";
+
+		regulator-name = "SDHI2 VccQ";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <3300000>;
+		gpios = <&gpio2 24 GPIO_ACTIVE_HIGH>;
+		gpios-states = <1>;
+		states = <3300000 1
+			1800000 0>;
+	};
+
+	fixedregulator3v3: fixedregulator@0 {
+		compatible = "regulator-fixed";
+		regulator-name = "fixed-3.3V";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-boot-on;
+		regulator-always-on;
+		enable-active-high;
+	};
+
+	fixedregulator1v8: fixedregulator@1 {
+		compatible = "regulator-fixed";
+		regulator-name = "fixed-1.8V";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		regulator-boot-on;
+		regulator-always-on;
+	};
+
+	hdmi-out {
+		compatible = "hdmi-connector";
+		type = "a";
+
+		port {
+			hdmi_con: endpoint {
+				remote-endpoint = <&sii9022_out>;
+			};
+		};
+	};
+};
+
+&cpu0 {
+        cpu0-supply = <&reg_1p0v>;
+};
+
+&wdt0 {
+	status = "okay";
+};
+
+&extal_clk {
+	clock-frequency = <20000000>;
+};
+
+&pfc {
+	scif1_pins: serial1 {
+		renesas,groups = "scif1_data_b";
+		renesas,function = "scif1";
+	};
+
+	scif2_pins: serial2 {
+		renesas,groups = "scif2_data_b";
+		renesas,function = "scif2";
+	};
+
+	scif4_pins: serial3 {
+		renesas,groups = "scif4_data_b";
+		renesas,function = "scif4";
+	};
+
+	scif5_pins: serial4 {
+		renesas,groups = "scif5_data_b";
+		renesas,function = "scif5";
+	};
+
+	hscif1_pins: serial5 {
+		renesas,groups = "hscif1_data", "hscif1_ctrl_a";
+		renesas,function = "hscif1";
+	};
+
+	hscif2_pins: serial6 {
+		renesas,groups = "hscif2_data", "hscif2_clk", "hscif2_ctrl";
+		renesas,function = "hscif2";
+	};
+
+	avb_pins: avb {
+		renesas,groups = "avb_mdio", "avb_gmii", "avb_phy_int";
+		renesas,function = "avb";
+	};
+
+	phy0_pins: phy0 {
+		renesas,groups = "intc_irq8";
+		renesas,function = "intc";
+	};
+
+	sdhi2_pins: sd1 {
+		renesas,groups = "sdhi2_data4", "sdhi2_ctrl", "sdhi2_cd";
+		renesas,function = "sdhi2";
+	};
+
+	mmc_pins: mmc {
+		renesas,groups = "mmc_data8", "mmc_ctrl";
+		renesas,function = "mmc";
+	};
+
+	can0_pins: can0 {
+		renesas,groups = "can0_data_a";
+		renesas,function = "can0";
+	};
+
+	i2c4_pins: i2c4 {
+		renesas,groups = "i2c4_e";
+		renesas,function = "i2c4";
+	};
+
+	qspi0_pins: spi0 {
+		renesas,groups = "qspi0_ctrl", "qspi0_data2";
+		renesas,function = "qspi0";
+	};
+
+	msiof2_pins: spi4 {
+		renesas,groups = "msiof2_clk_a", "msiof2_sync_a", "msiof2_ss1_a", "msiof2_rx_a", "msiof2_tx_a";
+		renesas,function = "msiof2";
+	};
+
+	du0_pins: du0 {
+		renesas,groups = "du0_rgb888", "du0_clk_out", "du0_sync",
+						"du0_cde_disp";
+		renesas,function = "du0";
+	};
+
+	vin0_pins: vin0 {
+		renesas,groups = "vin0_data8", "vin0_sync", "vin0_clkenb", "vin0_clk";
+		renesas,function = "vin0";
+	};
+
+	pwm0_pins: pwm0 {
+		renesas,groups = "pwm0_c";
+		renesas,function = "pwm0";
+	};
+
+	pwm2_pins: pwm2 {
+		renesas,groups = "pwm2_d";
+		renesas,function = "pwm2";
+	};
+
+	pwm6_pins: pwm6 {
+		renesas,groups = "pwm6_c";
+		renesas,function = "pwm6";
+	};
+};
+
+&scif1 {
+	pinctrl-0 = <&scif1_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&scif2 {
+	pinctrl-0 = <&scif2_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&scif4 {
+	pinctrl-0 = <&scif4_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&scif5 {
+	pinctrl-0 = <&scif5_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&hscif1 {
+	pinctrl-0 = <&hscif1_pins>;
+	pinctrl-names = "default";
+	ctsrts;
+	status = "okay";
+};
+
+&hscif2 {
+	pinctrl-0 = <&hscif2_pins>;
+	pinctrl-names = "default";
+	ctsrts;
+	status = "okay";
+};
+
+&avb {
+	pinctrl-0 = <&avb_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+
+	phy-handle = <&phy0>;
+	renesas,no-ether-link;
+	status = "okay";
+
+	phy0: ethernet-phy@0 {
+		reg = <3>;
+		micrel,led-mode = <1>;
+	};
+};
+
+&sdhi2 {
+        pinctrl-0 = <&sdhi2_pins>;
+        pinctrl-names = "default";
+
+        vmmc-supply = <&vcc_sdhi2>;
+        vqmmc-supply = <&vccq_sdhi2>;
+        bus-width = <4>;
+        cd-gpios = <&gpio4 20 GPIO_ACTIVE_LOW>;
+        status = "okay";
+};
+
+&mmc {
+	pinctrl-0 = <&mmc_pins>;
+	pinctrl-names = "default";
+
+	vmmc-supply = <&fixedregulator3v3>;
+	vqmmc-supply = <&fixedregulator3v3>;
+	bus-width = <8>;
+	non-removable;
+	cap-mmc-highspeed;
+	cap-mmc-wait-busy;
+	status = "okay";
+};
+
+&usbphy0 {
+	status = "okay";
+	renesas,id-gpio = <&gpio0 1 GPIO_ACTIVE_LOW>;
+	renesas,vbus-pwr-gpio = <&gpio0 0 GPIO_ACTIVE_LOW>;
+	renesas,wakeup;
+};
+
+&usbphy1 {
+	status = "okay";
+};
+
+&hsusb {
+	status = "okay";
+};
+
+&ohci_1 {
+	status = "okay";
+};
+
+&ehci_1 {
+	status = "okay";
+};
+
+&can0 {
+	pinctrl-0 = <&can0_pins>;
+	pinctrl-names = "default";
+	renesas,can-clock-select = <0x0>;
+	status = "okay";
+};
+
+&i2c4 {
+	pinctrl-0 = <&i2c4_pins>;
+	pinctrl-names = "default";
+	clock-frequency = <100000>;
+	status = "okay";
+
+	hdmi@39 {
+		compatible = "sil,sii9022";
+		reg = <0x39>;
+		interrupt-parent = <&gpio2>;
+		interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				sii9022_in: endpoint {
+					remote-endpoint = <&du_out_rgb0>;
+				};
+			};
+
+			port@1 {
+				reg = <1>;
+				sii9022_out: endpoint {
+					remote-endpoint = <&hdmi_con>;
+				};
+			};
+		};
+	};
+
+	rcar_dvdec@0 {
+		compatible = "rcar-dvdec";
+		reg = <0x49>;
+		clocks = <&mstp8_clks R8A77470_CLK_DVDEC>;
+
+		port {
+			dvdec: endpoint {
+				remote-endpoint = <&vin0ep>;
+			};
+		};
+	};
+};
+
+&pwm0 {
+	pinctrl-0 = <&pwm0_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&pwm2 {
+	pinctrl-0 = <&pwm2_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&pwm6 {
+	pinctrl-0 = <&pwm6_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&qspi0 {
+	pinctrl-0 = <&qspi0_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+
+	flash: flash@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "sst,sst25vf016b";
+		reg = <0>;
+		spi-max-frequency = <50000000>;
+		spi-tx-bus-width = <1>;
+		spi-rx-bus-width = <1>;
+		m25p,fast-read;
+		spi-cpol;
+		spi-cpha;
+
+	};
+};
+
+&msiof2 {
+	pinctrl-0 = <&msiof2_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+
+	spidev@0 {
+		compatible = "renesas,spidev-r8a77470";
+		reg = <0>;
+		spi-max-frequency = <1000000>;
+	};
+};
+
+
+&vin0 {
+	status = "okay";
+	pinctrl-0 = <&vin0_pins>;
+	pinctrl-names = "default";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vin0ep: endpoint {
+			remote-endpoint = <&dvdec>;
+		};
+	};
+};
+
+&tmu1 {
+	status = "okay";
+};
+
+&tmu2 {
+	status = "okay";
+};
+
+&tmu3 {
+	status = "okay";
+};
+
+
+&cmt0 {
+	status = "okay";
+};
+
+&cmt1 {
+	status = "okay";
+};
+
+&du {
+	pinctrl-0 = <&du0_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+
+	clocks = <&mstp7_clks R8A77470_CLK_DU0>;
+	clock-names = "du.0";
+
+	port@0 {
+		endpoint {
+			remote-endpoint = <&sii9022_in>;
+		};
+	};
+};

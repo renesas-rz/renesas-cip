@@ -32,6 +32,9 @@
 #include <linux/slab.h>
 
 struct gpio_rcar_priv {
+	/* per-gpio-device "gpios" for use with of_get_named_gpiod_flags() */
+	struct property gpios_property;
+	__be32 gpios_phandle_value[32 * 3]; /*  #gpio-cells assumed to be 2 */
 	void __iomem *base;
 	spinlock_t lock;
 	struct gpio_rcar_config config;
@@ -293,32 +296,17 @@ static void gpio_rcar_config_general_input_output_mode(struct gpio_chip *chip,
 
 static int gpio_rcar_request(struct gpio_chip *chip, unsigned offset)
 {
-	struct gpio_rcar_priv *p = gpio_to_priv(chip);
-	int error;
-
-	error = pm_runtime_get_sync(&p->pdev->dev);
-	if (error < 0)
-		return error;
-
-	error = pinctrl_request_gpio(chip->base + offset);
-	if (error)
-		pm_runtime_put(&p->pdev->dev);
-
-	return error;
+	return pinctrl_request_gpio(chip->base + offset);
 }
 
 static void gpio_rcar_free(struct gpio_chip *chip, unsigned offset)
 {
-	struct gpio_rcar_priv *p = gpio_to_priv(chip);
-
 	pinctrl_free_gpio(chip->base + offset);
 
 	/* Set the GPIO as an input to ensure that the next GPIO request won't
 	 * drive the GPIO pin as an output.
 	 */
 	gpio_rcar_config_general_input_output_mode(chip, offset, false);
-
-	pm_runtime_put(&p->pdev->dev);
 }
 
 static int gpio_rcar_direction_input(struct gpio_chip *chip, unsigned offset)
@@ -382,10 +370,22 @@ static const struct of_device_id gpio_rcar_of_table[] = {
 		.compatible = "renesas,gpio-r8a7791",
 		.data = &gpio_rcar_info_gen2,
 	}, {
+		.compatible = "renesas,gpio-r8a7742",
+		.data = &gpio_rcar_info_gen2,
+	}, {
+		.compatible = "renesas,gpio-r8a7744",
+		.data = &gpio_rcar_info_gen2,
+	}, {
 		.compatible = "renesas,gpio-r8a7793",
 		.data = &gpio_rcar_info_gen2,
 	}, {
 		.compatible = "renesas,gpio-r8a7794",
+		.data = &gpio_rcar_info_gen2,
+	},{
+	.compatible = "renesas,gpio-r8a7745",
+		.data = &gpio_rcar_info_gen2,
+	}, {
+		.compatible = "renesas,gpio-r8a77470",
 		.data = &gpio_rcar_info_gen2,
 	}, {
 		.compatible = "renesas,gpio-r8a7795",
@@ -406,6 +406,7 @@ static int gpio_rcar_parse_pdata(struct gpio_rcar_priv *p)
 	struct gpio_rcar_config *pdata = dev_get_platdata(&p->pdev->dev);
 	struct device_node *np = p->pdev->dev.of_node;
 	struct of_phandle_args args;
+	unsigned int k;
 	int ret;
 
 	if (pdata) {
@@ -426,6 +427,18 @@ static int gpio_rcar_parse_pdata(struct gpio_rcar_priv *p)
 					 : RCAR_MAX_GPIO_PER_BANK;
 		p->config.gpio_base = -1;
 		p->config.has_both_edge_trigger = info->has_both_edge_trigger;
+
+		/* initialize "gpios" property for this GPIO controller */
+		for (k = 0; k < RCAR_MAX_GPIO_PER_BANK; k++) {
+			p->gpios_phandle_value[k*3] = cpu_to_be32(np->phandle);
+			p->gpios_phandle_value[(k*3) + 1] = cpu_to_be32(k);
+			p->gpios_phandle_value[(k*3) + 2] = cpu_to_be32(0);
+		}
+
+		p->gpios_property.name = "gpios";
+		p->gpios_property.length = sizeof(p->gpios_phandle_value);
+		p->gpios_property.value = p->gpios_phandle_value;
+		of_add_property(np, &p->gpios_property);
 	}
 
 	if (p->config.number_of_pins == 0 ||
@@ -470,6 +483,7 @@ static int gpio_rcar_probe(struct platform_device *pdev)
 	}
 
 	pm_runtime_enable(dev);
+	pm_runtime_get_sync(dev);
 
 	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
@@ -555,6 +569,7 @@ static int gpio_rcar_probe(struct platform_device *pdev)
 err1:
 	gpiochip_remove(gpio_chip);
 err0:
+	pm_runtime_put(dev);
 	pm_runtime_disable(dev);
 	return ret;
 }
@@ -562,10 +577,17 @@ err0:
 static int gpio_rcar_remove(struct platform_device *pdev)
 {
 	struct gpio_rcar_priv *p = platform_get_drvdata(pdev);
+	struct gpio_rcar_config *pdata = dev_get_platdata(&p->pdev->dev);
+	struct device_node *np = p->pdev->dev.of_node;
 
 	gpiochip_remove(&p->gpio_chip);
 
+	pm_runtime_put(&pdev->dev);
 	pm_runtime_disable(&pdev->dev);
+
+	if (!pdata && IS_ENABLED(CONFIG_OF) && np)
+		of_remove_property(np, &p->gpios_property);
+
 	return 0;
 }
 
@@ -578,7 +600,17 @@ static struct platform_driver gpio_rcar_device_driver = {
 	}
 };
 
-module_platform_driver(gpio_rcar_device_driver);
+static int __init gpio_rcar_init(void)
+{
+	return platform_driver_register(&gpio_rcar_device_driver);
+}
+subsys_initcall(gpio_rcar_init);
+
+static void __exit gpio_rcar_exit(void)
+{
+	platform_driver_unregister(&gpio_rcar_device_driver);
+}
+module_exit(gpio_rcar_exit);
 
 MODULE_AUTHOR("Magnus Damm");
 MODULE_DESCRIPTION("Renesas R-Car GPIO Driver");

@@ -23,6 +23,7 @@
 #include "rcar_du_hdmienc.h"
 #include "rcar_du_kms.h"
 #include "rcar_du_lvdscon.h"
+#include "rcar_du_rgbcon.h"
 #include "rcar_du_lvdsenc.h"
 #include "rcar_du_vgacon.h"
 
@@ -89,12 +90,8 @@ static int rcar_du_encoder_atomic_check(struct drm_encoder *encoder,
 	/* The flat panel mode is fixed, just copy it to the adjusted mode. */
 	drm_mode_copy(adjusted_mode, panel_mode);
 
-	/* The internal LVDS encoder has a clock frequency operating range of
-	 * 30MHz to 150MHz. Clamp the clock accordingly.
-	 */
 	if (renc->lvds)
-		adjusted_mode->clock = clamp(adjusted_mode->clock,
-					     30000, 150000);
+		rcar_du_lvdsenc_atomic_check(renc->lvds, adjusted_mode);
 
 	return 0;
 }
@@ -173,7 +170,7 @@ int rcar_du_encoder_init(struct rcar_du_device *rcdu,
 			goto done;
 	} else {
 		ret = drm_encoder_init(rcdu->ddev, encoder, &encoder_funcs,
-				       encoder_type);
+				       encoder_type, NULL);
 		if (ret < 0)
 			goto done;
 
@@ -193,6 +190,10 @@ int rcar_du_encoder_init(struct rcar_du_device *rcdu,
 		ret = rcar_du_hdmi_connector_init(rcdu, renc);
 		break;
 
+	case DRM_MODE_ENCODER_NONE:
+		ret = rcar_du_rgb_connector_init(rcdu, renc, con_node);
+		break;
+
 	default:
 		ret = -EINVAL;
 		break;
@@ -204,6 +205,12 @@ done:
 			encoder->funcs->destroy(encoder);
 		devm_kfree(rcdu->dev, renc);
 	}
+
+	if (ret == -EPROBE_DEFER)
+		/* Return -EPROBE_DEFER will make kernel trying to initialize
+		 * current output again. But in certain case it causes looping
+		 * and kernel cannot init another output. Disable temporarily */
+		ret = -1;
 
 	return ret;
 }

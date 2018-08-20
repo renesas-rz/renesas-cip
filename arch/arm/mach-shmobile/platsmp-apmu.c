@@ -26,6 +26,19 @@
 #include "platsmp-apmu.h"
 #include "rcar-gen2.h"
 
+/* only enable the cluster that includes the boot CPU by default */
+static bool enable_multicluster = false;
+
+static __init int apmu_setup(char *opt)
+{
+	if (!opt)
+		return -EINVAL;
+	if (!strncmp(opt, "multicluster", 12))
+		enable_multicluster = true;
+	return 0;
+}
+early_param("apmu", apmu_setup);
+
 static struct {
 	void __iomem *iomem;
 	int bit;
@@ -93,7 +106,7 @@ static void apmu_init_cpu(struct resource *res, int cpu, int bit)
 	apmu_cpus[cpu].iomem = ioremap_nocache(res->start, resource_size(res));
 	apmu_cpus[cpu].bit = bit;
 
-	pr_debug("apmu ioremap %d %d %pr\n", cpu, bit, res);
+	pr_debug("apmu ioremap %d %d %pr %p\n", cpu, bit, res, apmu_cpus[cpu].iomem);
 
 	/* Setup for debug mode */
 	x = readl(apmu_cpus[cpu].iomem + DBGRCR_OFFS);
@@ -110,8 +123,7 @@ static void apmu_parse_cfg(void (*fn)(struct resource *res, int cpu, int bit),
 	bool is_allowed;
 
 	for (k = 0; k < num; k++) {
-		/* only enable the cluster that includes the boot CPU */
-		is_allowed = false;
+		is_allowed = enable_multicluster;
 		for (bit = 0; bit < ARRAY_SIZE(apmu_config[k].cpus); bit++) {
 			id = apmu_config[k].cpus[bit];
 			if (id >= 0) {
@@ -204,7 +216,7 @@ void __init shmobile_smp_apmu_prepare_cpus(unsigned int max_cpus,
 int shmobile_smp_apmu_boot_secondary(unsigned int cpu, struct task_struct *idle)
 {
 	/* For this particular CPU register boot vector */
-	shmobile_smp_hook(cpu, virt_to_phys(secondary_startup), 0);
+	shmobile_smp_hook(cpu, virt_to_phys(shmobile_invalidate_start), 0);
 
 	return apmu_wrap(cpu, apmu_power_on);
 }

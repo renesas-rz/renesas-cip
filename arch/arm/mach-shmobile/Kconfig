@@ -12,13 +12,15 @@ config PM_RMOBILE
 
 config ARCH_RCAR_GEN1
 	bool
-	select PM_RCAR if PM || SMP
+	select PM
+	select PM_GENERIC_DOMAINS
 	select RENESAS_INTC_IRQPIN
 	select SYS_SUPPORTS_SH_TMU
 
 config ARCH_RCAR_GEN2
 	bool
-	select PM_RCAR if PM || SMP
+	select PM
+	select PM_GENERIC_DOMAINS
 	select RENESAS_IRQC
 	select SYS_SUPPORTS_SH_CMT
 	select PCI_DOMAINS if PCI
@@ -67,10 +69,16 @@ config ARCH_R8A7740
 config ARCH_R8A7743
 	bool "RZ/G1M (R8A77430)"
 	select ARCH_RCAR_GEN2
+	select I2C
 
 config ARCH_R8A7745
 	bool "RZ/G1E (R8A77450)"
 	select ARCH_RCAR_GEN2
+
+config ARCH_R8A77470
+	bool "RZ/G1C (R8A77470)"
+	select ARCH_RCAR_GEN2
+	select I2C
 
 config ARCH_R8A7778
 	bool "R-Car M1A (R8A77781)"
@@ -85,8 +93,18 @@ config ARCH_R8A7790
 	select ARCH_RCAR_GEN2
 	select I2C
 
+config ARCH_R8A7742
+	bool "RZ/G1H (R8A77420)"
+	select ARCH_RCAR_GEN2
+	select I2C
+
 config ARCH_R8A7791
 	bool "R-Car M2-W (R8A77910)"
+	select ARCH_RCAR_GEN2
+	select I2C
+
+config ARCH_R8A7744
+	bool "RZ/G1N (R8A77440)"
 	select ARCH_RCAR_GEN2
 	select I2C
 

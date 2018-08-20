@@ -33,6 +33,7 @@ struct drm_fb_cma {
 struct drm_fbdev_cma {
 	struct drm_fb_helper	fb_helper;
 	struct drm_fb_cma	*fb;
+	unsigned int		fb_size_mult;
 };
 
 static inline struct drm_fbdev_cma *to_fbdev_cma(struct drm_fb_helper *helper)
@@ -74,7 +75,7 @@ static struct drm_framebuffer_funcs drm_fb_cma_funcs = {
 };
 
 static struct drm_fb_cma *drm_fb_cma_alloc(struct drm_device *dev,
-	struct drm_mode_fb_cmd2 *mode_cmd, struct drm_gem_cma_object **obj,
+	const const struct drm_mode_fb_cmd2 *mode_cmd, struct drm_gem_cma_object **obj,
 	unsigned int num_planes)
 {
 	struct drm_fb_cma *fb_cma;
@@ -107,7 +108,7 @@ static struct drm_fb_cma *drm_fb_cma_alloc(struct drm_device *dev,
  * checked before calling this function.
  */
 struct drm_framebuffer *drm_fb_cma_create(struct drm_device *dev,
-	struct drm_file *file_priv, struct drm_mode_fb_cmd2 *mode_cmd)
+	struct drm_file *file_priv, const struct drm_mode_fb_cmd2 *mode_cmd)
 {
 	struct drm_fb_cma *fb_cma;
 	struct drm_gem_cma_object *objs[4];
@@ -230,6 +231,7 @@ static struct fb_ops drm_fbdev_cma_ops = {
 	.fb_blank	= drm_fb_helper_blank,
 	.fb_pan_display	= drm_fb_helper_pan_display,
 	.fb_setcmap	= drm_fb_helper_setcmap,
+	.fb_ioctl       = drm_fb_helper_ioctl,
 };
 
 static int drm_fbdev_cma_create(struct drm_fb_helper *helper,
@@ -253,7 +255,7 @@ static int drm_fbdev_cma_create(struct drm_fb_helper *helper,
 	bytes_per_pixel = DIV_ROUND_UP(sizes->surface_bpp, 8);
 
 	mode_cmd.width = sizes->surface_width;
-	mode_cmd.height = sizes->surface_height;
+	mode_cmd.height = sizes->surface_height * fbdev_cma->fb_size_mult;
 	mode_cmd.pitches[0] = sizes->surface_width * bytes_per_pixel;
 	mode_cmd.pixel_format = drm_mode_legacy_fb_format(sizes->surface_bpp,
 		sizes->surface_depth);
@@ -284,7 +286,8 @@ static int drm_fbdev_cma_create(struct drm_fb_helper *helper,
 	fbi->fbops = &drm_fbdev_cma_ops;
 
 	drm_fb_helper_fill_fix(fbi, fb->pitches[0], fb->depth);
-	drm_fb_helper_fill_var(fbi, helper, sizes->fb_width, sizes->fb_height);
+	drm_fb_helper_fill_var(fbi, helper, sizes->surface_width,
+			sizes->surface_height);
 
 	offset = fbi->var.xoffset * bytes_per_pixel;
 	offset += fbi->var.yoffset * fb->pitches[0];
@@ -314,12 +317,13 @@ static const struct drm_fb_helper_funcs drm_fb_cma_helper_funcs = {
  * @preferred_bpp: Preferred bits per pixel for the device
  * @num_crtc: Number of CRTCs
  * @max_conn_count: Maximum number of connectors
+ * @fb_size_mult: Frame buffer height size multiplier
  *
  * Returns a newly allocated drm_fbdev_cma struct or a ERR_PTR.
  */
 struct drm_fbdev_cma *drm_fbdev_cma_init(struct drm_device *dev,
 	unsigned int preferred_bpp, unsigned int num_crtc,
-	unsigned int max_conn_count)
+	unsigned int max_conn_count, unsigned int fb_size_mult)
 {
 	struct drm_fbdev_cma *fbdev_cma;
 	struct drm_fb_helper *helper;
@@ -331,6 +335,7 @@ struct drm_fbdev_cma *drm_fbdev_cma_init(struct drm_device *dev,
 		return ERR_PTR(-ENOMEM);
 	}
 
+	fbdev_cma->fb_size_mult = fb_size_mult;
 	helper = &fbdev_cma->fb_helper;
 
 	drm_fb_helper_prepare(dev, helper, &drm_fb_cma_helper_funcs);

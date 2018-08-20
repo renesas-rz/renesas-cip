@@ -54,8 +54,15 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
 
 	if (!is_c45 && !of_get_phy_id(child, &phy_id))
 		phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
-	else
-		phy = get_phy_device(mdio, addr, is_c45);
+	else {
+		for (addr = 1; addr < PHY_MAX_ADDR ; addr++) {
+			phy = get_phy_device(mdio, addr, is_c45);
+			if (!phy || IS_ERR(phy))
+				continue;
+			else
+				break;
+		}
+	}
 	if (!phy || IS_ERR(phy))
 		return 1;
 

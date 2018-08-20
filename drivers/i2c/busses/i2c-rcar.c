@@ -448,6 +448,7 @@ static irqreturn_t rcar_i2c_irq(int irq, void *ptr)
 		/* HW automatically sends STOP after received NACK */
 		rcar_i2c_write(priv, ICMIER, RCAR_IRQ_STOP);
 		rcar_i2c_flags_set(priv, ID_NACK);
+		rcar_i2c_write(priv, ICMSR, 0);
 		goto out;
 	}
 
@@ -455,6 +456,7 @@ static irqreturn_t rcar_i2c_irq(int irq, void *ptr)
 	if (msr & MST) {
 		priv->msgs_left--; /* The last message also made it */
 		rcar_i2c_flags_set(priv, ID_DONE);
+		rcar_i2c_write(priv, ICMSR, 0);
 		goto out;
 	}
 
@@ -466,7 +468,6 @@ static irqreturn_t rcar_i2c_irq(int irq, void *ptr)
 out:
 	if (rcar_i2c_flags_has(priv, ID_DONE)) {
 		rcar_i2c_write(priv, ICMIER, 0);
-		rcar_i2c_write(priv, ICMSR, 0);
 		wake_up(&priv->wait);
 	}
 
@@ -580,9 +581,13 @@ static const struct of_device_id rcar_i2c_dt_ids[] = {
 	{ .compatible = "renesas,i2c-r8a7779", .data = (void *)I2C_RCAR_GEN1 },
 	{ .compatible = "renesas,i2c-r8a7790", .data = (void *)I2C_RCAR_GEN2 },
 	{ .compatible = "renesas,i2c-r8a7791", .data = (void *)I2C_RCAR_GEN2 },
+	{ .compatible = "renesas,i2c-r8a7742", .data = (void *)I2C_RCAR_GEN2 },
 	{ .compatible = "renesas,i2c-r8a7792", .data = (void *)I2C_RCAR_GEN2 },
 	{ .compatible = "renesas,i2c-r8a7793", .data = (void *)I2C_RCAR_GEN2 },
 	{ .compatible = "renesas,i2c-r8a7794", .data = (void *)I2C_RCAR_GEN2 },
+	{ .compatible = "renesas,i2c-r8a77470", .data = (void *)I2C_RCAR_GEN2 },
+	{ .compatible = "renesas,i2c-r8a7745", .data = (void *)I2C_RCAR_GEN2 },
+	{ .compatible = "renesas,i2c-r8a7744", .data = (void *)I2C_RCAR_GEN2 },
 	{ .compatible = "renesas,i2c-r8a7795", .data = (void *)I2C_RCAR_GEN3 },
 	{ .compatible = "renesas,i2c-rcar", .data = (void *)I2C_RCAR_GEN1 },	/* Deprecated */
 	{ .compatible = "renesas,rcar-gen1-i2c", .data = (void *)I2C_RCAR_GEN1 },
@@ -689,7 +694,18 @@ static struct platform_driver rcar_i2c_driver = {
 	.remove		= rcar_i2c_remove,
 };
 
-module_platform_driver(rcar_i2c_driver);
+static int __init rcar_i2c_adap_init(void)
+{
+	return platform_driver_register(&rcar_i2c_driver);
+}
+
+static void __exit rcar_i2c_adap_exit(void)
+{
+	platform_driver_unregister(&rcar_i2c_driver);
+}
+
+subsys_initcall(rcar_i2c_adap_init);
+module_exit(rcar_i2c_adap_exit);
 
 MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("Renesas R-Car I2C bus driver");
