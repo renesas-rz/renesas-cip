@@ -1,7 +1,7 @@
 /*
  * rcar_du_kms.c  --  R-Car Display Unit Mode Setting
  *
- * Copyright (C) 2013-2015 Renesas Electronics Corporation
+ * Copyright (C) 2013-2018 Renesas Electronics Corporation
  *
  * Contact: Laurent Pinchart (laurent.pinchart@ideasonboard.com)
  *
@@ -522,8 +522,8 @@ int rcar_du_modeset_init(struct rcar_du_device *rcdu)
 	dev->mode_config.helper_private = &rcar_du_mode_config_helper;
 
 	if (rcdu->info->gen < 3) {
-		dev->mode_config.max_width = 4095;
-		dev->mode_config.max_height = 2047;
+		dev->mode_config.max_width = 4096;
+		dev->mode_config.max_height = 2160;
 	} else {
 		/*
 		 * The Gen3 DU uses the VSP1 for memory access, and is limited
