@@ -299,6 +299,22 @@ static const struct clk_div_table cpg_sd01_div_table[] = {
  * Initialization
  */
 
+struct pll0_config_data{
+	bool is_devider_fixed;
+	unsigned int mult_ratio_table[4];
+};
+
+static struct pll0_config_data fix_pll0_ratio = {
+	.is_devider_fixed = true,
+	.mult_ratio_table = {
+		200, 150, 230, 200
+	} /* See tables 7.5b and 7.5c */
+};
+
+static struct pll0_config_data var_pll0_ratio = {
+	.is_devider_fixed = false
+};
+
 static u32 cpg_mode __initdata;
 
 static const char * const pll0_mult_match[] = {
