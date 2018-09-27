@@ -131,6 +131,11 @@
 		renesas,groups = "qspi_ctrl", "qspi_data2";
 		renesas,function = "qspi";
 	};
+
+	i2c2_pins: i2c2 {
+		renesas,groups = "i2c2";
+		renesas,function = "i2c2";
+	};
 };
 
 &scif0 {
@@ -233,4 +238,20 @@
 		spi-cpol;
 		spi-cpha;
 	};
+};
+
+&i2c2 {
+	pinctrl-0 = <&i2c2_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+	clock-frequency = <400000>;
+
+};
+
+&i2c5 {
+	pinctrl-names = "default";
+	status = "okay";
+	clock-frequency = <400000>;
+
 };
