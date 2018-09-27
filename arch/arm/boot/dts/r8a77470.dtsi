@@ -28,6 +28,7 @@
 			reg = <0>;
 			clock-frequency = <1000000000>;
 			voltage-tolerance = <1>; /* 1% */
+			clocks = <&z2_clk>;
 			clock-latency = <300000>; /* 300 us */
 
 			/* kHz - uV - OPPs unknown yet */
