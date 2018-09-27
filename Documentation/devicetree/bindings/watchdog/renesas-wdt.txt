@@ -31,3 +31,10 @@ Examples:
 		power-domains = <&cpg_clocks>;
 		timeout-sec = <60>;
 	};
+
+	wdt0: watchdog@e6020000 {
+		compatible = "renesas,r8a77470-wdt", "renesas,rcar-gen2-wdt";
+		reg = <0 0xe6020000 0 0x0c>;
+		clocks = <&mstp4_clks R8A77470_CLK_RWDT>;
+		timeout-sec = <60>;
+	};
