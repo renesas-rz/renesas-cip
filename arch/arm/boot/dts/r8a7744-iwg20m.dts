@@ -148,6 +148,11 @@
 		renesas,groups = "i2c2";
 		renesas,function = "i2c2";
 	};
+
+	pwm3_pins: pwm3 {
+		renesas,groups = "pwm3";
+		renesas,function = "pwm3";
+	};
 };
 
 &scif0 {
@@ -279,4 +284,11 @@
 	status = "okay";
 	clock-frequency = <400000>;
 
+};
+
+&pwm3 {
+	pinctrl-0 = <&pwm3_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
 };
