@@ -179,10 +179,7 @@ void __init rcar_gen2_reserve(void)
 	/* reserve 256 MiB at the top of the physical legacy 32-bit space */
 	memset(&mrc, 0, sizeof(mrc));
 
-	if (of_machine_is_compatible("renesas,r8a77470"))
-		mrc.reserved = SZ_128M;
-	else
-		mrc.reserved = SZ_256M;
+	mrc.reserved = SZ_256M;
 
 	of_scan_flat_dt(rcar_gen2_scan_mem, &mrc);
 #ifdef CONFIG_DMA_CMA
