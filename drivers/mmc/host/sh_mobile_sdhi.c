@@ -205,11 +205,13 @@ static int sh_mobile_sdhi_probe(struct platform_device *pdev)
 	struct sh_mobile_sdhi *priv;
 	struct tmio_mmc_data *mmc_data;
 	struct tmio_mmc_data *mmd = pdev->dev.platform_data;
+	const struct device_node *np = pdev->dev.of_node;
 	struct tmio_mmc_host *host;
 	struct resource *res;
 	int irq, ret, i = 0;
 	bool multiplexed_isr = true;
 	struct tmio_mmc_dma *dma_priv;
+	int clk_rate = 0;
 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	if (!res)
@@ -229,6 +231,18 @@ static int sh_mobile_sdhi_probe(struct platform_device *pdev)
 		ret = PTR_ERR(priv->clk);
 		dev_err(&pdev->dev, "cannot get clock: %d\n", ret);
 		goto eprobe;
+	}
+
+	if (np && !of_property_read_u32(np, "renesas,clk-rate", &clk_rate)) {
+			if (clk_rate) {
+					clk_prepare_enable(priv->clk);
+					ret = clk_set_rate(priv->clk, clk_rate);
+					if (ret < 0)
+							dev_err(&pdev->dev,
+									"cannot set clock rate: %d\n", ret);
+
+					clk_disable_unprepare(priv->clk);
+			}
 	}
 
 	host = tmio_mmc_host_alloc(pdev);
