@@ -508,6 +508,7 @@ static int rcar_i2c_master_xfer(struct i2c_adapter *adap,
 	time_left = wait_event_timeout(priv->wait,
 				     rcar_i2c_flags_has(priv, ID_DONE),
 				     num * adap->timeout);
+	msleep(100);
 	if (!time_left) {
 		rcar_i2c_init(priv);
 		ret = -ETIMEDOUT;
