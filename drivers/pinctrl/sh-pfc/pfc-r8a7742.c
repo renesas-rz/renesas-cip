@@ -3513,12 +3513,19 @@ static const unsigned int vin1_clkenb_pins[] = {
 static const unsigned int vin1_clkenb_mux[] = {
 	VI1_CLKENB_MARK,
 };
+static const unsigned int vin1_clk_b_pins[] = {
+	RCAR_GP_PIN(3, 15),
+};
+static const unsigned int vin1_clk_b_mux[] = {
+	VI1_CLK_B_MARK,
+};
 static const unsigned int vin1_clk_pins[] = {
 	RCAR_GP_PIN(2, 9),
 };
 static const unsigned int vin1_clk_mux[] = {
 	VI1_CLK_MARK,
 };
+
 /* - VIN2 ----------------------------------------------------------------- */
 static const union vin_data vin2_data_pins = {
 	.data24 = {
@@ -3954,6 +3961,7 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
 	SH_PFC_PIN_GROUP(vin1_sync),
 	SH_PFC_PIN_GROUP(vin1_field),
 	SH_PFC_PIN_GROUP(vin1_clkenb),
+	SH_PFC_PIN_GROUP(vin1_clk_b),
 	SH_PFC_PIN_GROUP(vin1_clk),
 	VIN_DATA_PIN_GROUP(vin2_data, 24),
 	SH_PFC_PIN_GROUP(vin2_data18),
@@ -4405,6 +4413,7 @@ static const char * const vin1_groups[] = {
 	"vin1_sync",
 	"vin1_field",
 	"vin1_clkenb",
+	"vin1_clk_b",
 	"vin1_clk",
 };
 
