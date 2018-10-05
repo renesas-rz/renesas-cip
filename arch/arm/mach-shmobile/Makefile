@@ -15,7 +15,7 @@ obj-$(CONFIG_ARCH_R8A7790)	+= setup-r8a7790.o
 obj-$(CONFIG_ARCH_R8A7790)	+= setup-r8a7742.o
 obj-$(CONFIG_ARCH_R8A7791)	+= setup-r8a7791.o
 obj-$(CONFIG_ARCH_R8A7745)      += setup-r8a7745.o sgx-r8a7745-quirk.o
-obj-$(CONFIG_ARCH_R8A77470)     += setup-r8a77470.o
+obj-$(CONFIG_ARCH_R8A77470) += setup-rcar-gen2.o
 obj-$(CONFIG_ARCH_R8A7744)	+= setup-rcar-gen2.o
 obj-$(CONFIG_ARCH_EMEV2)	+= setup-emev2.o
 obj-$(CONFIG_ARCH_R7S72100)	+= setup-r7s72100.o
@@ -37,7 +37,7 @@ smp-$(CONFIG_ARCH_R8A7779)	+= smp-r8a7779.o headsmp-scu.o platsmp-scu.o
 smp-$(CONFIG_ARCH_R8A7790)	+= smp-r8a7790.o
 smp-$(CONFIG_ARCH_R8A7790)	+= smp-r8a7742.o
 smp-$(CONFIG_ARCH_R8A7791)	+= smp-r8a7791.o
-smp-$(CONFIG_ARCH_R8A77470)     += smp-r8a77470.o
+smp-$(CONFIG_ARCH_R8A77470) += platsmp-apmu.o $(cpu-y)
 smp-$(CONFIG_ARCH_R8A7744)	+= platsmp-apmu.o $(cpu-y)
 smp-$(CONFIG_ARCH_EMEV2)	+= smp-emev2.o headsmp-scu.o platsmp-scu.o
 
