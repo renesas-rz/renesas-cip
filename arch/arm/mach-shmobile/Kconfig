@@ -93,6 +93,11 @@ config ARCH_R8A7790
 	select ARCH_RCAR_GEN2
 	select I2C
 
+config ARCH_R8A7742
+	bool "RZ/G1H (R8A77420)"
+	select ARCH_RCAR_GEN2
+	select I2C
+
 config ARCH_R8A7791
 	bool "R-Car M2-W (R8A77910)"
 	select ARCH_RCAR_GEN2
