@@ -92,6 +92,8 @@ void __init rcar_gen2_pm_init(void)
 
 	if (of_machine_is_compatible("renesas,r8a7790"))
 		syscier = 0x013111ef;
+	else if (of_machine_is_compatible("renesas,r8a7742"))
+		syscier = 0x013111ef;
 	else if (of_machine_is_compatible("renesas,r8a7791"))
 		syscier = 0x00111003;
 	else if (of_machine_is_compatible("renesas,r8a7743"))
