@@ -315,6 +315,21 @@ static struct pll0_config_data var_pll0_ratio = {
 	.is_devider_fixed = false
 };
 
+static const struct of_device_id cpg_of_match[] = {
+
+	{
+		.compatible = "renesas,r8a7743-cpg-clocks",
+		.data = &var_pll0_ratio,
+	},
+
+
+	{
+		.compatible = "renesas,r8a7745-cpg-clocks",
+		.data = &fix_pll0_ratio,
+	},
+	{}
+};
+
 static u32 cpg_mode __initdata;
 
 static const char * const pll0_mult_match[] = {
