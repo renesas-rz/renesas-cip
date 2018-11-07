@@ -154,3 +154,12 @@
 
 	status = "okay";
 };
+
+&gpio4 {
+	can1-trx-en-gpio{
+		gpio-hog;
+		gpios = <10 GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "can1-trx-en-gpio";
+	};
+};
