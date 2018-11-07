@@ -331,3 +331,12 @@
 		};
 	};
 };
+
+&gpio4 {
+	can0-trx-en-gpio{
+		gpio-hog;
+		gpios = <2 GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "can0-trx-en-gpio";
+	};
+};
