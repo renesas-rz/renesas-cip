@@ -205,6 +205,11 @@
 		function = "avb";
 	};
 
+	phy0_pins: phy0 {
+		renesas,groups = "intc_irq8";
+		renesas,function = "intc";
+	};
+
 	sdhi0_pins: sd0 {
 		groups = "sdhi0_data4", "sdhi0_ctrl";
 		function = "sdhi0";
