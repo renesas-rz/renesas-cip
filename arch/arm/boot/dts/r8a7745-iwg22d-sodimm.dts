@@ -381,3 +381,7 @@
 		line-name = "can0-trx-en-gpio";
 	};
 };
+
+&tmu1 {
+	status = "okay";
+};
