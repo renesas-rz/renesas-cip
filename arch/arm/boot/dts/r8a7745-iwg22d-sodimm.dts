@@ -377,11 +377,21 @@
 	can0-trx-en-gpio{
 		gpio-hog;
 		gpios = <2 GPIO_ACTIVE_HIGH>;
+
+
 		output-low;
 		line-name = "can0-trx-en-gpio";
 	};
 };
 
 &tmu1 {
+	status = "okay";
+};
+
+&tmu2 {
+	status = "okay";
+};
+
+&tmu3 {
 	status = "okay";
 };
