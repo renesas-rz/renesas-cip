@@ -1,0 +1,105 @@
+/*
+ * Device Tree Source for the iwg23s-Pi boards
+ *
+ * Copyright (c) 2016 iWave Systems Technologies Pvt. Ltd.
+ *
+ * This file is licensed under the terms of the GNU General Public License
+ * version 2.  This program is licensed "as is" without any warranty of any
+ * kind, whether express or implied.
+ */
+
+/dts-v1/;
+#include "r8a77470.dtsi"
+/ {
+	model = "iW-RainboW-G23S-Pi Board based on Renesas RZ/G1C";
+	compatible = "iw,iwg23s", "renesas,r8a77470";
+
+	aliases {
+		serial1 = &scif1;
+		serial2 = &scif2;
+		serial3 = &scif4;
+		serial4 = &scif5;
+		serial5 = &hscif1;
+		serial6 = &hscif2;
+	};
+
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0 0x40000000 0 0x20000000>;
+	};
+
+};
+
+&extal_clk {
+	clock-frequency = <20000000>;
+};
+
+&pfc {
+	scif1_pins: serial1 {
+		renesas,groups = "scif1_data_b";
+		renesas,function = "scif1";
+	};
+
+	scif2_pins: serial2 {
+		renesas,groups = "scif2_data_b";
+		renesas,function = "scif2";
+	};
+
+	scif4_pins: serial3 {
+		renesas,groups = "scif4_data_b";
+		renesas,function = "scif4";
+	};
+
+	scif5_pins: serial4 {
+		renesas,groups = "scif5_data_b";
+		renesas,function = "scif5";
+	};
+
+	hscif1_pins: serial5 {
+		renesas,groups = "hscif1_data", "hscif1_ctrl_a";
+		renesas,function = "hscif1";
+	};
+
+	hscif2_pins: serial6 {
+		renesas,groups = "hscif2_data", "hscif2_clk", "hscif2_ctrl";
+		renesas,function = "hscif2";
+	};
+};
+
+&scif1 {
+	pinctrl-0 = <&scif1_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&scif2 {
+	pinctrl-0 = <&scif2_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&scif4 {
+	pinctrl-0 = <&scif4_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&scif5 {
+	pinctrl-0 = <&scif5_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&hscif1 {
+	pinctrl-0 = <&hscif1_pins>;
+	pinctrl-names = "default";
+	ctsrts;
+	status = "okay";
+};
+
+&hscif2 {
+	pinctrl-0 = <&hscif2_pins>;
+	pinctrl-names = "default";
+	ctsrts;
+	status = "okay";
+};
