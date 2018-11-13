@@ -43,6 +43,52 @@
 		regulator-always-on;
 		regulator-boot-on;
 	};
+
+	vcc_lcd: regulator@4 {
+		compatible = "regulator-fixed";
+
+		regulator-name = "panel vcc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
+
+	backlight {
+		compatible = "pwm-backlight";
+		pwms = <&tpu 3 5000000 GPIO_ACTIVE_LOW>;
+		brightness-levels = <0 4 8 16 32 64 128 255>;
+		default-brightness-level = <7>;
+		pinctrl-0 = <&backlight_pins>;
+		pinctrl-names = "default";
+	};
+
+	lcd@20 {
+		compatible = "edt,et043080dh6-gp", "simple-panel";
+		power-supply = <&vcc_lcd>;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				reg = <0>;
+				lcd_in: endpoint {
+					reg = <0>;
+					remote-endpoint = <&du_out_rgb0>;
+				};
+			};
+
+		};
+	};
+
+	x2_clk: x2-clock {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <10800000>;
+	};
 };
 
 &cmt0 {
