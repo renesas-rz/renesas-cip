@@ -104,13 +104,13 @@
 
 &pfc {
 	mmcif0_pins: mmc {
-		groups = "mmc_data8", "mmc_ctrl";
-		function = "mmc";
+		renesas,groups = "mmc_data8", "mmc_ctrl";
+		renesas,function = "mmc";
 	};
 
 	qspi_pins: qspi {
-		groups = "qspi_ctrl", "qspi_data2";
-		function = "qspi";
+		renesas,groups = "qspi_ctrl", "qspi_data2";
+		renesas,function = "qspi";
 	};
 
 	msiof2_pins: spi3 {
@@ -120,14 +120,14 @@
 	};
 
 	sdhi1_pins: sd1 {
-		groups = "sdhi1_data4", "sdhi1_ctrl";
-		function = "sdhi1";
+		renesas,groups = "sdhi1_data4", "sdhi1_ctrl";
+		renesas,function = "sdhi1";
 		power-source = <3300>;
 	};
 
 	i2c3_pins: i2c3 {
-		groups = "i2c3_b";
-		function = "i2c3";
+		renesas,groups = "i2c3_b";
+		renesas,function = "i2c3";
 	};
 };
 

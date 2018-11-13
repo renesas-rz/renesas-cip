@@ -150,13 +150,13 @@
 
 &pfc {
 	can0_pins: can0 {
-		groups = "can0_data";
-		function = "can0";
+		renesas,groups = "can0_data";
+		renesas,function = "can0";
 	};
 
 	hscif1_pins: hscif1 {
-		groups = "hscif1_data", "hscif1_ctrl";
-		function = "hscif1";
+		renesas,groups = "hscif1_data", "hscif1_ctrl";
+		renesas,function = "hscif1";
 	};
 
 	scif2_pins: serial1 {
@@ -170,8 +170,8 @@
 	};
 
 	i2c5_pins: i2c5 {
-		groups = "i2c5_b";
-		function = "i2c5";
+		renesas,groups = "i2c5_b";
+		renesas,function = "i2c5";
 	};
 
 	stmp_pins: stmpe811 {
@@ -196,13 +196,13 @@
 	};
 
 	scif4_pins: scif4 {
-		groups = "scif4_data_b";
-		function = "scif4";
+		renesas,groups = "scif4_data_b";
+		renesas,function = "scif4";
 	};
 
 	avb_pins: avb {
-		groups = "avb_mdio", "avb_gmii";
-		function = "avb";
+		renesas,groups = "avb_mdio", "avb_gmii";
+		renesas,function = "avb";
 	};
 
 	phy0_pins: phy0 {
@@ -211,24 +211,24 @@
 	};
 
 	sdhi0_pins: sd0 {
-		groups = "sdhi0_data4", "sdhi0_ctrl";
-		function = "sdhi0";
+		renesas,groups = "sdhi0_data4", "sdhi0_ctrl";
+		renesas,function = "sdhi0";
 		power-source = <3300>;
 	};
 
 	sound_pins: sound {
-		groups = "ssi34_ctrl", "ssi3_data", "ssi4_data";
-		function = "ssi";
+		renesas,groups = "ssi34_ctrl", "ssi3_data", "ssi4_data";
+		renesas,function = "ssi";
 	};
 
 	usb0_pins: usb0 {
-		groups = "usb0";
-		function = "usb0";
+		renesas,groups = "usb0";
+		renesas,function = "usb0";
 	};
 
 	usb1_pins: usb1 {
-		groups = "usb1";
-		function = "usb1";
+		renesas,groups = "usb1";
+		renesas,function = "usb1";
 	};
 
 	pwm1_pins: pwm1 {
