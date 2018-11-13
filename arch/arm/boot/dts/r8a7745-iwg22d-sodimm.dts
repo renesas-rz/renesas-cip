@@ -114,6 +114,20 @@
 		VDDA-supply = <&reg_3p3v>;
 		VDDIO-supply = <&reg_3p3v>;
 	};
+
+	ov7725@21 {
+		compatible = "ov772x";
+		reg = <0x21>;
+		remote = <&vin1>;
+
+		port {
+			ov7725: endpoint {
+				bus-width = <8>;
+				pclk-sample = <1>;
+				remote-endpoint = <&vin1ep>;
+			};
+		};
+	};
 };
 
 &pfc {
@@ -146,6 +160,11 @@
 		renesas,groups = "du0_rgb888", "du0_sync", "du0_disp",
 				"du0_clk0_out";
 		renesas,function = "du0";
+	};
+
+	vin1_pins: vin1 {
+		renesas,groups = "vin1_data8", "vin1_sync", "vin1_clk";
+		renesas,function = "vin1";
 	};
 
 	scif4_pins: scif4 {
@@ -293,6 +312,22 @@
 			endpoint {
 				remote-endpoint = <&lcd_in>;
 			};
+		};
+	};
+};
+
+&vin1 {
+	status = "okay";
+	pinctrl-0 = <&vin1_pins>;
+	pinctrl-names = "default";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vin1ep: endpoint {
+			remote-endpoint = <&ov7725>;
+			bus-width = <8>;
 		};
 	};
 };
