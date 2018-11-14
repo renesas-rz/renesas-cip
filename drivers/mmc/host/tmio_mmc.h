@@ -215,6 +215,10 @@ struct tmio_mmc_host {
 	void (*hs400_downgrade)(struct tmio_mmc_host *host);
 	void (*hs400_complete)(struct tmio_mmc_host *host);
 
+	/* Sampling data comparison: 1 for match. 0 for mismatch */
+	DECLARE_BITMAP(smpcmp, BITS_PER_BYTE * sizeof(long));
+	unsigned int (*compare_scc_data)(struct tmio_mmc_host *host);
+
 	const struct tmio_mmc_dma_ops *dma_ops;
 };
 
