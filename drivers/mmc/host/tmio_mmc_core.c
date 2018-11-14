@@ -1073,6 +1073,14 @@ static void tmio_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 	struct device *dev = &host->pdev->dev;
 	unsigned long flags;
 
+	if (host->disable_scc)
+		host->disable_scc(mmc);
+
+	/* reset HS400 mode */
+	if (!(ios->timing == MMC_TIMING_MMC_HS400))
+		if (host->reset_hs400_mode)
+			host->reset_hs400_mode(mmc);
+
 	mutex_lock(&host->ios_lock);
 
 	spin_lock_irqsave(&host->lock, flags);
@@ -1123,6 +1131,12 @@ static void tmio_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 			"%s.%d: IOS interrupted: clk %u, mode %u",
 			current->comm, task_pid_nr(current),
 			ios->clock, ios->power_mode);
+
+	/* HS400 Register setting */
+	if (ios->timing == MMC_TIMING_MMC_HS400)
+		if (host->prepare_hs400_tuning)
+			host->prepare_hs400_tuning(host);
+
 	host->mrq = NULL;
 
 	host->clk_cache = ios->clock;

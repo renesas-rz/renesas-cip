@@ -118,6 +118,7 @@
 
 /* Check LSI revisions and set specific quirk value */
 #define DTRAEND1_SET_BIT17	BIT(0)
+#define HS400_USE_4TAP         BIT(1)
 
 struct tmio_mmc_data;
 struct tmio_mmc_host;
@@ -211,9 +212,13 @@ struct tmio_mmc_host {
 	unsigned int tap_num;
 	unsigned long tap_set;
 
+	void (*disable_scc)(struct mmc_host *mmc);
 	void (*prepare_hs400_tuning)(struct tmio_mmc_host *host);
 	void (*hs400_downgrade)(struct tmio_mmc_host *host);
 	void (*hs400_complete)(struct tmio_mmc_host *host);
+	void (*reset_hs400_mode)(struct mmc_host *mmc);
+	/* HS400 mode uses 4TAP */
+	bool                    hs400_use_4tap;
 
 	/* Sampling data comparison: 1 for match. 0 for mismatch */
 	DECLARE_BITMAP(smpcmp, BITS_PER_BYTE * sizeof(long));
