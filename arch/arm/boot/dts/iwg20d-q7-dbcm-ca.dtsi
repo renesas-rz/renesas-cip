@@ -164,13 +164,13 @@
 	};
 
 	vin0_pins: vin0 {
-		renesas,groups = "vin0_data8", "vin0_clk";
-		renesas,function = "vin0";
+		groups = "vin0_data8", "vin0_clk";
+		function = "vin0";
 	};
 
 	vin2_pins: vin2 {
-		renesas,groups = "vin2_data8", "vin2_clk";
-		renesas,function = "vin2";
+		groups = "vin2_data8", "vin2_clk";
+		function = "vin2";
 	};
 };
 
