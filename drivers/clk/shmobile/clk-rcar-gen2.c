@@ -21,6 +21,8 @@
 #include <linux/spinlock.h>
 #include <linux/soc/renesas/rcar-rst.h>
 
+static bool is_g1c;
+
 struct rcar_gen2_cpg {
 	struct clk_onecell_data data;
 	spinlock_t lock;
@@ -283,6 +285,11 @@ static const struct cpg_pll_config cpg_pll_configs[8] __initconst = {
 	{ 2, 240, 122 }, { 2, 240, 102 }, { 2, 208, 106 }, { 2, 208,  88 },
 };
 
+static const struct cpg_pll_config g1c_cpg_pll_configs[4] __initconst = {
+	{ 1, 78, 50 }, { 1, 60, 56 },
+	{ /* Invalid */ }, { 1, 52, 50 },
+};
+
 /* SDHI divisors */
 static const struct clk_div_table cpg_sdh_div_table[] = {
 	{  0,  2 }, {  1,  3 }, {  2,  4 }, {  3,  6 },
@@ -292,6 +299,11 @@ static const struct clk_div_table cpg_sdh_div_table[] = {
 
 static const struct clk_div_table cpg_sd01_div_table[] = {
 	{  4,  8 },
+	{  5, 12 }, {  6, 16 }, {  7, 18 }, {  8, 24 },
+	{ 10, 36 }, { 11, 48 }, { 12, 10 }, {  0,  0 },
+};
+
+static const struct clk_div_table g1c_cpg_sd01_div_table[] = {
 	{  5, 12 }, {  6, 16 }, {  7, 18 }, {  8, 24 },
 	{ 10, 36 }, { 11, 48 }, { 12, 10 }, {  0,  0 },
 };
@@ -351,6 +363,11 @@ static const struct of_device_id cpg_of_match[] = {
 		.compatible = "renesas,r8a7745-cpg-clocks",
 		.data = &fix_pll0_ratio,
 	},
+
+	{
+		.compatible = "renesas,r8a77470-cpg-clocks",
+		.data = &var_pll0_ratio,
+	},
 	{}
 };
 
@@ -393,13 +410,19 @@ rcar_gen2_cpg_register_clock(struct device_node *np, struct rcar_gen2_cpg *cpg,
 			mult = ((value >> 24) & ((1 << 7) - 1)) + 1;
 		}
 	} else if (!strcmp(name, "pll1")) {
-		mult = config->pll1_mult / 2;
+		if (is_g1c)
+			mult = config->pll1_mult;
+		else
+			mult = config->pll1_mult / 2;
 	} else if (!strcmp(name, "pll3")) {
 		parent_name = "main";
 		mult = config->pll3_mult;
 	} else if (!strcmp(name, "lb")) {
 		parent_name = "pll1";
-		div = cpg_mode & BIT(18) ? 36 : 24;
+		if (is_g1c)
+			div = 12;
+		else
+			div = cpg_mode & BIT(18) ? 36 : 24;
 	} else if (!strcmp(name, "qspi")) {
 		parent_name = "pll1_div2";
 		div = (cpg_mode & (BIT(3) | BIT(2) | BIT(1))) == BIT(2)
@@ -409,11 +432,18 @@ rcar_gen2_cpg_register_clock(struct device_node *np, struct rcar_gen2_cpg *cpg,
 		table = cpg_sdh_div_table;
 		shift = 8;
 	} else if (!strcmp(name, "sd0")) {
-		table = cpg_sd01_div_table;
+		parent_name = "pll1";
+		if (is_g1c)
+			table = g1c_cpg_sd01_div_table;
+		else
+			table = cpg_sd01_div_table;
 		shift = 4;
 	} else if (!strcmp(name, "sd1")) {
 		parent_name = "pll1";
-		table = cpg_sd01_div_table;
+		if (is_g1c)
+			table = g1c_cpg_sd01_div_table;
+		else
+			table = cpg_sd01_div_table;
 		shift = 0;
 	} else if (!strcmp(name, "z")) {
 		if (data->is_devider_fixed)
@@ -476,7 +506,13 @@ static void __init rcar_gen2_cpg_clocks_init(struct device_node *np)
 	if (WARN_ON(cpg->reg == NULL))
 		return;
 
-	config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
+	if (of_machine_is_compatible("renesas,r8a77470")) {
+		config = &g1c_cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode) >> 1];
+		is_g1c = true;
+	} else {
+		config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
+		is_g1c = false;
+	}
 
 	for (i = 0; i < num_clks; ++i) {
 		const char *name;
@@ -495,7 +531,8 @@ static void __init rcar_gen2_cpg_clocks_init(struct device_node *np)
 
 	of_clk_add_provider(np, of_clk_src_onecell_get, &cpg->data);
 
-	cpg_mstp_add_clk_domain(np);
+	if (is_g1c == false)
+		cpg_mstp_add_clk_domain(np);
 }
 CLK_OF_DECLARE(rcar_gen2_cpg_clks, "renesas,rcar-gen2-cpg-clocks",
 	       rcar_gen2_cpg_clocks_init);
