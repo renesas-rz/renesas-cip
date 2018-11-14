@@ -101,6 +101,10 @@
 		cpu0-supply = <&reg_1p0v>;
 };
 
+&wdt0 {
+	status = "okay";
+};
+
 &extal_clk {
 	clock-frequency = <20000000>;
 };
