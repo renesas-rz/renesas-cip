@@ -247,8 +247,8 @@
 	};
 
 	i2c2_pins: i2c2 {
-		renesas,groups = "i2c2";
-		renesas,function = "i2c2";
+		groups = "i2c2";
+		function = "i2c2";
 	};
 
 	scif0_pins: scif0 {
@@ -262,8 +262,8 @@
 	};
 
 	sdhi1_pins: sd1 {
-		renesas,groups = "sdhi1_data4", "sdhi1_ctrl", "sdhi1_cd";
-		renesas,function = "sdhi1";
+		groups = "sdhi1_data4", "sdhi1_ctrl", "sdhi1_cd";
+		function = "sdhi1";
 		power-source = <3300>;
 	};
 
@@ -273,8 +273,8 @@
 	};
 
 	sdhi1_pins_uhs: sd2_uhs {
-		renesas,groups = "sdhi1_data4", "sdhi1_ctrl", "sdhi1_cd";
-		renesas,function = "sdhi1";
+		groups = "sdhi1_data4", "sdhi1_ctrl", "sdhi1_cd";
+		function = "sdhi1";
 		power-source = <1800>;
 	};
 
@@ -289,13 +289,13 @@
 	};
 
 	scif4_pins: serial2 {
-		renesas,groups = "scif4_data_c";
-		renesas,function = "scif4";
+		groups = "scif4_data_c";
+		function = "scif4";
 	};
 
 	pwm3_pins: pwm3 {
-		renesas,groups = "pwm3";
-		renesas,function = "pwm3";
+		groups = "pwm3";
+		function = "pwm3";
 	};
 
 	du_pins: du {
