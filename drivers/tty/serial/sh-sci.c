@@ -1243,9 +1243,11 @@ static int sci_dma_rx_find_active(struct sci_port *s)
 	return -1;
 }
 
-static void sci_rx_dma_release(struct sci_port *s)
+static void sci_rx_dma_release(struct sci_port *s, bool enable_pio)
 {
 	struct dma_chan *chan = s->chan_rx_saved;
+	struct uart_port *port = &s->port;
+	unsigned long flags;
 
 	s->chan_rx_saved = s->chan_rx = NULL;
 	s->cookie_rx[0] = s->cookie_rx[1] = -EINVAL;
@@ -1253,6 +1255,8 @@ static void sci_rx_dma_release(struct sci_port *s)
 	dma_free_coherent(chan->device->dev, s->buf_len_rx * 2, s->rx_buf[0],
 			  sg_dma_address(&s->sg_rx[0]));
 	dma_release_channel(chan);
+	if (enable_pio)
+		sci_start_rx(port);
 }
 
 static void start_hrtimer_us(struct hrtimer *hrt, unsigned long usec)
@@ -1318,9 +1322,11 @@ fail:
 	spin_unlock_irqrestore(&port->lock, flags);
 }
 
-static void sci_tx_dma_release(struct sci_port *s)
+static void sci_tx_dma_release(struct sci_port *s, bool enable_pio)
 {
 	struct dma_chan *chan = s->chan_tx_saved;
+	struct uart_port *port = &s->port;
+	unsigned long flags;
 
 	cancel_work_sync(&s->work_tx);
 	s->chan_tx_saved = s->chan_tx = NULL;
@@ -1329,6 +1335,11 @@ static void sci_tx_dma_release(struct sci_port *s)
 	dma_unmap_single(chan->device->dev, s->tx_dma_addr, UART_XMIT_SIZE,
 			 DMA_TO_DEVICE);
 	dma_release_channel(chan);
+	if (enable_pio) {
+		spin_lock_irqsave(&port->lock, flags);
+		sci_start_tx(port);
+		spin_unlock_irqrestore(&port->lock, flags);
+	}
 }
 
 static void sci_submit_rx(struct sci_port *s)
@@ -1626,9 +1637,9 @@ static void sci_free_dma(struct uart_port *port)
 	struct sci_port *s = to_sci_port(port);
 
 	if (s->chan_tx_saved)
-		sci_tx_dma_release(s);
+		sci_tx_dma_release(s, false);
 	if (s->chan_rx_saved)
-		sci_rx_dma_release(s);
+		sci_rx_dma_release(s, false);
 }
 
 static void sci_flush_buffer(struct uart_port *port)
