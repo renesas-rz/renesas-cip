@@ -246,14 +246,14 @@ static int renesas_sdhi_start_signal_voltage_switch(struct mmc_host *mmc,
 static inline u32 sd_scc_read32(struct tmio_mmc_host *host,
 				struct renesas_sdhi *priv, int addr)
 {
-	return readl(priv->scc_ctl + (addr << host->bus_shift));
+	return readl(host->ctl + priv->scc_offset + (addr << host->bus_shift));
 }
 
 static inline void sd_scc_write32(struct tmio_mmc_host *host,
 				  struct renesas_sdhi *priv,
 				  int addr, u32 val)
 {
-	writel(val, priv->scc_ctl + (addr << host->bus_shift));
+	writel(val, host->ctl + priv->scc_offset + (addr << host->bus_shift));
 }
 
 static unsigned int renesas_sdhi_init_tuning(struct tmio_mmc_host *host)
@@ -686,6 +686,7 @@ int renesas_sdhi_probe(struct platform_device *pdev,
 		mmc_data->max_segs = of_data->max_segs;
 		dma_priv->dma_buswidth = of_data->dma_buswidth;
 		host->bus_shift = of_data->bus_shift;
+		priv->scc_offset = of_data->scc_offset;
 	}
 
 	host->write16_hook	= renesas_sdhi_write16_hook;
@@ -771,7 +772,6 @@ int renesas_sdhi_probe(struct platform_device *pdev,
 		if (!hit)
 			dev_warn(&host->pdev->dev, "Unknown clock rate for SDR104\n");
 
-		priv->scc_ctl = host->ctl + of_data->scc_offset;
 		host->init_tuning = renesas_sdhi_init_tuning;
 		host->prepare_tuning = renesas_sdhi_prepare_tuning;
 		host->compare_scc_data = renesas_sdhi_compare_scc_data;
