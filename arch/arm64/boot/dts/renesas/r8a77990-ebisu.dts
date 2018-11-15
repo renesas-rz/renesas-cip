@@ -323,3 +323,11 @@
 	non-removable;
 	status = "okay";
 };
+
+&pcie_bus_clk {
+	clock-frequency = <100000000>;
+};
+
+&pciec0 {
+	status = "okay";
+};
