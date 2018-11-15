@@ -363,9 +363,6 @@ static void rcar_i2c_dma_unmap(struct rcar_i2c_priv *priv)
 	struct dma_chan *chan = priv->dma_direction == DMA_FROM_DEVICE
 		? priv->dma_rx : priv->dma_tx;
 
-	/* Disable DMA Master Received/Transmitted */
-	rcar_i2c_write(priv, ICDMAER, 0);
-
 	/* Reset default delay */
 	rcar_i2c_write(priv, ICFBSCR, TCYC06);
 
@@ -377,7 +374,11 @@ static void rcar_i2c_dma_unmap(struct rcar_i2c_priv *priv)
 	    priv->dma_direction == DMA_FROM_DEVICE)
 		priv->flags |= ID_P_NO_RXDMA;
 
+
 	priv->dma_direction = DMA_NONE;
+
+	/* Disable DMA Master Received/Transmitted */
+	rcar_i2c_write(priv, ICDMAER, 0);
 }
 
 static void rcar_i2c_cleanup_dma(struct rcar_i2c_priv *priv)
