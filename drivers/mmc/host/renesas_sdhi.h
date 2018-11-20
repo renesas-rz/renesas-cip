@@ -55,6 +55,8 @@ struct renesas_sdhi {
 	u32 scc_tappos;
 	u32 scc_tappos_hs400;
 	int scc_offset;
+	u32 adjust_hs400_offset;
+	u32 adjust_hs400_calibrate;
 };
 
 #define host_to_priv(host) \
