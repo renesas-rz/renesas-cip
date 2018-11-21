@@ -350,3 +350,7 @@
 &pciec0 {
 	status = "okay";
 };
+
+&usb3_peri0 {
+	status = "okay";
+};
