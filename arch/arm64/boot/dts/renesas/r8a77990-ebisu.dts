@@ -433,6 +433,12 @@
 			 "audio_clkout_a", "audio_clkout1_a";
 		function = "audio_clk";
 	};
+
+	msiof0_pins: spi0 {
+		groups = "msiof0_clk", "msiof0_sync",
+			 "msiof0_rxd", "msiof0_txd";
+		function = "msiof0";
+	};
 };
 
 &rwdt {
@@ -725,4 +731,15 @@
 
 &ssi1 {
 	shared-pin;
+};
+
+&msiof_ref_clk {
+	clock-frequency = <133333333>;
+};
+
+&msiof0 {
+	pinctrl-0 = <&msiof0_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
 };
