@@ -612,6 +612,7 @@ static int rvin_parallel_parse_v4l2(struct device *dev,
 static int rvin_parallel_init(struct rvin_dev *vin)
 {
 	int ret;
+	u32 id;
 
 	ret = v4l2_async_notifier_parse_fwnode_endpoints_by_port(
 		vin->dev, &vin->notifier, sizeof(struct rvin_parallel_entity),
@@ -625,6 +626,22 @@ static int rvin_parallel_init(struct rvin_dev *vin)
 
 	vin_dbg(vin, "Found parallel subdevice %pOF\n",
 		to_of_node(vin->parallel->asd.match.fwnode));
+
+	/* Make sure VIN id is present and sane */
+	ret = of_property_read_u32(vin->dev->of_node, "renesas,id", &id);
+	if (ret) {
+		vin_err(vin, "%pOF: No renesas,id property found\n",
+			vin->dev->of_node);
+		return -EINVAL;
+	}
+
+	if (id >= RCAR_VIN_NUM) {
+		vin_err(vin, "%pOF: Invalid renesas,id '%u'\n",
+			vin->dev->of_node, id);
+		return -EINVAL;
+	}
+
+	vin->id = id;
 
 	vin->notifier.ops = &rvin_parallel_notify_ops;
 	ret = v4l2_async_notifier_register(&vin->v4l2_dev, &vin->notifier);
