@@ -372,7 +372,7 @@
 	sdhi1_pins: sd1 {
 		groups = "sdhi1_data4", "sdhi1_ctrl";
 		function = "sdhi1";
-		power-source = <1800>;
+		power-source = <3300>;
 	};
 
 	sdhi1_pins_uhs: sd1_uhs {
