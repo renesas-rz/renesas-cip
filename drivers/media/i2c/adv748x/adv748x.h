@@ -112,6 +112,7 @@ struct adv748x_hdmi {
 		u32 present;
 		unsigned int blocks;
 	} edid;
+	unsigned int use_lane;
 };
 
 #define adv748x_ctrl_to_hdmi(ctrl) \
