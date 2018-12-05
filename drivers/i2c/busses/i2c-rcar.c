@@ -807,8 +807,14 @@ static int rcar_i2c_master_xfer(struct i2c_adapter *adap,
 
 	rcar_i2c_init(priv);
 
-	for (i = 0; i < num; i++)
+	for (i = 0; i < num; i++) {
+		/* This HW can't send STOP after address phase */
+		if (msgs[i].len == 0) {
+			ret = -EOPNOTSUPP;
+			goto out;
+		}
 		rcar_i2c_request_dma(priv, msgs + i);
+	}
 
 	/* init first message */
 	priv->msg = msgs;
