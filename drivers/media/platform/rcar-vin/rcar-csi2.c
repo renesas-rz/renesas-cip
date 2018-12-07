@@ -343,6 +343,7 @@ enum rcar_csi2_pads {
 
 struct rcar_csi2_info {
 	int (*init_phtw)(struct rcar_csi2 *priv, unsigned int mbps);
+	int (*init_v3m_e3_phtw)(struct rcar_csi2 *priv, unsigned int mbps);
 	int (*confirm_start)(struct rcar_csi2 *priv);
 	const struct rcsi2_mbps_reg *hsfreqrange;
 	unsigned int csi0clkfreqrange;
@@ -567,6 +568,11 @@ static int rcsi2_start(struct rcar_csi2 *priv, struct v4l2_subdev *nextsd)
 			return ret;
 	}
 
+	if (priv->info->init_v3m_e3_phtw) {
+		ret = priv->info->init_v3m_e3_phtw(priv, mbps);
+		if (ret)
+			return ret;
+	}
 	if (priv->info->hsfreqrange) {
 		ret = rcsi2_set_phypll(priv, mbps);
 		if (ret)
@@ -972,11 +978,11 @@ static int rcsi2_init_phtw_v3m_e3(struct rcar_csi2 *priv, unsigned int mbps)
 static int rcsi2_confirm_start_v3m_e3(struct rcar_csi2 *priv)
 {
 	static const struct phtw_value step1[] = {
-		{ .data = 0xed, .code = 0x34 },
-		{ .data = 0xed, .code = 0x44 },
-		{ .data = 0xed, .code = 0x54 },
-		{ .data = 0xed, .code = 0x84 },
-		{ .data = 0xed, .code = 0x94 },
+		{ .data = 0xee, .code = 0x34 },
+		{ .data = 0xee, .code = 0x44 },
+		{ .data = 0xee, .code = 0x54 },
+		{ .data = 0xee, .code = 0x84 },
+		{ .data = 0xee, .code = 0x94 },
 		{ /* sentinel */ },
 	};
 
@@ -1040,12 +1046,12 @@ static const struct rcar_csi2_info rcar_csi2_info_r8a77965 = {
 };
 
 static const struct rcar_csi2_info rcar_csi2_info_r8a77970 = {
-	.init_phtw = rcsi2_init_phtw_v3m_e3,
+	.init_v3m_e3_phtw = rcsi2_init_phtw_v3m_e3,
 	.confirm_start = rcsi2_confirm_start_v3m_e3,
 };
 
 static const struct rcar_csi2_info rcar_csi2_info_r8a77990 = {
-	.init_phtw = rcsi2_init_phtw_v3m_e3,
+	.init_v3m_e3_phtw = rcsi2_init_phtw_v3m_e3,
 	.confirm_start = rcsi2_confirm_start_v3m_e3,
 };
 
