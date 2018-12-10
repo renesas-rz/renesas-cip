@@ -21,7 +21,7 @@ enum rcar_gen3_clk_types {
 	CLK_TYPE_GEN3_PLL4,
 	CLK_TYPE_GEN3_SD,
 	CLK_TYPE_GEN3_R,
-	CLK_TYPE_GEN3_PE,
+	CLK_TYPE_GEN3_MDSEL,	/* Select parent/divider using mode pin */
 	CLK_TYPE_GEN3_Z,
 	CLK_TYPE_GEN3_Z2,
 	CLK_TYPE_GEN3_ZG,
@@ -32,11 +32,16 @@ enum rcar_gen3_clk_types {
 #define DEF_GEN3_SD(_name, _id, _parent, _offset)	\
 	DEF_BASE(_name, _id, CLK_TYPE_GEN3_SD, _parent, .offset = _offset)
 
+#define DEF_GEN3_MDSEL(_name, _id, _md, _parent0, _div0, _parent1, _div1) \
+	DEF_BASE(_name, _id, CLK_TYPE_GEN3_MDSEL,       \
+		(_parent0) << 16 | (_parent1),         \
+		.div = (_div0) << 16 | (_div1), .offset = _md)
+
 #define DEF_GEN3_PE(_name, _id, _parent_sscg, _div_sscg, _parent_clean, \
 		    _div_clean) \
-	DEF_BASE(_name, _id, CLK_TYPE_GEN3_PE,			\
-		 (_parent_sscg) << 16 | (_parent_clean),	\
-		 .div = (_div_sscg) << 16 | (_div_clean))
+	DEF_GEN3_MDSEL(_name, _id, 12, _parent_sscg, _div_sscg, \
+			_parent_clean, _div_clean)
+
 #define DEF_GEN3_Z(_name, _id, _type, _parent, _div)	\
 	DEF_BASE(_name, _id, _type, _parent, .div = _div)
 

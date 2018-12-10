@@ -830,12 +830,12 @@ struct clk * __init rcar_gen3_cpg_clk_register(struct device *dev,
 			parent = clks[cpg_clk_extalr];
 		break;
 
-	case CLK_TYPE_GEN3_PE:
+	case CLK_TYPE_GEN3_MDSEL:
 		/*
-		 * Peripheral clock with a fixed divider, selectable between
-		 * clean and spread spectrum parents using MD12
-		 */
-		if (cpg_mode & BIT(12)) {
+		* Clock selectable between two parents and two fixed dividers
+		* using a mode pin
+		*/
+		if (cpg_mode & BIT(core->offset)) {
 			/* Clean */
 			div = core->div & 0xffff;
 		} else {
