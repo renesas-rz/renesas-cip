@@ -6,7 +6,7 @@
  * Based on r8a7795-cpg-mssr.c
  *
  * Copyright (C) 2015 Glider bvba
- * Copyright (C) 2015 Renesas Electronics Corp.
+ * Copyright (C) 2018 Renesas Electronics Corp.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,8 +76,8 @@ static const struct cpg_core_clk r8a7796_core_clks[] __initconst = {
 	DEF_GEN3_OSC(".r",	CLK_RINT,	   CLK_EXTAL,      32),
 
 	/* Core Clock Outputs */
-	DEF_BASE("z",           R8A7796_CLK_Z,     CLK_TYPE_GEN3_Z, CLK_PLL0),
-	DEF_BASE("z2",          R8A7796_CLK_Z2,    CLK_TYPE_GEN3_Z2, CLK_PLL2),
+	DEF_GEN3_Z("z",         R8A7796_CLK_Z,	CLK_TYPE_GEN3_Z,  CLK_PLL0, 2),
+	DEF_GEN3_Z("z2",        R8A7796_CLK_Z2,	CLK_TYPE_GEN3_Z2, CLK_PLL2, 2),
 	DEF_BASE("zg",		R8A7796_CLK_ZG,	   CLK_TYPE_GEN3_ZG, CLK_PLL4),
 	DEF_FIXED("ztr",        R8A7796_CLK_ZTR,   CLK_PLL1_DIV2,  6, 1),
 	DEF_FIXED("ztrd2",      R8A7796_CLK_ZTRD2, CLK_PLL1_DIV2, 12, 1),
