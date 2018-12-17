@@ -135,6 +135,10 @@
 		dais = <&rsnd_port0>;
 	};
 
+	vspm_if {
+		compatible = "renesas,vspm_if";
+	};
+
 	x12_clk: x12 {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
@@ -837,5 +841,13 @@
 	pinctrl-0 = <&msiof0_pins>;
 	pinctrl-names = "default";
 
+	status = "okay";
+};
+
+&vspb {
+	status = "okay";
+};
+
+&vspi0 {
 	status = "okay";
 };
