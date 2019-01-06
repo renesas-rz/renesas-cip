@@ -1291,6 +1291,40 @@
 			renesas,fcp = <&fcpvd1>;
 			};
 
+		vsp@fe960000 {
+			compatible = "renesas,vspm-vsp2";
+			reg = <0 0xfe960000 0 0x8000>;
+			renesas,has-bru;
+			renesas,has-lut;
+			renesas,has-clu;
+			renesas,has-hgo;
+			renesas,#rpf = <5>;
+			renesas,#uds = <0>;
+			renesas,#wpf = <1>;
+		};
+
+		vspb: vspm@fe960000 {
+			compatible = "renesas,vspm";
+			reg = <0 0xfe960000 0 0x8000>, <0 0xfe96f000 0 0x200>;
+			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&cpg CPG_MOD 626>, <&cpg CPG_MOD 607>;
+			clock-names = "vsp", "fcp";
+			renesas,#ch = <3>;
+			renesas,#rpf = <31>;
+			renesas,#rpf_clut = <6>;
+			renesas,#wpf_rot = <0>;
+			renesas,has-lut;
+			renesas,has-clu;
+			renesas,has-bru;
+			renesas,has-hgo;
+			renesas,#read_outstanding = <0>;
+			renesas,#start_reservation = <2>;
+			power-domains = <&sysc R8A77990_PD_A3VC>;
+			resets = <&cpg 626>, <&cpg 607>;
+			reset-names = "vsp", "fcp";
+			status = "disabled";
+		};
+
 		vsp@fe9a0000 {
 			compatible = "renesas,vspm-vsp2";
 			reg = <0 0xfe9a0000 0 0x8000>;
@@ -1337,40 +1371,6 @@
 			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
 			resets = <&cpg 602>;
 			};
-
-		vsp@fe960000 {
-			compatible = "renesas,vspm-vsp2";
-			reg = <0 0xfe960000 0 0x8000>;
-			renesas,has-bru;
-			renesas,has-lut;
-			renesas,has-clu;
-			renesas,has-hgo;
-			renesas,#rpf = <5>;
-			renesas,#uds = <0>;
-			renesas,#wpf = <1>;
-		};
-
-		vspb: vspm@fe960000 {
-			compatible = "renesas,vspm";
-			reg = <0 0xfe960000 0 0x8000>, <0 0xfe96f000 0 0x200>;
-			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
-			clocks = <&cpg CPG_MOD 626>, <&cpg CPG_MOD 607>;
-			clock-names = "vsp", "fcp";
-			renesas,#ch = <3>;
-			renesas,#rpf = <31>;
-			renesas,#rpf_clut = <6>;
-			renesas,#wpf_rot = <0>;
-			renesas,has-lut;
-			renesas,has-clu;
-			renesas,has-bru;
-			renesas,has-hgo;
-			renesas,#read_outstanding = <0>;
-			renesas,#start_reservation = <2>;
-			power-domains = <&sysc R8A77990_PD_A3VC>;
-			resets = <&cpg 626>, <&cpg 607>;
-			reset-names = "vsp", "fcp";
-			status = "disabled";
-		};
 
 		lvds0: lvds-encoder@feb90000 {
 			compatible = "renesas,r8a77990-lvds";
