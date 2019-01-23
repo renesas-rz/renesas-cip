@@ -2168,6 +2168,13 @@
 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
 		};
 
+		firmware {
+			optee {
+				compatible = "linaro,optee-tz";
+				method = "smc";
+			};
+		};
+
 		pciec0: pcie@fe000000 {
 			compatible = "renesas,pcie-r8a7796",
 				     "renesas,pcie-rcar-gen3";
