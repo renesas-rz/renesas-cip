@@ -213,10 +213,6 @@
 	};
 };
 
-&wdt0{
-	status = "okay";
-};
-
 &xhci {
 	status = "okay";
 };
