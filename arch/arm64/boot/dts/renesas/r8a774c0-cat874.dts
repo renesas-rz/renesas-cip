@@ -74,6 +74,11 @@
 		function = "sdhi0";
 		power-source= <1800>;
 	};
+
+	usb0_pins: usb {
+		groups = "usb0_b";
+		function = "usb0";
+	};
 };
 
 &scif2 {
@@ -100,5 +105,22 @@
 	sd-uhs-sdr50;
 	sd-uhs-sdr104;
 	non-removable;
+	status = "okay";
+};
+
+&ehci0 {
+	dr_mode = "host";
+	status = "okay";
+};
+
+&ohci0 {
+	dr_mode = "host";
+	status = "okay";
+};
+
+&usb2_phy0 {
+	pinctrl-0 = <&usb0_pins>;
+	pinctrl-names = "default";
+
 	status = "okay";
 };
