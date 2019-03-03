@@ -79,6 +79,11 @@
 		groups = "usb0_b";
 		function = "usb0";
 	};
+
+	usb30_pins: usb30 {
+		groups = "usb30", "usb30_id";
+		function = "usb30";
+	};
 };
 
 &scif2 {
@@ -120,6 +125,13 @@
 
 &usb2_phy0 {
 	pinctrl-0 = <&usb0_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};
+
+&xhci0 {
+	pinctrl-0 = <&usb30_pins>;
 	pinctrl-names = "default";
 
 	status = "okay";
