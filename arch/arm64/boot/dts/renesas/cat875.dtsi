@@ -63,3 +63,7 @@
 	renesas,can-clock-select = <0x0>;
 	status = "okay";
 };
+
+&pciec0 {
+	status = "okay";
+};
