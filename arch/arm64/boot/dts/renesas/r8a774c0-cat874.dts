@@ -139,6 +139,12 @@
 		groups = "pwm6_a";
 		function = "pwm6";
 	};
+
+	msiof0_pins: spi0 {
+		groups = "msiof0_clk", "msiof0_sync",
+			 "msiof0_rxd", "msiof0_txd";
+		function = "msiof0";
+	};
 };
 
 &scif2 {
@@ -277,6 +283,13 @@
 &pwm6 {
 	princtrl-0 = <&pwm6_pins>;
 	pinctrl-name = "default";
+
+	status = "okay";
+};
+
+&msiof0 {
+	pinctrl-0 = <&msiof0_pins>;
+	pinctrl-names = "default";
 
 	status = "okay";
 };
