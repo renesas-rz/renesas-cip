@@ -336,7 +336,7 @@ static void ipmmu_utlb_enable(struct ipmmu_vmsa_domain *domain,
 	ipmmu_write(mmu, IMUCTR(utlb),
 		    ipmmu_read(mmu, IMUCTR(utlb)) |
 		    IMUCTR_TTSEL_MMU(domain->context_id) |
-		    IMUCTR_FLUSH | IMUCTR_MMUEN);
+		    IMUCTR_MMUEN);
 }
 
 /*
