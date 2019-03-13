@@ -1994,8 +1994,37 @@ static const unsigned int usb30_id_mux[] = {
 	USB3HS0_ID_MARK,
 };
 
+/* - CAN ------------------------------------------------------------------ */
+static const unsigned int can0_data_pins[] = {
+	/* TX, RX */
+	RCAR_GP_PIN(0, 12), RCAR_GP_PIN(0, 13),
+};
+
+static const unsigned int can0_data_mux[] = {
+	CAN0_TX_MARK, CAN0_RX_MARK,
+};
+
+static const unsigned int can1_data_pins[] = {
+	/* TX, RX */
+	RCAR_GP_PIN(0, 4), RCAR_GP_PIN(0, 7),
+};
+
+static const unsigned int can1_data_mux[] = {
+	CAN1_TX_MARK, CAN1_RX_MARK,
+};
+
+/* - CAN Clock -------------------------------------------------------------- */
+static const unsigned int can_clk_pins[] = {
+	/* CLK */
+	RCAR_GP_PIN(0, 14),
+};
+
+static const unsigned int can_clk_mux[] = {
+	CAN_CLK_MARK,
+};
+
 static const struct {
-	struct sh_pfc_pin_group common[75];
+	struct sh_pfc_pin_group common[78];
 	struct sh_pfc_pin_group r8a77990[0];
 } pinmux_groups = {
 	.common = {
@@ -2074,6 +2103,9 @@ static const struct {
 		SH_PFC_PIN_GROUP(usb0_id),
 		SH_PFC_PIN_GROUP(usb30),
 		SH_PFC_PIN_GROUP(usb30_id),
+		SH_PFC_PIN_GROUP(can0_data),
+		SH_PFC_PIN_GROUP(can1_data),
+		SH_PFC_PIN_GROUP(can_clk),
 	},
 };
 
@@ -2203,8 +2235,20 @@ static const char * const usb30_groups[] = {
 	"usb30_id",
 };
 
+static const char * const can0_groups[] = {
+	"can0_data",
+};
+
+static const char * const can1_groups[] = {
+	"can1_data",
+};
+
+static const char * const can_clk_groups[] = {
+	"can_clk",
+};
+
 static const struct {
-	struct sh_pfc_function common[17];
+	struct sh_pfc_function common[20];
 	struct sh_pfc_function r8a77990[0];
 } pinmux_functions = {
 	.common = {
@@ -2225,6 +2269,9 @@ static const struct {
 		SH_PFC_FUNCTION(scif_clk),
 		SH_PFC_FUNCTION(usb0),
 		SH_PFC_FUNCTION(usb30),
+		SH_PFC_FUNCTION(can0),
+		SH_PFC_FUNCTION(can1),
+		SH_PFC_FUNCTION(can_clk),
 	},
 };
 
