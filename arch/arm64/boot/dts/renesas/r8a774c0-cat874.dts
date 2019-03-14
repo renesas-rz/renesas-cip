@@ -66,6 +66,18 @@
 		states = <3300000 1
 			1800000 0>;
 	};
+
+	wlan_en_reg: fixedregulator {
+		compatible = "regulator-fixed";
+		regulator-name = "wlan-en-regulator";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		startup-delay-us = <70000>;
+
+		/* WLAN_EN GPIO for this board - Bank2, pin25 */
+		gpio = <&gpio2 25 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
 };
 
 &extal_clk {
@@ -98,6 +110,12 @@
 	usb30_pins: usb30 {
 		groups = "usb30", "usb30_id";
 		function = "usb30";
+	};
+
+	sdhi3_pins_uhs: sd3_uhs {
+		groups = "sdhi3_data4", "sdhi3_ctrl";
+		function = "sdhi3";
+		power-source = <1800>;
 	};
 };
 
@@ -187,4 +205,26 @@
 &pciec0 {
 	/* Map all possible DDR as inbound ranges */
 	dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x80000000>;
+};
+
+&sdhi3 {
+	/* used for on-board WIFI */
+	status = "okay";
+	pinctrl-0 = <&sdhi3_pins_uhs>;
+	pinctrl-names = "default";
+
+	vmmc-supply = <&wlan_en_reg>;
+	bus-width = <4>;
+	non-removable;
+	cap-power-off-card;
+	keep-power-in-suspend;
+
+	#address-cells = <1>;
+	#size-cells = <0>;
+	wlcore: wlcore@2 {
+		compatible = "ti,wl1837";
+		reg = <2>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+	};
 };
