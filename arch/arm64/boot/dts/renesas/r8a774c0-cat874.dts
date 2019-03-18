@@ -99,5 +99,6 @@
 	bus-width = <4>;
 	sd-uhs-sdr50;
 	sd-uhs-sdr104;
+	non-removable;
 	status = "okay";
 };
