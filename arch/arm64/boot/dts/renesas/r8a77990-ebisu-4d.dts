@@ -24,6 +24,13 @@ compatible = "renesas,ebisu", "renesas,r8a77990";
 			no-map;
 			reg = <0x00000000 0x54000000 0x0 0x03000000>;
 		};
+
+		/* device specific region for contiguous allocations */
+		mmp_reserved: linux,multimedia {
+			compatible = "shared-dma-pool";
+			reusable;
+			reg = <0x00000000 0x68000000 0x0 0x08000000>;
+		};
 	};
 
 	mmngr {
