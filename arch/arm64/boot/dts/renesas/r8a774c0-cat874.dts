@@ -117,6 +117,16 @@
 		function = "sdhi3";
 		power-source = <1800>;
 	};
+
+	pwm5_pins: pwm5 {
+		groups = "pwm5_a";
+		function = "pwm5";
+	};
+
+	pwm6_pins: pwm6 {
+		groups = "pwm6_a";
+		function = "pwm6";
+	};
 };
 
 &scif2 {
@@ -227,4 +237,18 @@
 		interrupt-parent = <&gpio1>;
 		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
 	};
+};
+
+&pwm5 {
+	princtrl-0 = <&pwm5_pins>;
+	pinctrl-name = "default";
+
+	status = "okay";
+};
+
+&pwm6 {
+	princtrl-0 = <&pwm6_pins>;
+	pinctrl-name = "default";
+
+	status = "okay";
 };
