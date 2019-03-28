@@ -80,6 +80,35 @@
 		gpio = <&gpio2 25 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
 	};
+
+	hdmi0-out {
+		compatible = "hdmi-connector";
+		type = "a";
+
+		port {
+			hdmi_con_out: endpoint {
+			remote-endpoint = <&tda19988_out>;
+			};
+		};
+	};
+
+
+	reg_3p3v: regulator1 {
+		compatible = "regulator-fixed";
+		regulator-name = "fixed-3.3V";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-boot-on;
+		regulator-always-on;
+	};
+
+	/* External DU dot clocks */
+	x13_clk: x13 {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <74250000>;
+	};
+
 };
 
 &extal_clk {
@@ -144,6 +173,12 @@
 		groups = "msiof0_clk", "msiof0_sync",
 			 "msiof0_rxd", "msiof0_txd";
 		function = "msiof0";
+	};
+
+	du_pins: du {
+		groups = "du_rgb888", "du_sync", "du_clk_out_0",
+			"du_disp", "du_clk_in_0";
+		function = "du";
 	};
 };
 
@@ -298,4 +333,63 @@
 	pinctrl-names = "default";
 
 	status = "okay";
+};
+
+&du {
+	pinctrl-0 = <&du_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+
+	clocks = <&cpg CPG_MOD 724>,
+		<&cpg CPG_MOD 723>,
+		<&x13_clk>;
+	clock-names = "du.0", "du.1", "dclkin.0";
+};
+
+&i2c0 {
+	status = "okay";
+	clock-frequency = <100000>;
+
+	tda19988@70 {
+		compatible = "nxp,tda998x";
+		reg = <0x70>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
+		video-ports = <0x234501>;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				tda19988_in: endpoint {
+					remote-endpoint = <&lvds0_out>;
+				};
+			};
+
+			port@1 {
+				reg = <1>;
+				tda19988_out: endpoint {
+					remote-endpoint = <&hdmi_con_out>;
+				};
+			};
+		};
+	};
+};
+
+&lvds0 {
+	status = "okay";
+
+	clocks = <&cpg CPG_MOD 727>,
+		 <&extal_clk>;
+	clock-names = "fck", "extal";
+
+	ports {
+		port@1 {
+			lvds0_out: endpoint {
+				remote-endpoint = <&tda19988_in>;
+			};
+		};
+	};
 };
