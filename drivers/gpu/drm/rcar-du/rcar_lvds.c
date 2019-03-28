@@ -35,6 +35,10 @@ enum rcar_lvds_mode {
 #define RCAR_LVDS_QUIRK_GEN2_PLLCR (1 << 1)	/* LVDPLLCR has gen2 layout */
 #define RCAR_LVDS_QUIRK_GEN3_LVEN (1 << 2)	/* LVEN bit needs to be set */
 						/* on R8A77970/R8A7799x */
+/* Has extended PLL */
+#define RCAR_LVDS_QUIRK_EXT_PLL		BIT(3)
+/* Supports dual-link operation */
+#define RCAR_LVDS_QUIRK_DUAL_LINK	BIT(4)
 
 struct rcar_lvds_device_info {
 	unsigned int gen;
@@ -514,6 +518,12 @@ static const struct rcar_lvds_device_info rcar_lvds_r8a77970_info = {
 	.quirks = RCAR_LVDS_QUIRK_GEN2_PLLCR | RCAR_LVDS_QUIRK_GEN3_LVEN,
 };
 
+static const struct rcar_lvds_device_info rcar_lvds_r8a774c0_info = {
+	.gen = 3,
+	.quirks = RCAR_LVDS_QUIRK_GEN3_LVEN | RCAR_LVDS_QUIRK_EXT_PLL
+		| RCAR_LVDS_QUIRK_DUAL_LINK,
+};
+
 static const struct of_device_id rcar_lvds_of_table[] = {
 	{ .compatible = "renesas,r8a7743-lvds", .data = &rcar_lvds_gen2_info },
 	{ .compatible = "renesas,r8a7790-lvds", .data = &rcar_lvds_r8a7790_info },
@@ -522,6 +532,8 @@ static const struct of_device_id rcar_lvds_of_table[] = {
 	{ .compatible = "renesas,r8a7795-lvds", .data = &rcar_lvds_gen3_info },
 	{ .compatible = "renesas,r8a7796-lvds", .data = &rcar_lvds_gen3_info },
 	{ .compatible = "renesas,r8a77970-lvds", .data = &rcar_lvds_r8a77970_info },
+	{ .compatible = "renesas,r8a774c0-lvds",
+	.data = &rcar_lvds_r8a774c0_info },
 	{ }
 };
 
