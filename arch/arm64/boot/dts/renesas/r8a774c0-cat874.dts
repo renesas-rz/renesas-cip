@@ -315,14 +315,14 @@
 };
 
 &pwm5 {
-	princtrl-0 = <&pwm5_pins>;
+	pinctrl-0 = <&pwm5_pins>;
 	pinctrl-name = "default";
 
 	status = "okay";
 };
 
 &pwm6 {
-	princtrl-0 = <&pwm6_pins>;
+	pinctrl-0 = <&pwm6_pins>;
 	pinctrl-name = "default";
 
 	status = "okay";
