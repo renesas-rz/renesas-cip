@@ -3038,7 +3038,7 @@ static const unsigned int du_disp_mux[] = {
 };
 
 static const struct {
-	struct sh_pfc_pin_group common[184];
+	struct sh_pfc_pin_group common[186];
 	struct sh_pfc_pin_group r8a77990[0];
 } pinmux_groups = {
 	.common = {
